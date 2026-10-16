@@ -2,7 +2,7 @@
 
 Site institucional de uma maquiadora e penteadista profissional que atende a domicílio (São Paulo). Apresenta a profissional, os serviços de **noivas**, **atendimento social** e **cursos**, reúne depoimentos de clientes e converte visitas em contato por **WhatsApp**. O Atendimento Social tem **agendamento online** integrado à [AgendamentoApi](../../AgendamentoAPI/README.md).
 
-- **Tipo:** site de uma página (one-page), HTML + CSS + JavaScript puros, sem framework e sem build.
+- **Tipo:** site de uma página (one-page) em HTML + CSS + **TypeScript**, sem framework. Build e servidor de desenvolvimento com **Vite**.
 - **Fontes:** Cormorant Garamond e Inter (Google Fonts).
 - **Conteúdo:** segue o documento `INFORMAÇÕES SITE.docx`, que é a referência de textos, preços e estrutura.
 
@@ -26,18 +26,27 @@ Site institucional de uma maquiadora e penteadista profissional que atende a dom
 
 ```
 larinovais beauty/
-├── index.html              # Site inteiro: marcação, estilos (<style>) e scripts dos formulários e dos carrosséis
-├── agendamento.js          # Widget de agendamento online (Atendimento Social)
-├── fotos/
-│   ├── Lari/               # Retratos da profissional (Home e Sobre Mim)
-│   ├── Noivas/             # Fotos de noivas (hero, galeria, cartões)
-│   ├── Atendimento Social/ # Fotos do atendimento social
-│   └── Fotos modelos/      # Make Beauty, Cacheado e Crespo, Formanda, Debutante (cursos e galerias)
+├── index.html              # Marcação do site (sem CSS nem JS inline)
+├── src/
+│   ├── main.ts             # Ponto de entrada: importa o CSS e inicia os módulos
+│   ├── site.ts             # Carrossel do hero, menu, depoimentos, formulários -> WhatsApp
+│   ├── config.ts           # Lê as variáveis VITE_* (.env)
+│   ├── utils.ts            # Máscaras, formatação de datas/valores, link do WhatsApp
+│   ├── utils.test.ts       # Testes unitários (Vitest)
+│   ├── styles/main.css     # Todos os estilos
+│   └── agendamento/        # Widget de agendamento online (Atendimento Social)
+│       ├── widget.ts       #   interface e fluxo
+│       ├── api.ts          #   chamadas à AgendamentoApi
+│       └── types.ts        #   tipos (Service, FeeEstimate, Appointment…)
+├── public/fotos/           # Imagens (Lari, Noivas, Atendimento Social, Fotos modelos)
+├── .env.example            # Modelo das variáveis de ambiente
+├── package.json · tsconfig.json · vite.config.ts
+├── eslint.config.js · .prettierrc.json · .editorconfig
 ├── INFORMAÇÕES SITE.docx   # Documento de conteúdo (fonte dos textos)
 └── README.md
 ```
 
-Os estilos e o JavaScript dos formulários ficam dentro do `index.html`. Só o agendamento fica separado, em `agendamento.js`.
+Os arquivos de `public/` são copiados como estão para o `dist/` e referenciados por `/fotos/...` no HTML.
 
 ---
 
@@ -76,7 +85,7 @@ A taxa de deslocamento é cobrada à parte, conforme o endereço. Há condiçõe
 
 Todos os contatos usam o número **(11) 91483-4786** (`5511914834786` nos links `wa.me`). Os formulários não enviam dados a nenhum servidor: montam uma mensagem formatada e abrem o WhatsApp da visitante com o texto pronto.
 
-| Formulário | Campos | Função (`index.html`) |
+| Formulário | Campos | Função (`src/site.ts`) |
 |---|---|---|
 | **Noivas** ("Quero ser sua noiva") | Nome da noiva, data do casamento, local do evento, mensagem | `sendNoiva()` |
 | **Fale Comigo** | Nome, e-mail, assunto (Sugestão, Elogio, Parceria, Outro), mensagem | `sendContato()` |
@@ -88,7 +97,7 @@ Os valores digitados são enviados pela URL com `encodeURIComponent`. Datas saem
 
 ## Agendamento online (Atendimento Social)
 
-O widget (`agendamento.js`) conversa com a **AgendamentoApi** (.NET). Noivas **não** usa agendamento online, apenas o formulário de WhatsApp.
+O widget (`src/agendamento/`) conversa com a **AgendamentoApi** (.NET). Noivas **não** usa agendamento online, apenas o formulário de WhatsApp.
 
 **Fluxo da cliente**
 1. Escolhe o **serviço** (lista, duração e preço vêm de `GET /api/services`).
@@ -119,11 +128,18 @@ As durações são estimativas e devem ser ajustadas ao tempo real de atendiment
 ## Como rodar localmente
 
 ### Só o site
-Não há dependências. Abra o `index.html` no navegador, ou sirva a pasta por HTTP:
+Requer Node 18+.
 
 ```bash
-npx http-server . -p 8080 -c-1
-# http://localhost:8080
+npm install
+npm run dev        # http://localhost:5173
+npm run typecheck  # checagem de tipos (strict)
+npm run lint       # ESLint (typescript-eslint strict)
+npm run format     # Prettier
+npm test           # testes (Vitest)
+npm run check      # typecheck + lint + format + testes
+npm run build      # gera dist/ (tsc + vite build)
+npm run preview    # serve o dist/ localmente
 ```
 
 Sem a API no ar, o site funciona normalmente, só o widget de agendamento mostra o aviso de indisponibilidade.
@@ -134,8 +150,8 @@ Sem a API no ar, o site funciona normalmente, só o widget de agendamento mostra
    cd ../../AgendamentoAPI/AgendamentoApi
    dotnet run --launch-profile http   # http://localhost:5102
    ```
-2. Confirme que `window.AGENDAMENTO_API` no `index.html` aponta para `http://localhost:5102/api`.
-3. Abra o site e vá até o Atendimento Social.
+2. Confirme que `VITE_AGENDAMENTO_API` (em `.env.development`) aponta para `http://localhost:5102/api`.
+3. Rode `npm run dev` e vá até o Atendimento Social.
 
 Em desenvolvimento a API aceita qualquer origem (CORS aberto). Em produção só aceita as origens listadas em `Cors:AllowedOrigins`.
 
@@ -143,36 +159,34 @@ Em desenvolvimento a API aceita qualquer origem (CORS aberto). Em produção só
 
 ## Configuração
 
-Duas variáveis no fim do `index.html`, antes do script do widget:
+Variáveis de ambiente do Vite (modelo em `.env.example`; `npm run dev` lê o `.env.development`; **`npm run build` lê o `.env.production`**, que você precisa criar, senão o widget sai como "indisponível"):
 
-```html
-<script>
-  window.AGENDAMENTO_API = "http://localhost:5102/api"; // URL pública (HTTPS) da AgendamentoApi em produção
-  window.AGENDAMENTO_WA  = "5511914834786";             // WhatsApp usado no plano B do widget
-</script>
+```
+VITE_AGENDAMENTO_API=https://api.seudominio.com/api   # URL pública (HTTPS) da AgendamentoApi
+VITE_WHATSAPP=5511914834786                            # WhatsApp dos formulários e do plano B do widget
 ```
 
-O número do WhatsApp dos formulários e dos botões de curso está escrito diretamente no HTML (`5511914834786`). Para trocar de número, faça uma busca e substituição no `index.html`.
+As variáveis são embutidas no build: ao mudá-las, rode `npm run build` de novo. Os links `wa.me` escritos direto no `index.html` (botões de curso) continuam com o número fixo; para trocar de número, faça uma busca e substituição no `index.html`.
 
 ---
 
 ## Como editar o conteúdo
 
 - **Textos:** edite direto no `index.html`; cada seção tem um comentário de marcação (`<!-- NOIVAS -->`, `<!-- CURSOS -->`…).
-- **Depoimentos e avaliações:** ficam no array `REVIEWS` do script do `index.html`. O mesmo conteúdo alimenta o carrossel da Home e o do Google. Para as avaliações do Google serem reais, será preciso integrar com a API do Google Places ou copiar os textos manualmente.
+- **Depoimentos e avaliações:** ficam no array `REVIEWS` de `src/site.ts`. O mesmo conteúdo alimenta o carrossel da Home e o do Google. Para as avaliações do Google serem reais, será preciso integrar com a API do Google Places ou copiar os textos manualmente.
 - **Cursos:** cada curso é um bloco `.curso-card`; o link do botão é um `wa.me` com o nome do curso já codificado.
 - **Fotos:** coloque as imagens em `fotos/` e referencie pelo caminho relativo. Atenção ao peso (veja abaixo).
-- **Cores e tipografia:** variáveis CSS em `:root` no topo do `<style>` (`--rose`, `--rose-dark`, `--cream`…).
+- **Cores e tipografia:** variáveis CSS em `:root` no topo de `src/styles/main.css` (`--rose`, `--rose-dark`, `--cream`…).
 - **Preços do Social:** estão em dois lugares, no cartão de preços do `index.html` e nos serviços da API. Atualize os dois.
 
 ---
 
 ## Publicação
 
-O site é estático: qualquer hospedagem de arquivos serve (Netlify, Vercel, GitHub Pages, Cloudflare Pages, hospedagem comum). Publique `index.html`, `agendamento.js` e a pasta `fotos/`.
+O site é estático: rode `npm run build` e publique o conteúdo da pasta `dist/` em qualquer hospedagem de arquivos (Netlify, Vercel, GitHub Pages, Cloudflare Pages, hospedagem comum).
 
 Antes de publicar:
-1. Hospedar a **AgendamentoApi com HTTPS** e trocar `AGENDAMENTO_API` pela URL pública. Páginas HTTPS não conseguem chamar uma API HTTP.
+1. Hospedar a **AgendamentoApi com HTTPS** e definir `VITE_AGENDAMENTO_API` com a URL pública antes do build. Páginas HTTPS não conseguem chamar uma API HTTP.
 2. Colocar o domínio do site em `Cors:AllowedOrigins` na API.
 3. Cadastrar na API os serviços do Social (tabela acima).
 4. **Otimizar as fotos.** A pasta `fotos/` pesa cerca de **145 MB**, com muitos JPGs originais de câmera. Convém redimensionar (por exemplo, 1600 px no lado maior) e comprimir, ou converter para WebP, para o site carregar rápido no celular.
