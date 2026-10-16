@@ -1,11 +1,4 @@
-import { WHATSAPP } from './config';
-
-/** Escapa texto para uso seguro em innerHTML. */
-export function esc(t: string | number | null | undefined): string {
-  const d = document.createElement('div');
-  d.textContent = t === null || t === undefined ? '' : String(t);
-  return d.innerHTML;
-}
+import { whatsappUrl } from './whatsapp';
 
 export function brl(n: number | string | null | undefined): string {
   return 'R$ ' + (Number(n) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -47,14 +40,5 @@ export function maskCep(v: string): string {
   return d.length > 5 ? `${d.slice(0, 5)}-${d.slice(5)}` : d;
 }
 
-export function waLink(text = 'Olá, vim pelo site e gostaria de agendar um atendimento social.'): string {
-  return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
-}
-
-/** querySelector que falha alto se o elemento não existir. */
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- T é o ponto de asserção de tipo do DOM
-export function must<T extends Element>(parent: ParentNode, selector: string): T {
-  const el = parent.querySelector<T>(selector);
-  if (!el) throw new Error(`Elemento não encontrado: ${selector}`);
-  return el;
-}
+export const waLink = (text = 'Olá, vim pelo site e gostaria de agendar um atendimento social.'): string =>
+  whatsappUrl(text);

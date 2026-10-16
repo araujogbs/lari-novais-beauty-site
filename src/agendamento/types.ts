@@ -21,12 +21,21 @@ export interface Appointment {
   clientAddress?: string;
 }
 
-export interface WidgetState {
-  services: Service[];
-  service: Service | null;
-  date: string;
-  slot: string;
-  fee: FeeEstimate | null;
-  files: File[];
-  busy: boolean;
+/** Valores digitados no formulário de novo agendamento. */
+export interface BookingValues {
+  nome: string;
+  fone: string;
+  cep: string;
+  num: string;
+  end: string;
+  qtd: string;
+  msg: string;
+}
+
+export interface BookingDoneInfo {
+  nome: string;
+  fone: string;
+  serviceName: string;
+  when: string;
+  total: number;
 }

@@ -14,13 +14,13 @@ body {
 
 :root {
   --white: #ffffff;
-  --cream: #faf9f8;
-  --rose: #c4a08a;
-  --rose-light: #e8d5c8;
-  --rose-dark: #a07e68;
+  --cream: #f4e0e2; /* rosa chá: fundo de seções e blocos */
+  --rose: #a85d6b; /* rosewood */
+  --rose-light: #ebcfd3; /* dusty rose claro */
+  --rose-dark: #8a4553; /* rosa queimado */
   --text: #2c2c2c;
   --text-light: #6b6b6b;
-  --text-muted: #9b9b9b;
+  --text-muted: #7d6b6e;
 }
 
 /* NAV */
@@ -34,9 +34,19 @@ nav {
   align-items: center;
   padding: 0 4rem;
   height: 70px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(196, 160, 138, 0.15);
+  border-bottom: 1px solid rgba(168, 93, 107, 0.12);
+  transition:
+    background-color 0.6s ease,
+    box-shadow 0.6s ease,
+    border-color 0.6s ease;
+}
+/* ao rolar, o header fica mais translúcido */
+nav.nav-scrolled {
+  background: rgba(255, 255, 255, 0.58);
+  border-bottom-color: rgba(168, 93, 107, 0.06);
+  box-shadow: 0 6px 24px rgba(138, 69, 83, 0.04);
 }
 nav .logo {
   font-family: 'Cormorant Garamond', serif;
@@ -99,7 +109,7 @@ nav a:hover {
 .hero-img {
   width: min(360px, 65vw);
   aspect-ratio: 3/4;
-  background: linear-gradient(135deg, #e8ddd5, #d4cac0);
+  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
   border-radius: 180px;
   margin-bottom: 3rem;
   overflow: hidden;
@@ -138,6 +148,8 @@ nav a:hover {
   gap: 0.5rem;
 }
 .dot {
+  border: 0;
+  padding: 0;
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -342,7 +354,7 @@ section {
 .photo-placeholder {
   width: 100%;
   aspect-ratio: 3/4;
-  background: linear-gradient(135deg, #e8ddd5, #d4cac0);
+  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -392,7 +404,7 @@ section {
 }
 .service-card-img {
   height: 280px;
-  background: linear-gradient(135deg, #e2d5cc, #d4c8be);
+  background: linear-gradient(135deg, #ecd3d6, #dcb4ba);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -432,7 +444,7 @@ section {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #e8ddd5, #d4cac0);
+  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
   margin: 0 auto 1rem;
   display: flex;
   justify-content: center;
@@ -463,7 +475,7 @@ section {
 .social-card {
   text-align: center;
   padding: 2.5rem 1.5rem;
-  border: 1px solid rgba(196, 160, 138, 0.15);
+  border: 1px solid rgba(168, 93, 107, 0.15);
   border-radius: 12px;
   transition: border-color 0.3s;
 }
@@ -583,7 +595,7 @@ section {
 .sobre-photo {
   min-height: 0;
   overflow: hidden;
-  background: linear-gradient(135deg, #e8ddd5, #d4cac0);
+  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
   border-radius: 8px;
   display: flex;
   justify-content: center;
@@ -652,7 +664,7 @@ section {
 }
 .step-card {
   padding: 2rem;
-  border: 1px solid rgba(196, 160, 138, 0.15);
+  border: 1px solid rgba(168, 93, 107, 0.15);
   border-radius: 12px;
 }
 .step-num {
@@ -683,7 +695,7 @@ section {
 }
 .noiva-photo {
   aspect-ratio: 3/4;
-  background: linear-gradient(135deg, #e2d5cc, #d4c8be);
+  background: linear-gradient(135deg, #ecd3d6, #dcb4ba);
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -732,7 +744,7 @@ section {
   font-size: 0.85rem;
   color: var(--text-light);
   padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(196, 160, 138, 0.1);
+  border-bottom: 1px solid rgba(168, 93, 107, 0.1);
   font-weight: 300;
 }
 .pacote-card li::before {
@@ -769,7 +781,7 @@ section {
 .form-group textarea {
   width: 100%;
   background: var(--white);
-  border: 1px solid rgba(196, 160, 138, 0.2);
+  border: 1px solid rgba(168, 93, 107, 0.2);
   padding: 0.9rem 1rem;
   color: var(--text);
   font-family: 'Inter', sans-serif;
@@ -807,7 +819,7 @@ section {
 
 /* SOCIAL OCCASION */
 .social-section {
-  border-bottom: 1px solid rgba(196, 160, 138, 0.1);
+  border-bottom: 1px solid rgba(168, 93, 107, 0.1);
 }
 .occasion-grid {
   display: grid;
@@ -829,7 +841,7 @@ section {
 }
 .occasion-photo {
   aspect-ratio: 3/4;
-  background: linear-gradient(135deg, #e8ddd5, #d4cac0);
+  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -860,7 +872,7 @@ section {
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px dotted rgba(196, 160, 138, 0.2);
+  border-bottom: 1px dotted rgba(168, 93, 107, 0.2);
 }
 .price-item .service {
   font-size: 0.9rem;
@@ -880,7 +892,7 @@ section {
 }
 .curso-card {
   background: var(--white);
-  border: 1px solid rgba(196, 160, 138, 0.15);
+  border: 1px solid rgba(168, 93, 107, 0.15);
   border-radius: 12px;
   overflow: hidden;
   transition: box-shadow 0.3s;
@@ -890,7 +902,7 @@ section {
 }
 .curso-img {
   height: 220px;
-  background: linear-gradient(135deg, #e2d5cc, #d4c8be);
+  background: linear-gradient(135deg, #ecd3d6, #dcb4ba);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -993,7 +1005,7 @@ section {
   background: var(--white);
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(196, 160, 138, 0.1);
+  border: 1px solid rgba(168, 93, 107, 0.1);
   transition: transform 0.3s;
   text-align: center;
 }
@@ -1036,7 +1048,7 @@ section {
 .pilar-card {
   padding: 2rem;
   text-align: center;
-  border: 1px solid rgba(196, 160, 138, 0.15);
+  border: 1px solid rgba(168, 93, 107, 0.15);
   border-radius: 12px;
 }
 .pilar-icon {
@@ -1053,7 +1065,7 @@ section {
 }
 .equipe-gallery .gallery-placeholder {
   aspect-ratio: 1/1;
-  background: linear-gradient(135deg, #e8ddd5, #d4cac0);
+  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
   border-radius: 8px;
   display: flex;
   justify-content: center;
@@ -1072,7 +1084,7 @@ section {
 }
 .rede-card {
   background: var(--white);
-  border: 1px solid rgba(196, 160, 138, 0.15);
+  border: 1px solid rgba(168, 93, 107, 0.15);
   border-radius: 12px;
   padding: 2.5rem 2rem;
   text-align: center;
@@ -1104,7 +1116,7 @@ section {
   font-size: 0.8rem;
   color: var(--text-light);
   padding: 0.3rem 0;
-  border-bottom: 1px solid rgba(196, 160, 138, 0.1);
+  border-bottom: 1px solid rgba(168, 93, 107, 0.1);
 }
 .blog-note {
   background: var(--cream);
@@ -1135,7 +1147,7 @@ section {
 }
 .depo-item {
   background: var(--white);
-  border: 1px solid rgba(196, 160, 138, 0.15);
+  border: 1px solid rgba(168, 93, 107, 0.15);
   border-radius: 12px;
   padding: 2.5rem;
 }
@@ -1171,7 +1183,7 @@ section {
 }
 .video-placeholder {
   aspect-ratio: 16/9;
-  background: linear-gradient(135deg, #e8ddd5, #d4cac0);
+  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -1248,7 +1260,7 @@ section {
   scroll-snap-align: start;
   text-align: left;
   background: var(--white);
-  border: 1px solid rgba(196, 160, 138, 0.2);
+  border: 1px solid rgba(168, 93, 107, 0.2);
   border-radius: 12px;
   padding: 1.8rem;
   display: flex;
@@ -1377,7 +1389,7 @@ section {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  border-bottom: 1px solid rgba(196, 160, 138, 0.25);
+  border-bottom: 1px solid rgba(168, 93, 107, 0.25);
 }
 .ag-tab {
   background: none;
@@ -1435,7 +1447,7 @@ section {
   align-items: center;
   gap: 0.8rem;
   background: var(--white);
-  border: 1px solid rgba(196, 160, 138, 0.25);
+  border: 1px solid rgba(168, 93, 107, 0.25);
   border-radius: 8px;
   padding: 0.9rem 1rem;
   cursor: pointer;
@@ -1511,7 +1523,7 @@ section {
   text-align: right;
 }
 .ag-summary .ag-total {
-  border-top: 1px dotted rgba(196, 160, 138, 0.4);
+  border-top: 1px dotted rgba(168, 93, 107, 0.4);
   margin-top: 0.4rem;
   padding-top: 0.7rem;
 }
@@ -1551,7 +1563,7 @@ section {
 .ag-lookup input {
   flex: 1;
   background: var(--white);
-  border: 1px solid rgba(196, 160, 138, 0.2);
+  border: 1px solid rgba(168, 93, 107, 0.2);
   padding: 0.9rem 1rem;
   border-radius: 8px;
   font-family: 'Inter', sans-serif;
@@ -1655,7 +1667,7 @@ section {
 footer {
   text-align: center;
   padding: 3rem 2rem;
-  border-top: 1px solid rgba(196, 160, 138, 0.15);
+  border-top: 1px solid rgba(168, 93, 107, 0.15);
   background: var(--white);
 }
 footer .logo {
@@ -1707,7 +1719,7 @@ footer p {
     flex-direction: column;
     padding: 2rem;
     gap: 1.2rem;
-    border-bottom: 1px solid rgba(196, 160, 138, 0.15);
+    border-bottom: 1px solid rgba(168, 93, 107, 0.15);
     transform: translateY(-100%);
     opacity: 0;
     pointer-events: none;
@@ -1779,4 +1791,171 @@ footer p {
   .video-placeholder-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ROSA: blocos coloridos sobre fundo rosa */
+.service-card {
+  background: var(--white);
+}
+
+/* NOIVAS: tipografia harmonizada com o título principal */
+.noivas-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--rose-dark);
+  line-height: 1.4;
+  max-width: 720px;
+  margin: 0 auto 1.25rem;
+}
+.section-title--noivas {
+  font-size: clamp(1.9rem, 3.2vw, 2.4rem);
+  font-weight: 300;
+}
+.pacote-card .price-note {
+  font-style: normal;
+  color: var(--text-light);
+}
+
+/* AGENDAMENTO: avisos em destaque */
+.ag-notice {
+  margin: 0.75rem 0;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-style: italic;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* SPRITES: sóis, luas e constelações místicos, bem sutis */
+.site {
+  position: relative;
+  overflow-x: clip;
+}
+.celestial {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.celestial-sprite {
+  position: absolute;
+  color: var(--rose);
+  opacity: 0.16;
+}
+.celestial-sun,
+.celestial-moon {
+  opacity: 0.12;
+}
+.celestial-sprite svg {
+  width: 100%;
+  height: 100%;
+}
+.celestial-sun svg {
+  animation: celestial-spin 240s linear infinite;
+}
+.celestial-moon svg {
+  animation: celestial-spin 360s linear infinite reverse;
+}
+.celestial-constellation {
+  animation: celestial-twinkle 7s ease-in-out infinite;
+}
+.celestial-flip svg {
+  transform: scaleX(-1);
+}
+@keyframes celestial-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes celestial-twinkle {
+  50% {
+    opacity: 0.32;
+  }
+}
+@media (max-width: 768px) {
+  .celestial-sun,
+  .celestial-moon {
+    opacity: 0.09;
+  }
+  .celestial-constellation {
+    display: none;
+  }
+}
+.hero {
+  position: relative;
+}
+.moon-phases {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 50%;
+  width: 230px;
+  transform: translateX(-50%);
+  color: var(--rose);
+  opacity: 0.55;
+}
+
+/* BLOCOS ROSA */
+.section-rose {
+  background: var(--cream);
+}
+@media (prefers-reduced-motion: reduce) {
+  nav {
+    transition: none;
+  }
+  .celestial-sprite,
+  .celestial-sprite svg {
+    animation: none;
+  }
+}
+
+/* AGENDAMENTO: upload de fotos como ícone de galeria */
+.ag-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--text-light);
+}
+.ag-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ag-add-photo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border: 1px dashed var(--rose);
+  border-radius: 8px;
+  color: var(--rose);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+.ag-add-photo svg {
+  width: 30px;
+  height: 30px;
+}
+.ag-add-photo:hover,
+.ag-file-input:focus-visible + .ag-thumbs .ag-add-photo {
+  background: var(--rose-light);
+  color: var(--rose-dark);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

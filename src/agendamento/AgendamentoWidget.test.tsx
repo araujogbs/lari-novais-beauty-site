@@ -1,0 +1,142 @@
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { AgendamentoWidget } from './AgendamentoWidget';
+
+type Handler = (url: string, init?: RequestInit) => Response | undefined;
+
+const json = (body: unknown, status = 200): Response =>
+  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
+
+type Input = string | URL | Request;
+const urlOf = (input: Input): string =>
+  typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+
+const SERVICES = [{ id: 1, name: 'Maquiagem', durationMinutes: 60, price: 290 }];
+
+/** Simula a AgendamentoApi. `override` tem prioridade sobre as respostas padrão. */
+function mockApi(override?: Handler) {
+  const fetchMock = vi.fn((input: Input, init?: RequestInit) => {
+    const url = urlOf(input);
+    const custom = override?.(url, init);
+    if (custom) return Promise.resolve(custom);
+    let res = json(null, 404);
+    if (url.endsWith('/services')) res = json(SERVICES);
+    else if (url.includes('available-slots')) res = json(['09:00', '10:00']);
+    else if (url.includes('estimate-fee'))
+      res = json({ distanceKm: 12.34, travelFee: 40, street: 'Rua A', city: 'SP' });
+    else if (url.endsWith('/appointments') && init?.method === 'POST') res = json({}, 201);
+    else if (url.includes('my-appointments'))
+      res = json([{ id: 7, serviceName: 'Maquiagem', startTime: '2030-01-10T12:00:00Z', clientAddress: 'Rua A' }]);
+    else if (url.includes('client-cancel')) res = json({});
+    return Promise.resolve(res);
+  });
+  vi.stubGlobal('fetch', fetchMock);
+  return fetchMock;
+}
+
+const isPost = ([, init]: [Input, (RequestInit | undefined)?]): boolean => init?.method === 'POST';
+
+async function fillValidForm(user: ReturnType<typeof userEvent.setup>): Promise<void> {
+  await user.click(await screen.findByLabelText(/Maquiagem/));
+  await user.type(screen.getByLabelText('Data do evento'), '2030-01-10');
+  await user.click(await screen.findByRole('button', { name: '09:00' }));
+  await user.type(screen.getByLabelText('Seu nome completo'), 'Maria Souza');
+  await user.type(screen.getByLabelText('WhatsApp'), '11912345678');
+  await user.type(screen.getByLabelText('CEP do atendimento'), '01310100');
+  await user.type(screen.getByLabelText('Como você quer a sua produção?'), 'Casamento');
+}
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
+
+describe('AgendamentoWidget', () => {
+  it('conclui um agendamento completo e mostra a confirmação', async () => {
+    const fetchMock = mockApi();
+    const user = userEvent.setup();
+    render(<AgendamentoWidget />);
+    await fillValidForm(user);
+
+    // máscaras, endereço pelo CEP e total com deslocamento
+    expect(screen.getByLabelText('WhatsApp')).toHaveValue('(11) 91234-5678');
+    expect(screen.getByLabelText('CEP do atendimento')).toHaveValue('01310-100');
+    expect(await screen.findByText(/12,3 km/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByLabelText('Endereço')).toHaveValue('Rua A, SP');
+    });
+    expect(screen.getByText('R$ 330,00')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Confirmar agendamento' }));
+    expect(await screen.findByText('Agendamento confirmado!')).toBeInTheDocument();
+    expect(screen.getByText('Maria, seu horário está reservado.')).toBeInTheDocument();
+
+    const post = fetchMock.mock.calls.find(isPost);
+    const body = post?.[1]?.body;
+    expect(body).toBeInstanceOf(FormData);
+    expect((body as FormData).get('readyTime')).toBe('2030-01-10T09:00:00-03:00');
+    expect((body as FormData).get('people')).toBe('1');
+  });
+
+  it('mostra erro de validação sem chamar a API de criação', async () => {
+    const fetchMock = mockApi();
+    const user = userEvent.setup();
+    render(<AgendamentoWidget />);
+    await user.click(await screen.findByRole('button', { name: 'Confirmar agendamento' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Escolha o serviço.');
+    expect(fetchMock.mock.calls.some(isPost)).toBe(false);
+  });
+
+  it('em conflito (409) mostra a mensagem e recarrega os horários', async () => {
+    const fetchMock = mockApi((_url, init) =>
+      init?.method === 'POST' ? json({ message: 'Horário indisponível.' }, 409) : undefined,
+    );
+    const user = userEvent.setup();
+    render(<AgendamentoWidget />);
+    await fillValidForm(user);
+    const slotCalls = (): number => fetchMock.mock.calls.filter(([u]) => urlOf(u).includes('available-slots')).length;
+    const before = slotCalls();
+
+    await user.click(screen.getByRole('button', { name: 'Confirmar agendamento' }));
+    expect(await screen.findByText('Horário indisponível. Escolha outro horário.')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(slotCalls()).toBe(before + 1);
+    });
+  });
+
+  it('mostra o plano B pelo WhatsApp quando os serviços não carregam', async () => {
+    mockApi((url) => (url.endsWith('/services') ? json({ message: 'erro' }, 500) : undefined));
+    render(<AgendamentoWidget />);
+    expect(await screen.findByText(/Não foi possível carregar os serviços/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Confirmar agendamento' })).toBeDisabled();
+  });
+
+  it('lista e cancela agendamentos pelo telefone', async () => {
+    const fetchMock = mockApi();
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const user = userEvent.setup();
+    render(<AgendamentoWidget />);
+    await user.click(screen.getByRole('button', { name: 'Meus agendamentos' }));
+    const panel = screen.getByLabelText('WhatsApp usado no agendamento').closest<HTMLElement>('.ag-panel');
+    if (!panel) throw new Error('painel não encontrado');
+
+    await user.type(within(panel).getByLabelText('WhatsApp usado no agendamento'), '11912345678');
+    await user.click(within(panel).getByRole('button', { name: 'Buscar' }));
+    expect(await within(panel).findByText('Maquiagem')).toBeInTheDocument();
+
+    await user.click(within(panel).getByRole('button', { name: 'Cancelar' }));
+    await waitFor(() => {
+      expect(fetchMock.mock.calls.some(([u]) => urlOf(u).includes('/7/client-cancel'))).toBe(true);
+    });
+  });
+
+  it('valida o telefone antes de buscar', async () => {
+    mockApi();
+    const user = userEvent.setup();
+    render(<AgendamentoWidget />);
+    await user.click(screen.getByRole('button', { name: 'Meus agendamentos' }));
+    await user.click(screen.getByRole('button', { name: 'Buscar' }));
+    expect(screen.getByText('Informe um WhatsApp válido.')).toBeInTheDocument();
+  });
+});

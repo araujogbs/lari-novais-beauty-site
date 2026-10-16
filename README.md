@@ -2,7 +2,7 @@
 
 Site institucional de uma maquiadora e penteadista profissional que atende a domicílio (São Paulo). Apresenta a profissional, os serviços de **noivas**, **atendimento social** e **cursos**, reúne depoimentos de clientes e converte visitas em contato por **WhatsApp**. O Atendimento Social tem **agendamento online** integrado à [AgendamentoApi](../../AgendamentoAPI/README.md).
 
-- **Tipo:** site de uma página (one-page) em HTML + CSS + **TypeScript**, sem framework. Build e servidor de desenvolvimento com **Vite**.
+- **Tipo:** site de uma página (one-page) em **React + TypeScript**, com build e servidor de desenvolvimento do **Vite**.
 - **Fontes:** Cormorant Garamond e Inter (Google Fonts).
 - **Conteúdo:** segue o documento `INFORMAÇÕES SITE.docx`, que é a referência de textos, preços e estrutura.
 
@@ -26,23 +26,32 @@ Site institucional de uma maquiadora e penteadista profissional que atende a dom
 
 ```
 larinovais beauty/
-├── index.html              # Marcação do site (sem CSS nem JS inline)
+├── index.html                 # Só o <head> e o <div id="root">
 ├── src/
-│   ├── main.ts             # Ponto de entrada: importa o CSS e inicia os módulos
-│   ├── site.ts             # Carrossel do hero, menu, depoimentos, formulários -> WhatsApp
-│   ├── config.ts           # Lê as variáveis VITE_* (.env)
-│   ├── utils.ts            # Máscaras, formatação de datas/valores, link do WhatsApp
-│   ├── utils.test.ts       # Testes unitários (Vitest)
-│   ├── styles/main.css     # Todos os estilos
-│   └── agendamento/        # Widget de agendamento online (Atendimento Social)
-│       ├── widget.ts       #   interface e fluxo
-│       ├── api.ts          #   chamadas à AgendamentoApi
-│       └── types.ts        #   tipos (Service, FeeEstimate, Appointment…)
-├── public/fotos/           # Imagens (Lari, Noivas, Atendimento Social, Fotos modelos)
-├── .env.example            # Modelo das variáveis de ambiente
+│   ├── main.tsx               # Ponto de entrada (StrictMode + CSS)
+│   ├── App.tsx                # Monta as seções na ordem da página
+│   ├── components/            # Uma seção por componente (Hero, AboutMe, Brides, Courses…)
+│   │   ├── Nav.tsx · HeroCarousel.tsx · ReviewsCarousel.tsx   # partes interativas
+│   │   └── BrideForm.tsx · ContactForm.tsx                    # formulários -> WhatsApp
+│   ├── agendamento/           # Widget de agendamento online (Atendimento Social)
+│   │   ├── AgendamentoWidget.tsx   # abas e estado geral
+│   │   ├── NewBooking.tsx          # passos 1-4 e envio
+│   │   ├── MyAppointments.tsx      # consulta e cancelamento por telefone
+│   │   ├── BookingDone.tsx         # tela de confirmação
+│   │   ├── booking.ts              # validação, regras de fotos e montagem do multipart (puro)
+│   │   ├── api.ts · types.ts       # chamadas à AgendamentoApi e tipos
+│   │   └── useAsync.ts · useServices.ts   # hooks de busca
+│   ├── data/                  # Conteúdo em dados: depoimentos, fotos do hero, links do menu
+│   ├── hooks/useReveal.ts     # Animação de entrada (.reveal)
+│   ├── whatsapp.ts            # Montagem das mensagens e links do WhatsApp
+│   ├── config.ts · utils.ts   # Variáveis VITE_* e utilitários (máscaras, datas, valores)
+│   ├── styles/main.css        # Todos os estilos
+│   └── **/*.test.ts(x)        # Testes (Vitest + Testing Library)
+├── public/fotos/              # Imagens (Lari, Noivas, Atendimento Social, Fotos modelos)
+├── .env.example               # Modelo das variáveis de ambiente
 ├── package.json · tsconfig.json · vite.config.ts
 ├── eslint.config.js · .prettierrc.json · .editorconfig
-├── INFORMAÇÕES SITE.docx   # Documento de conteúdo (fonte dos textos)
+├── INFORMAÇÕES SITE.docx      # Documento de conteúdo (fonte dos textos)
 └── README.md
 ```
 
@@ -85,13 +94,13 @@ A taxa de deslocamento é cobrada à parte, conforme o endereço. Há condiçõe
 
 Todos os contatos usam o número **(11) 91483-4786** (`5511914834786` nos links `wa.me`). Os formulários não enviam dados a nenhum servidor: montam uma mensagem formatada e abrem o WhatsApp da visitante com o texto pronto.
 
-| Formulário | Campos | Função (`src/site.ts`) |
+| Formulário | Campos | Componente |
 |---|---|---|
-| **Noivas** ("Quero ser sua noiva") | Nome da noiva, data do casamento, local do evento, mensagem | `sendNoiva()` |
-| **Fale Comigo** | Nome, e-mail, assunto (Sugestão, Elogio, Parceria, Outro), mensagem | `sendContato()` |
+| **Noivas** ("Quero ser sua noiva") | Nome da noiva, data do casamento, local do evento, mensagem | `BrideForm.tsx` |
+| **Fale Comigo** | Nome, e-mail, assunto (Sugestão, Elogio, Parceria, Outro), mensagem | `ContactForm.tsx` |
 | **Cursos** | Sem formulário: o botão abre o WhatsApp com "Quero me inscrever no curso …" | link direto |
 
-Os valores digitados são enviados pela URL com `encodeURIComponent`. Datas saem em formato dd/mm/aaaa. O e-mail de contato exibido é `contato.larinovaisbeauty@gmail.com`.
+Os valores digitados são enviados pela URL com `encodeURIComponent`. Datas saem em formato dd/mm/aaaa. A montagem das mensagens fica em `src/whatsapp.ts` (com testes). O e-mail de contato exibido é `contato.larinovaisbeauty@gmail.com`.
 
 ---
 
@@ -107,19 +116,21 @@ O widget (`src/agendamento/`) conversa com a **AgendamentoApi** (.NET). Noivas *
 5. Confirma (`POST /api/appointments`, formulário multipart). O horário é enviado em fuso de Brasília (`-03:00`).
 6. Em **Meus agendamentos**, busca pelo WhatsApp e cancela com mais de 24 h de antecedência (`my-appointments` e `client-cancel`).
 
-"Pronta às …" e "Pessoas a se arrumar" não têm campo na API e vão dentro da descrição do agendamento.
+O horário escolhido é o de **estar pronta** (`readyTime`); a API calcula o início voltando a duração total (serviço × pessoas). A quantidade de pessoas (`people`) multiplica o valor do serviço e a duração, mas não o deslocamento.
 
 **Se a API estiver indisponível:** o widget mostra um aviso e um link "Agendar pelo WhatsApp"; o resto do site não é afetado.
 
-**Regras que vêm do backend** (não do site): expediente das 9h às 18h, sem sobreposição de horários, cancelamento só com mais de 24 h, limites de requisições por IP (resposta 429) e cálculo de deslocamento a partir do CEP. Detalhes no README da AgendamentoApi.
+**Regras que vêm do backend** (não do site): expediente das 6h às 22h, sem sobreposição de horários, cancelamento só com mais de 24 h, limites de requisições por IP (resposta 429) e cálculo de deslocamento a partir do CEP. Detalhes no README da AgendamentoApi.
 
 ### Serviços cadastrados na API (ambiente local)
 | Id | Serviço | Duração | Preço |
 |---|---|---|---|
-| 1 | Maquiagem | 60 min | R$ 290 |
-| 2 | Penteado | 60 min | R$ 290 |
-| 3 | Maquiagem + Penteado | 120 min | R$ 550 |
-| 4 | Escova/Babyliss | 60 min | R$ 250 |
+| 1 | Maquiagem | 60 min | R$ 350 |
+| 2 | Penteado | 90 min (site mostra 60 a 90) | R$ 350 |
+| 3 | Maquiagem + Penteado | 150 min | R$ 700 |
+| 4 | Escova e Babyliss | 60 min | R$ 300 |
+
+Aplicado pela migration `AtualizarServicosSocial` da API (`dotnet ef database update`).
 
 As durações são estimativas e devem ser ajustadas ao tempo real de atendimento. Esses registros foram criados direto no banco local; em produção é preciso cadastrá-los de novo.
 
@@ -166,18 +177,18 @@ VITE_AGENDAMENTO_API=https://api.seudominio.com/api   # URL pública (HTTPS) da 
 VITE_WHATSAPP=5511914834786                            # WhatsApp dos formulários e do plano B do widget
 ```
 
-As variáveis são embutidas no build: ao mudá-las, rode `npm run build` de novo. Os links `wa.me` escritos direto no `index.html` (botões de curso) continuam com o número fixo; para trocar de número, faça uma busca e substituição no `index.html`.
+As variáveis são embutidas no build: ao mudá-las, rode `npm run build` de novo. Os links `wa.me` escritos direto em `src/components/Courses.tsx` (botões de curso) continuam com o número fixo; para trocar de número, faça uma busca e substituição nesse arquivo.
 
 ---
 
 ## Como editar o conteúdo
 
-- **Textos:** edite direto no `index.html`; cada seção tem um comentário de marcação (`<!-- NOIVAS -->`, `<!-- CURSOS -->`…).
-- **Depoimentos e avaliações:** ficam no array `REVIEWS` de `src/site.ts`. O mesmo conteúdo alimenta o carrossel da Home e o do Google. Para as avaliações do Google serem reais, será preciso integrar com a API do Google Places ou copiar os textos manualmente.
-- **Cursos:** cada curso é um bloco `.curso-card`; o link do botão é um `wa.me` com o nome do curso já codificado.
-- **Fotos:** coloque as imagens em `fotos/` e referencie pelo caminho relativo. Atenção ao peso (veja abaixo).
+- **Textos:** edite o componente da seção em `src/components/` (por exemplo, a Trajetória está em `AboutMe.tsx`). Ele é JSX: `class` vira `className` e `style` é um objeto.
+- **Depoimentos e avaliações:** ficam em `src/data/reviews.ts`. O mesmo conteúdo alimenta o carrossel da Home e o do Google. Para as avaliações do Google serem reais, será preciso integrar com a API do Google Places ou copiar os textos manualmente.
+- **Cursos:** cada curso é um bloco `.curso-card` em `src/components/Courses.tsx`; o link do botão é um `wa.me` com o nome do curso já codificado.
+- **Fotos:** coloque as imagens em `public/fotos/` e referencie por `/fotos/...`. Atenção ao peso (veja abaixo).
 - **Cores e tipografia:** variáveis CSS em `:root` no topo de `src/styles/main.css` (`--rose`, `--rose-dark`, `--cream`…).
-- **Preços do Social:** estão em dois lugares, no cartão de preços do `index.html` e nos serviços da API. Atualize os dois.
+- **Preços do Social:** estão em dois lugares, no cartão de preços de `src/components/SocialService.tsx` e nos serviços da API. Atualize os dois.
 
 ---
 
@@ -201,7 +212,7 @@ Antes de publicar:
 - **Seção Equipe e bloco de redes da Home estão ocultos**; os nomes e descrições da Equipe são de exemplo.
 - **Cartões de Instagram e TikTok** na seção Redes trazem listas de exemplo ("Antes e depois de noivas", "Penteado em 60 segundos") que não vêm do documento.
 - **Conteúdo do portfólio** da Home e rótulos das fotos são genéricos; vale revisar com a cliente.
-- **Horário de atendimento da API é fixo** (9h às 18h); eventos que exigem horários mais cedo precisam de ajuste no backend.
+- **Horário de atendimento da API é fixo** (6h às 22h, constantes `WorkStart`/`WorkEnd` no `AppointmentsController`).
 - **Fuso:** o widget envia o horário com `-03:00` fixo, o que está correto enquanto o Brasil não adotar horário de verão.
 - **"Meus agendamentos" usa só o telefone** como identificação (limitação da API).
 - **Sem analytics, SEO avançado ou metadados de compartilhamento** (Open Graph, favicon, `sitemap`). Há apenas `title` e `lang`.

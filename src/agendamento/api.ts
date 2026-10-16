@@ -34,8 +34,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const getServices = () => request<Service[] | null>('/services');
 
-export const getSlots = (date: string, serviceId: number) =>
-  request<string[] | null>(`/appointments/available-slots?date=${date}&serviceId=${serviceId}`);
+export const getSlots = (date: string, serviceId: number, people: number) =>
+  request<string[] | null>(`/appointments/available-slots?date=${date}&serviceId=${serviceId}&people=${people}`);
 
 export const estimateFee = (cep: string) => request<FeeEstimate>(`/appointments/estimate-fee?cep=${cep}`);
 
