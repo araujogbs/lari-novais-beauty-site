@@ -142,7 +142,7 @@ As durações são estimativas e devem ser ajustadas ao tempo real de atendiment
 
 A mesma gestão do app, no navegador. Abre pelo endereço **`/#painel`** (não há link no site). O login é o mesmo do app (`Admin:Username` / senha da API).
 
-- **Pedidos em análise** (de qualquer data) com **Aprovar** e **Recusar** (motivo opcional, enviado à cliente).
+- **Pedidos em análise** (de qualquer data) com **Aprovar** e **Recusar** (motivo opcional, enviado à cliente) e o prazo para responder: sem resposta em 3 dias, a API expira o pedido e libera o horário.
 - **Agenda do dia** com navegação entre dias: serviço, horário, WhatsApp, endereço, valores, descrição e **fotos de referência** (baixadas com o token e ampliáveis).
 - Atalhos de **WhatsApp** e **mapa**, **Desmarcar** atendimento confirmado e **Bloquear/Desbloquear** agenda (dia inteiro ou intervalo).
 

@@ -1,0 +1,10 @@
+# Mantém LF no disco mesmo com core.autocrlf=true (o Prettier exige LF)
+* text=auto eol=lf
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.woff binary
+*.woff2 binary

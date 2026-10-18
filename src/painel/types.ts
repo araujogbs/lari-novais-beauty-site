@@ -1,5 +1,8 @@
-/** Pending = em análise; Confirmed = aprovado; Rejected = recusado; Cancelled = desmarcado; Blocked = bloqueio de agenda. */
-export type AdminStatus = 'Pending' | 'Confirmed' | 'Rejected' | 'Cancelled' | 'Blocked';
+/**
+ * Pending = em análise; Confirmed = aprovado; Rejected = recusado; Expired = ficou 3 dias sem resposta;
+ * Cancelled = desmarcado; Blocked = bloqueio de agenda.
+ */
+export type AdminStatus = 'Pending' | 'Confirmed' | 'Rejected' | 'Expired' | 'Cancelled' | 'Blocked';
 
 export interface AdminService {
   id: number;
@@ -22,6 +25,8 @@ export interface AdminAppointment {
   startTime: string;
   endTime: string;
   status: AdminStatus;
+  /** Prazo para aprovar ou recusar (só nos pedidos em análise). */
+  expiresAt?: string | null;
   serviceItem?: AdminService | null;
 }
 

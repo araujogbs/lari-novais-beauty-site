@@ -9,9 +9,12 @@ export const digits = (v: string | null | undefined): string => (v ?? '').replac
 /** "2026-10-15" -> "15/10/2026" */
 export const fmtDateBR = (iso: string): string => (iso ? iso.split('-').reverse().join('/') : '');
 
+/** Brasília é UTC-3 o ano todo (sem horário de verão desde 2019). */
+const BRASILIA_OFFSET_MS = 3 * 60 * 60 * 1000;
+
+/** Data de hoje (AAAA-MM-DD) em Brasília, independente do fuso do aparelho de quem abre o site. */
 export function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return new Date(Date.now() - BRASILIA_OFFSET_MS).toISOString().slice(0, 10);
 }
 
 /** Data/hora legível no fuso de Brasília. Datas sem fuso vindas da API são tratadas como UTC. */

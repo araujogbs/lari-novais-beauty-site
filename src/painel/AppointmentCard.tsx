@@ -19,6 +19,7 @@ const BADGES: Record<AdminStatus, string> = {
   Pending: 'Em análise',
   Confirmed: 'Confirmado',
   Rejected: 'Recusado',
+  Expired: 'Expirado',
   Cancelled: 'Cancelado',
   Blocked: 'Bloqueado',
 };
@@ -32,7 +33,7 @@ export function AppointmentCard({ item, token, showDate = false, onApprove, onRe
   const people = item.people ?? 1;
   const isPending = item.status === 'Pending';
   const isBlocked = item.status === 'Blocked';
-  const isInactive = item.status === 'Cancelled' || item.status === 'Rejected';
+  const isInactive = item.status === 'Cancelled' || item.status === 'Rejected' || item.status === 'Expired';
   const images = item.referenceImages ?? [];
   const servicePrice = (item.serviceItem?.price ?? 0) * people;
 
@@ -55,6 +56,11 @@ export function AppointmentCard({ item, token, showDate = false, onApprove, onRe
             {fmtTime(item.startTime)} às {fmtTime(item.endTime)}
             {!isBlocked && ` · ${item.serviceItem?.name ?? 'Serviço'}${people > 1 ? ` (${people} pessoas)` : ''}`}
           </p>
+          {isPending && item.expiresAt && (
+            <p className="pn-deadline">
+              Responder até {fmtDay(item.expiresAt)}, {fmtTime(item.expiresAt)} (depois expira sozinho)
+            </p>
+          )}
         </div>
         <span className={`pn-badge pn-badge--${item.status.toLowerCase()}`}>{BADGES[item.status]}</span>
       </header>

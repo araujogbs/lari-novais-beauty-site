@@ -253,7 +253,8 @@
   background: #fffbf0;
 }
 .pn-card--cancelled,
-.pn-card--rejected {
+.pn-card--rejected,
+.pn-card--expired {
   opacity: 0.55;
 }
 .pn-card--blocked {
@@ -273,6 +274,11 @@
 .pn-when {
   font-size: 0.85rem;
   color: var(--text-light);
+  margin-top: 0.15rem;
+}
+.pn-deadline {
+  font-size: 0.78rem;
+  color: #b7791f;
   margin-top: 0.15rem;
 }
 .pn-line {
@@ -306,7 +312,8 @@
   color: #2f5f37;
 }
 .pn-badge--cancelled,
-.pn-badge--rejected {
+.pn-badge--rejected,
+.pn-badge--expired {
   background: #fcebeb;
   color: #9e2a2b;
 }

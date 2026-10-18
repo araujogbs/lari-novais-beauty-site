@@ -1,5 +1,20 @@
-import { describe, expect, it } from 'vitest';
-import { brl, digits, fmtDateBR, maskCep, maskPhone } from './utils';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { brl, digits, fmtDateBR, maskCep, maskPhone, todayISO } from './utils';
+
+describe('todayISO', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it.each([
+    ['2026-10-18T01:30:00Z', '2026-10-17'], // 22h30 de 17/10 em Brasília (em UTC já é dia 18)
+    ['2026-10-18T03:00:00Z', '2026-10-18'], // meia-noite em Brasília
+    ['2026-10-18T15:00:00Z', '2026-10-18'],
+  ])('%s -> %s', (now, expected) => {
+    vi.useFakeTimers({ now: new Date(now) });
+    expect(todayISO()).toBe(expected);
+  });
+});
 
 describe('maskPhone', () => {
   it.each([

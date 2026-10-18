@@ -25,6 +25,7 @@ const PENDING: AdminAppointment = {
   startTime: '2030-01-10T12:00:00Z',
   endTime: '2030-01-10T13:00:00Z',
   status: 'Pending',
+  expiresAt: '2030-01-08T15:00:00Z',
   serviceItem: { id: 1, name: 'Maquiagem', durationMinutes: 60, price: 350 },
 };
 
@@ -72,6 +73,8 @@ describe('Painel Ateliê', () => {
     const pendentes = screen.getByRole('region', { name: /Pedidos em análise/ });
     expect(await within(pendentes).findByText('Maria Souza')).toBeInTheDocument();
     expect(within(pendentes).getByText('Em análise')).toBeInTheDocument();
+    // prazo de resposta mostrado no horário de Brasília (15:00 UTC = 12:00)
+    expect(within(pendentes).getByText(/Responder até .*08\/01, 12:00/)).toBeInTheDocument();
 
     await user.click(within(pendentes).getByRole('button', { name: 'Aprovar' }));
     expect(await screen.findByText(/Agendamento confirmado/)).toBeInTheDocument();
