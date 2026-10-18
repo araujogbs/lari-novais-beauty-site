@@ -25,7 +25,7 @@ Site institucional de uma maquiadora e penteadista profissional que atende a dom
 ## Estrutura do projeto
 
 ```
-larinovais beauty/
+Site/
 ├── index.html                 # Só o <head> e o <div id="root">
 ├── src/
 │   ├── main.tsx               # Ponto de entrada (StrictMode + CSS)
@@ -43,7 +43,7 @@ larinovais beauty/
 │   │   └── useAsync.ts · useServices.ts   # hooks de busca
 │   ├── painel/                # Painel Ateliê da Lari (/#painel): login, pedidos em análise, agenda, bloqueios
 │   ├── data/                  # Conteúdo em dados: depoimentos, fotos do hero, links do menu
-│   ├── hooks/useReveal.ts     # Animação de entrada (.reveal)
+│   ├── hooks/                 # useReveal (animação .reveal), useScrolled (menu), useHash (abre o painel)
 │   ├── whatsapp.ts            # Montagem das mensagens e links do WhatsApp
 │   ├── config.ts · utils.ts   # Variáveis VITE_* e utilitários (máscaras, datas, valores)
 │   ├── styles/main.css        # Todos os estilos
@@ -116,13 +116,13 @@ O widget (`src/agendamento/`) conversa com a **AgendamentoApi** (.NET). Noivas *
 3. Preenche nome, WhatsApp (com máscara), horário de início (o símbolo "i" ao lado do título explica como escolher), CEP, número, quantidade de pessoas, descrição e **fotos de referência** (até 5, JPG/PNG/WebP, 5 MB cada, com miniaturas e botão para remover).
 4. Ao completar o **CEP**, o endereço é preenchido e a **taxa de deslocamento** é calculada (`GET /api/appointments/estimate-fee`). O resumo mostra serviço, deslocamento e total.
 5. Confirma (`POST /api/appointments`, formulário multipart). O horário é enviado em fuso de Brasília (`-03:00`).
-6. Em **Meus agendamentos**, busca pelo WhatsApp e cancela com mais de 24 h de antecedência (`my-appointments` e `client-cancel`).
+6. Em **Meus agendamentos**, busca pelo WhatsApp, vê o status ("Em análise" ou "Confirmado") e cancela: pedido em análise a qualquer momento, confirmado com mais de 24 h de antecedência (`my-appointments` e `client-cancel`).
 
-O horário escolhido é o de **início** (`startTime`); a API calcula o término somando a duração total (serviço × pessoas), e o resumo mostra o término previsto. Ao enviar, a cliente vê "Agendamento em análise" e recebe a confirmação pelo WhatsApp. A quantidade de pessoas (`people`) multiplica o valor do serviço e a duração, mas não o deslocamento.
+O horário escolhido é o de **início** (`startTime`); a API calcula o término somando a duração total (serviço × pessoas), e o resumo mostra o término previsto. Ao enviar, a cliente vê "Agendamento em análise": o pedido segura o horário até a Lari aprovar ou recusar no painel (prazo de 3 dias, depois expira), e a resposta chega pelo WhatsApp. A quantidade de pessoas (`people`) multiplica o valor do serviço e a duração, mas não o deslocamento.
 
 **Se a API estiver indisponível:** o widget mostra um aviso e um link "Agendar pelo WhatsApp"; o resto do site não é afetado.
 
-**Regras que vêm do backend** (não do site): expediente das 6h às 22h, sem sobreposição de horários, cancelamento só com mais de 24 h, limites de requisições por IP (resposta 429) e cálculo de deslocamento a partir do CEP. Detalhes no README da AgendamentoApi.
+**Regras que vêm do backend** (não do site): expediente das 6h às 22h, sem sobreposição de horários, aprovação dos pedidos e prazo de 3 dias, cancelamento de confirmados só com mais de 24 h, limites de requisições por IP (resposta 429) e cálculo de deslocamento a partir do CEP. Detalhes no README da AgendamentoApi.
 
 ### Serviços cadastrados na API (ambiente local)
 | Id | Serviço | Duração | Preço |
@@ -132,7 +132,7 @@ O horário escolhido é o de **início** (`startTime`); a API calcula o término
 | 3 | Maquiagem + Penteado | 150 min | R$ 700 |
 | 4 | Escova e Babyliss | 60 min | R$ 300 |
 
-Aplicado pela migration `AtualizarServicosSocial` da API (`dotnet ef database update`).
+Preços e durações ajustados pela migration `AtualizarServicosSocial` da API (`dotnet ef database update`), que atualiza os serviços já existentes pelo nome.
 
 As durações são estimativas e devem ser ajustadas ao tempo real de atendimento. Esses registros foram criados direto no banco local; em produção é preciso cadastrá-los de novo.
 
