@@ -20,8 +20,8 @@ export const HAIR_DURATION_LABEL = '60 a 90 min';
 export const CURLY_HAIR_NOTICE =
   'Cabelos cacheados ou crespos podem exigir mais tempo de penteado. Ajustamos o cronograma para um acabamento perfeito.';
 
-export const ARRIVAL_NOTICE =
-  'Escolha o horário pensando em quando precisa estar pronta para sair, não em quando quer começar.';
+export const START_TIME_INFO =
+  'Escolha o horário pensando em quando você precisa estar pronta, levando em consideração o tempo de execução de cada serviço. Ex.: para estar pronta às 17h, o horário de início precisa ser às 15h para uma produção completa.';
 
 /** Penteado avulso dura de 60 a 90 minutos; os demais serviços usam a duração cadastrada. */
 export function durationLabel(service: Service): string {
@@ -65,16 +65,16 @@ export function acceptFiles(current: readonly File[], incoming: readonly File[])
   return { files, error: '' };
 }
 
-/** Subtrai minutos de um horário "HH:mm" (sem passar da meia-noite). */
-export function minusMinutes(hhmm: string, minutes: number): string {
+/** Soma minutos a um horário "HH:mm" (sem passar das 23:59). */
+export function plusMinutes(hhmm: string, minutes: number): string {
   const [h = 0, m = 0] = hhmm.split(':').map(Number);
-  const total = Math.max(h * 60 + m - minutes, 0);
+  const total = Math.min(h * 60 + m + minutes, 23 * 60 + 59);
   return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
 }
 
-/** Horário em que a Lari começa: o horário "pronta" menos a duração total (serviço x pessoas). */
-export function startTimeFor(service: Service, people: number, ready: string): string {
-  return minusMinutes(ready, service.durationMinutes * people);
+/** Término previsto: o horário de início mais a duração total (serviço x pessoas). */
+export function endTimeFor(service: Service, people: number, start: string): string {
+  return plusMinutes(start, service.durationMinutes * people);
 }
 
 export function buildAppointmentForm(
@@ -97,7 +97,7 @@ export function buildAppointmentForm(
   fd.append('description', descricao);
   fd.append('serviceItemId', String(service.id));
   fd.append('people', String(qtd));
-  fd.append('readyTime', `${date}T${slot}:00-03:00`); // horário de Brasília em que ela precisa estar pronta; a API calcula o início
+  fd.append('startTime', `${date}T${slot}:00-03:00`); // início do atendimento em horário de Brasília; a API calcula o término
   files.forEach((f) => {
     fd.append('images', f);
   });

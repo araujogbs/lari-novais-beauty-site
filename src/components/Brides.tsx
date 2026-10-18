@@ -7,14 +7,14 @@ export function Brides() {
         <div>
           <div className="section-label">Noivas</div>
           <h1>
-            Seu dia, seu <em>jeito</em>,<br />
-            sua beleza real
+            A <em>sofisticação</em> que o seu momento pede,
+            <br />
+            com a <em>naturalidade</em> que você deseja.
           </h1>
         </div>
       </section>
       <section style={{ paddingTop: '1rem', paddingBottom: '2rem' }}>
         <div className="container section-center reveal">
-          <p className="noivas-tagline">A sofisticação que o seu momento pede, com a naturalidade que você deseja.</p>
           <p className="section-desc" style={{ maxWidth: '720px', marginBottom: '0' }}>
             Acredito que a maquiagem e o penteado ideais não servem para criar uma fantasia, mas sim para respeitar a
             sua essência, valorizar os seus traços naturais e destacar o que você já tem de mais belo. Minha assinatura
@@ -149,7 +149,7 @@ export function Brides() {
       </section>
       <section>
         <div className="container section-center reveal">
-          <div className="section-label">Quero ser sua noiva</div>
+          <div className="section-label">Vamos conversar sobre o seu casamento</div>
           <h2 className="section-title">Vamos desenhar a beleza do seu grande dia</h2>
           <p className="section-desc" style={{ marginBottom: '0' }}>
             Me conte os primeiros detalhes do seu casamento e eu retorno pelo WhatsApp para iniciarmos o seu

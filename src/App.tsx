@@ -14,10 +14,27 @@ import { SocialNetworksHome } from './components/SocialNetworksHome';
 import { SocialService } from './components/SocialService';
 import { Team } from './components/Team';
 import { Testimonials } from './components/Testimonials';
+import { lazy, Suspense } from 'react';
+import { useHash } from './hooks/useHash';
 import { useReveal } from './hooks/useReveal';
 
+// Painel da Lari: carregado só quando aberto, para não pesar no site
+const AdminPanel = lazy(() => import('./painel/AdminPanel'));
+
+const PAINEL_HASH = '#painel';
+
 export function App() {
-  useReveal();
+  const hash = useHash();
+  const isPainel = hash === PAINEL_HASH;
+  useReveal(isPainel);
+
+  if (isPainel) {
+    return (
+      <Suspense fallback={<p className="pn-loading">Carregando painel…</p>}>
+        <AdminPanel />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="site">

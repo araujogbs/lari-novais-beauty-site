@@ -25,7 +25,7 @@ export function Contact() {
               <div className="contact-channel">
                 <h5>E-mail</h5>
                 <p>Para parcerias, propostas e contratos formais</p>
-                <a href="mailto:contato.larinovaisbeauty@gmail.com">contato.larinovaisbeauty@gmail.com</a>
+                <a href="mailto:larinovaisbeauty@gmail.com">larinovaisbeauty@gmail.com</a>
               </div>
               <div className="contact-channel">
                 <h5>Redes</h5>

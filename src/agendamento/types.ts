@@ -14,11 +14,15 @@ export interface FeeEstimate {
   city?: string;
 }
 
+/** Pending = em análise pela maquiadora; Confirmed = aprovado. */
+export type AppointmentStatus = 'Pending' | 'Confirmed';
+
 export interface Appointment {
   id: number | string;
   serviceName: string;
   startTime: string;
   clientAddress?: string;
+  status?: AppointmentStatus;
 }
 
 /** Valores digitados no formulário de novo agendamento. */

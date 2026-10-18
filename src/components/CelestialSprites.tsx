@@ -132,9 +132,9 @@ export function MoonPhases(): ReactElement {
 const PATTERN: readonly { kind: Kind; size: number; bleed: number }[] = [
   { kind: 'sun', size: 400, bleed: 0.5 },
   { kind: 'constellation', size: 190, bleed: 0.06 },
-  { kind: 'moon', size: 360, bleed: 0.5 },
+  { kind: 'moon', size: 360, bleed: 0.15 },
   { kind: 'constellation', size: 170, bleed: 0.06 },
-  { kind: 'moon', size: 420, bleed: 0.52 },
+  { kind: 'moon', size: 420, bleed: 0.2 },
   { kind: 'sun', size: 340, bleed: 0.5 },
 ];
 

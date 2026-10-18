@@ -10,8 +10,8 @@ export function BookingDone({ info, onViewAppointments }: Props) {
   return (
     <div className="ag-done">
       <div className="ag-check">&#10003;</div>
-      <h3>Agendamento confirmado!</h3>
-      <p>{info.nome.split(' ')[0]}, seu horário está reservado.</p>
+      <h3>Agendamento em análise</h3>
+      <p>{info.nome.split(' ')[0]}, você receberá a confirmação pelo WhatsApp.</p>
       <div className="ag-summary">
         <div>
           <span>Serviço</span>
@@ -26,10 +26,7 @@ export function BookingDone({ info, onViewAppointments }: Props) {
           <strong>{brl(info.total)}</strong>
         </div>
       </div>
-      <p className="ag-hint">
-        Você receberá a confirmação pelo WhatsApp. Para ver ou cancelar (com mais de 24 h de antecedência), use "Meus
-        agendamentos".
-      </p>
+      <p className="ag-hint">Para ver ou cancelar (com mais de 24 h de antecedência), use "Meus agendamentos".</p>
       <button type="button" className="btn btn-primary" onClick={onViewAppointments}>
         Ver meus agendamentos
       </button>

@@ -14,10 +14,11 @@ body {
 
 :root {
   --white: #ffffff;
-  --cream: #f4e0e2; /* rosa chá: fundo de seções e blocos */
-  --rose: #a85d6b; /* rosewood */
-  --rose-light: #ebcfd3; /* dusty rose claro */
-  --rose-dark: #8a4553; /* rosa queimado */
+  /* Teste de rosa mais aceso. Paleta anterior: cream #f4e0e2, rose #a85d6b, rose-light #ebcfd3, rose-dark #8a4553 */
+  --cream: #fbe1e8; /* rosa chá: fundo de seções e blocos */
+  --rose: #c2537a; /* rosa vivo */
+  --rose-light: #f4c6d4; /* rosa claro */
+  --rose-dark: #9e3a5e; /* rosa profundo */
   --text: #2c2c2c;
   --text-light: #6b6b6b;
   --text-muted: #7d6b6e;
@@ -36,7 +37,7 @@ nav {
   height: 70px;
   background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(168, 93, 107, 0.12);
+  border-bottom: 1px solid rgba(194, 83, 122, 0.12);
   transition:
     background-color 0.6s ease,
     box-shadow 0.6s ease,
@@ -45,8 +46,8 @@ nav {
 /* ao rolar, o header fica mais translúcido */
 nav.nav-scrolled {
   background: rgba(255, 255, 255, 0.58);
-  border-bottom-color: rgba(168, 93, 107, 0.06);
-  box-shadow: 0 6px 24px rgba(138, 69, 83, 0.04);
+  border-bottom-color: rgba(194, 83, 122, 0.06);
+  box-shadow: 0 6px 24px rgba(158, 58, 94, 0.04);
 }
 nav .logo {
   font-family: 'Cormorant Garamond', serif;
@@ -475,7 +476,7 @@ section {
 .social-card {
   text-align: center;
   padding: 2.5rem 1.5rem;
-  border: 1px solid rgba(168, 93, 107, 0.15);
+  border: 1px solid rgba(194, 83, 122, 0.15);
   border-radius: 12px;
   transition: border-color 0.3s;
 }
@@ -547,22 +548,17 @@ section {
 }
 
 /* SOBRE MIM */
-.sobre-hero {
-  min-height: 60vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.sobre-head {
   text-align: center;
-  padding: 8rem 4rem;
-  background: var(--cream);
+  margin-bottom: 4rem;
 }
-.sobre-hero h1 {
+.sobre-head h1 {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(3rem, 5vw, 4.5rem);
   font-weight: 300;
   color: var(--text);
 }
-.sobre-hero h1 em {
+.sobre-head h1 em {
   color: var(--rose-dark);
   font-style: italic;
 }
@@ -647,10 +643,12 @@ section {
 }
 .noivas-hero h1 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(3rem, 5vw, 4rem);
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
   font-weight: 300;
+  line-height: 1.25;
   color: var(--text);
-  margin-bottom: 1rem;
+  max-width: 900px;
+  margin: 0 auto 1rem;
 }
 .noivas-hero h1 em {
   color: var(--rose-dark);
@@ -664,7 +662,7 @@ section {
 }
 .step-card {
   padding: 2rem;
-  border: 1px solid rgba(168, 93, 107, 0.15);
+  border: 1px solid rgba(194, 83, 122, 0.15);
   border-radius: 12px;
 }
 .step-num {
@@ -678,6 +676,12 @@ section {
   font-size: 1.2rem;
   color: var(--text);
   margin-bottom: 0.5rem;
+}
+.step-card p {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  line-height: 1.7;
+  font-weight: 300;
 }
 
 /* PILARES */
@@ -744,7 +748,7 @@ section {
   font-size: 0.85rem;
   color: var(--text-light);
   padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(168, 93, 107, 0.1);
+  border-bottom: 1px solid rgba(194, 83, 122, 0.1);
   font-weight: 300;
 }
 .pacote-card li::before {
@@ -781,7 +785,7 @@ section {
 .form-group textarea {
   width: 100%;
   background: var(--white);
-  border: 1px solid rgba(168, 93, 107, 0.2);
+  border: 1px solid rgba(194, 83, 122, 0.2);
   padding: 0.9rem 1rem;
   color: var(--text);
   font-family: 'Inter', sans-serif;
@@ -819,7 +823,7 @@ section {
 
 /* SOCIAL OCCASION */
 .social-section {
-  border-bottom: 1px solid rgba(168, 93, 107, 0.1);
+  border-bottom: 1px solid rgba(194, 83, 122, 0.1);
 }
 .occasion-grid {
   display: grid;
@@ -872,7 +876,7 @@ section {
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px dotted rgba(168, 93, 107, 0.2);
+  border-bottom: 1px dotted rgba(194, 83, 122, 0.2);
 }
 .price-item .service {
   font-size: 0.9rem;
@@ -892,7 +896,7 @@ section {
 }
 .curso-card {
   background: var(--white);
-  border: 1px solid rgba(168, 93, 107, 0.15);
+  border: 1px solid rgba(194, 83, 122, 0.15);
   border-radius: 12px;
   overflow: hidden;
   transition: box-shadow 0.3s;
@@ -1005,7 +1009,7 @@ section {
   background: var(--white);
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(168, 93, 107, 0.1);
+  border: 1px solid rgba(194, 83, 122, 0.1);
   transition: transform 0.3s;
   text-align: center;
 }
@@ -1048,7 +1052,7 @@ section {
 .pilar-card {
   padding: 2rem;
   text-align: center;
-  border: 1px solid rgba(168, 93, 107, 0.15);
+  border: 1px solid rgba(194, 83, 122, 0.15);
   border-radius: 12px;
 }
 .pilar-icon {
@@ -1084,7 +1088,7 @@ section {
 }
 .rede-card {
   background: var(--white);
-  border: 1px solid rgba(168, 93, 107, 0.15);
+  border: 1px solid rgba(194, 83, 122, 0.15);
   border-radius: 12px;
   padding: 2.5rem 2rem;
   text-align: center;
@@ -1116,7 +1120,7 @@ section {
   font-size: 0.8rem;
   color: var(--text-light);
   padding: 0.3rem 0;
-  border-bottom: 1px solid rgba(168, 93, 107, 0.1);
+  border-bottom: 1px solid rgba(194, 83, 122, 0.1);
 }
 .blog-note {
   background: var(--cream);
@@ -1147,7 +1151,7 @@ section {
 }
 .depo-item {
   background: var(--white);
-  border: 1px solid rgba(168, 93, 107, 0.15);
+  border: 1px solid rgba(194, 83, 122, 0.15);
   border-radius: 12px;
   padding: 2.5rem;
 }
@@ -1260,7 +1264,7 @@ section {
   scroll-snap-align: start;
   text-align: left;
   background: var(--white);
-  border: 1px solid rgba(168, 93, 107, 0.2);
+  border: 1px solid rgba(194, 83, 122, 0.2);
   border-radius: 12px;
   padding: 1.8rem;
   display: flex;
@@ -1389,7 +1393,7 @@ section {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  border-bottom: 1px solid rgba(168, 93, 107, 0.25);
+  border-bottom: 1px solid rgba(194, 83, 122, 0.25);
 }
 .ag-tab {
   background: none;
@@ -1420,7 +1424,7 @@ section {
   align-items: center;
   gap: 0.7rem;
 }
-.ag-step h4 span {
+.ag-step h4 > span {
   width: 26px;
   height: 26px;
   border-radius: 50%;
@@ -1431,6 +1435,79 @@ section {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+/* Símbolo de informação com explicação ao passar o mouse (ou tocar/focar) */
+.ag-info {
+  position: relative;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--rose);
+  background: var(--white);
+  color: var(--rose);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1;
+  cursor: help;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ag-info-tip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  background: var(--text);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 1.55;
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+  z-index: 20;
+  pointer-events: none;
+}
+.ag-info-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--text);
+}
+.ag-info:hover .ag-info-tip,
+.ag-info:focus-visible .ag-info-tip,
+.ag-info:focus .ag-info-tip {
+  opacity: 1;
+  visibility: visible;
+}
+@media (max-width: 600px) {
+  .ag-info-tip {
+    left: auto;
+    right: -10px;
+    transform: none;
+    width: min(280px, 80vw);
+  }
+  .ag-info-tip::after {
+    left: auto;
+    right: 14px;
+    transform: none;
+  }
 }
 .ag-hint {
   font-size: 0.82rem;
@@ -1447,7 +1524,7 @@ section {
   align-items: center;
   gap: 0.8rem;
   background: var(--white);
-  border: 1px solid rgba(168, 93, 107, 0.25);
+  border: 1px solid rgba(194, 83, 122, 0.25);
   border-radius: 8px;
   padding: 0.9rem 1rem;
   cursor: pointer;
@@ -1523,7 +1600,7 @@ section {
   text-align: right;
 }
 .ag-summary .ag-total {
-  border-top: 1px dotted rgba(168, 93, 107, 0.4);
+  border-top: 1px dotted rgba(194, 83, 122, 0.4);
   margin-top: 0.4rem;
   padding-top: 0.7rem;
 }
@@ -1563,7 +1640,7 @@ section {
 .ag-lookup input {
   flex: 1;
   background: var(--white);
-  border: 1px solid rgba(168, 93, 107, 0.2);
+  border: 1px solid rgba(194, 83, 122, 0.2);
   padding: 0.9rem 1rem;
   border-radius: 8px;
   font-family: 'Inter', sans-serif;
@@ -1584,6 +1661,26 @@ section {
   font-size: 0.8rem;
   color: var(--text-light);
   margin-top: 0.2rem;
+}
+.ag-status {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.ag-status--pending {
+  background: #fff3d6;
+  color: #8a5a00;
+}
+.ag-status--confirmed {
+  background: #e3f2e6;
+  color: #2f5f37;
 }
 .ag-thumbs {
   display: flex;
@@ -1667,7 +1764,7 @@ section {
 footer {
   text-align: center;
   padding: 3rem 2rem;
-  border-top: 1px solid rgba(168, 93, 107, 0.15);
+  border-top: 1px solid rgba(194, 83, 122, 0.15);
   background: var(--white);
 }
 footer .logo {
@@ -1719,7 +1816,7 @@ footer p {
     flex-direction: column;
     padding: 2rem;
     gap: 1.2rem;
-    border-bottom: 1px solid rgba(168, 93, 107, 0.15);
+    border-bottom: 1px solid rgba(194, 83, 122, 0.15);
     transform: translateY(-100%);
     opacity: 0;
     pointer-events: none;
@@ -1799,16 +1896,6 @@ footer p {
 }
 
 /* NOIVAS: tipografia harmonizada com o título principal */
-.noivas-tagline {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
-  font-style: italic;
-  font-weight: 400;
-  color: var(--rose-dark);
-  line-height: 1.4;
-  max-width: 720px;
-  margin: 0 auto 1.25rem;
-}
 .section-title--noivas {
   font-size: clamp(1.9rem, 3.2vw, 2.4rem);
   font-weight: 300;

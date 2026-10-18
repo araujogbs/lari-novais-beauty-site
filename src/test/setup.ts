@@ -9,3 +9,4 @@ afterEach(() => {
 // jsdom não implementa estas APIs.
 window.HTMLElement.prototype.scrollIntoView = () => undefined;
 window.HTMLElement.prototype.scrollBy = () => undefined;
+window.scrollTo = () => undefined;

@@ -50,8 +50,6 @@ export function SocialService() {
               </div>
               <p className="price-note">
                 A taxa de deslocamento é cobrada à parte de acordo com o endereço de atendimento.
-                <br />
-                Condições especiais para agendamentos feitos de segunda a quinta-feira em horário comercial: 8h às 18h.
               </p>
             </div>
           </div>

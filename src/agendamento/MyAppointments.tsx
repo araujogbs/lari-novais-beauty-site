@@ -80,6 +80,11 @@ export function MyAppointments({ initialPhone = '' }: Props) {
             <div className="ag-appt" key={a.id}>
               <div>
                 <strong>{a.serviceName}</strong>
+                {a.status === 'Pending' ? (
+                  <em className="ag-status ag-status--pending">Em análise</em>
+                ) : (
+                  <em className="ag-status ag-status--confirmed">Confirmado</em>
+                )}
                 <span>{fmtWhen(a.startTime)}</span>
                 {a.clientAddress && <span>{a.clientAddress}</span>}
               </div>

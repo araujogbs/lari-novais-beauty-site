@@ -5,9 +5,9 @@ import {
   durationLabel,
   EMPTY_VALUES,
   firstError,
-  minusMinutes,
+  endTimeFor,
   parsePeople,
-  startTimeFor,
+  plusMinutes,
   total,
 } from './booking';
 import type { BookingValues, Service } from './types';
@@ -68,7 +68,7 @@ describe('buildAppointmentForm', () => {
     expect(fd.get('clientAddress')).toBe('Av. Paulista, 120, apto 32 — CEP 01310-100');
     expect(fd.get('cep')).toBe('01310100');
     expect(fd.get('serviceItemId')).toBe('3');
-    expect(fd.get('readyTime')).toBe('2030-01-10T09:00:00-03:00');
+    expect(fd.get('startTime')).toBe('2030-01-10T09:00:00-03:00');
     expect(fd.get('people')).toBe('2');
     expect(fd.get('description')).toBe('Atendimento Social.\nCasamento');
     expect(fd.getAll('images')).toHaveLength(1);
@@ -113,9 +113,9 @@ describe('durationLabel', () => {
   });
 });
 
-describe('início do atendimento', () => {
-  it('volta a duração total a partir do horário em que ela precisa estar pronta', () => {
-    expect(minusMinutes('10:30', 90)).toBe('09:00');
-    expect(startTimeFor({ id: 1, name: 'Maquiagem', durationMinutes: 60, price: 350 }, 2, '12:00')).toBe('10:00');
+describe('término previsto', () => {
+  it('soma a duração total (serviço x pessoas) ao horário de início', () => {
+    expect(plusMinutes('09:00', 90)).toBe('10:30');
+    expect(endTimeFor({ id: 1, name: 'Maquiagem', durationMinutes: 60, price: 350 }, 2, '15:00')).toBe('17:00');
   });
 });

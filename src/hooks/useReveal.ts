@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 
-/** Marca com `.visible` os elementos `.reveal` quando entram na tela (animação de entrada). */
-export function useReveal(): void {
+/**
+ * Marca com `.visible` os elementos `.reveal` quando entram na tela (animação de entrada).
+ * `resetKey` refaz a observação quando o conteúdo da página é trocado (ex.: ao voltar do painel para o site).
+ */
+export function useReveal(resetKey?: unknown): void {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -17,5 +20,5 @@ export function useReveal(): void {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [resetKey]);
 }

@@ -1,6 +1,6 @@
 # Lari Novais Beauty — Site
 
-Site institucional de uma maquiadora e penteadista profissional que atende a domicílio (São Paulo). Apresenta a profissional, os serviços de **noivas**, **atendimento social** e **cursos**, reúne depoimentos de clientes e converte visitas em contato por **WhatsApp**. O Atendimento Social tem **agendamento online** integrado à [AgendamentoApi](../../AgendamentoAPI/README.md).
+Site institucional de uma maquiadora e penteadista profissional que atende a domicílio (São Paulo). Apresenta a profissional, os serviços de **noivas**, **atendimento social** e **cursos**, reúne depoimentos de clientes e converte visitas em contato por **WhatsApp**. O Atendimento Social tem **agendamento online** integrado à [AgendamentoApi](../API%20e%20App/README.md).
 
 - **Tipo:** site de uma página (one-page) em **React + TypeScript**, com build e servidor de desenvolvimento do **Vite**.
 - **Fontes:** Cormorant Garamond e Inter (Google Fonts).
@@ -41,13 +41,15 @@ larinovais beauty/
 │   │   ├── booking.ts              # validação, regras de fotos e montagem do multipart (puro)
 │   │   ├── api.ts · types.ts       # chamadas à AgendamentoApi e tipos
 │   │   └── useAsync.ts · useServices.ts   # hooks de busca
+│   ├── painel/                # Painel Ateliê da Lari (/#painel): login, pedidos em análise, agenda, bloqueios
 │   ├── data/                  # Conteúdo em dados: depoimentos, fotos do hero, links do menu
 │   ├── hooks/useReveal.ts     # Animação de entrada (.reveal)
 │   ├── whatsapp.ts            # Montagem das mensagens e links do WhatsApp
 │   ├── config.ts · utils.ts   # Variáveis VITE_* e utilitários (máscaras, datas, valores)
 │   ├── styles/main.css        # Todos os estilos
 │   └── **/*.test.ts(x)        # Testes (Vitest + Testing Library)
-├── public/fotos/              # Imagens (Lari, Noivas, Atendimento Social, Fotos modelos)
+├── public/img/                # Imagens otimizadas usadas pelo site (hero, home, cursos, Lari)
+├── public/fotos/              # Fotos originais (Lari, Noivas, Social, Modelos); quase não usadas
 ├── .env.example               # Modelo das variáveis de ambiente
 ├── package.json · tsconfig.json · vite.config.ts
 ├── eslint.config.js · .prettierrc.json · .editorconfig
@@ -55,7 +57,7 @@ larinovais beauty/
 └── README.md
 ```
 
-Os arquivos de `public/` são copiados como estão para o `dist/` e referenciados por `/fotos/...` no HTML.
+Os arquivos de `public/` são copiados como estão para o `dist/` e referenciados por `/img/...` (e `/fotos/...`) no HTML.
 
 ---
 
@@ -81,12 +83,12 @@ A navegação fixa no topo tem: **Home · Sobre Mim · Noivas · Social · Curso
 ### Preços (Atendimento Social)
 | Item | Valor |
 |---|---|
-| Pacote Maquiagem e Penteado | R$ 550,00 |
-| Maquiagem (unitário) | R$ 290,00 |
-| Penteado (unitário) | R$ 290,00 |
-| Escova/Babyliss | R$ 250,00 |
+| Pacote Maquiagem + Penteado | R$ 700,00 |
+| Maquiagem (unitário) | R$ 350,00 |
+| Penteado (unitário) | R$ 350,00 |
+| Escova e Babyliss | R$ 300,00 |
 
-A taxa de deslocamento é cobrada à parte, conforme o endereço. Há condições especiais para agendamentos de segunda a quinta, das 8h às 18h. Cursos: Automaquiagem R$ 500,00 (4 h); Penteado Profissional (20 h) e Maquiagem Profissional (6 h) com valores sob consulta.
+A taxa de deslocamento é cobrada à parte, conforme o endereço. Cursos: Automaquiagem R$ 500,00 (4 h); Penteado Profissional (20 h) e Maquiagem Profissional (6 h) com valores sob consulta.
 
 ---
 
@@ -96,11 +98,11 @@ Todos os contatos usam o número **(11) 91483-4786** (`5511914834786` nos links 
 
 | Formulário | Campos | Componente |
 |---|---|---|
-| **Noivas** ("Quero ser sua noiva") | Nome da noiva, data do casamento, local do evento, mensagem | `BrideForm.tsx` |
+| **Noivas** ("Vamos conversar sobre o seu casamento") | Nome da noiva, data do casamento, local do evento, mensagem | `BrideForm.tsx` |
 | **Fale Comigo** | Nome, e-mail, assunto (Sugestão, Elogio, Parceria, Outro), mensagem | `ContactForm.tsx` |
 | **Cursos** | Sem formulário: o botão abre o WhatsApp com "Quero me inscrever no curso …" | link direto |
 
-Os valores digitados são enviados pela URL com `encodeURIComponent`. Datas saem em formato dd/mm/aaaa. A montagem das mensagens fica em `src/whatsapp.ts` (com testes). O e-mail de contato exibido é `contato.larinovaisbeauty@gmail.com`.
+Os valores digitados são enviados pela URL com `encodeURIComponent`. Datas saem em formato dd/mm/aaaa. A montagem das mensagens fica em `src/whatsapp.ts` (com testes). O e-mail de contato exibido é `larinovaisbeauty@gmail.com`.
 
 ---
 
@@ -111,12 +113,12 @@ O widget (`src/agendamento/`) conversa com a **AgendamentoApi** (.NET). Noivas *
 **Fluxo da cliente**
 1. Escolhe o **serviço** (lista, duração e preço vêm de `GET /api/services`).
 2. Escolhe a **data**; os **horários livres** vêm de `GET /api/appointments/available-slots`.
-3. Preenche nome, WhatsApp (com máscara), horário em que precisa estar pronta, CEP, número, quantidade de pessoas, descrição e **fotos de referência** (até 5, JPG/PNG/WebP, 5 MB cada, com miniaturas e botão para remover).
+3. Preenche nome, WhatsApp (com máscara), horário de início (o símbolo "i" ao lado do título explica como escolher), CEP, número, quantidade de pessoas, descrição e **fotos de referência** (até 5, JPG/PNG/WebP, 5 MB cada, com miniaturas e botão para remover).
 4. Ao completar o **CEP**, o endereço é preenchido e a **taxa de deslocamento** é calculada (`GET /api/appointments/estimate-fee`). O resumo mostra serviço, deslocamento e total.
 5. Confirma (`POST /api/appointments`, formulário multipart). O horário é enviado em fuso de Brasília (`-03:00`).
 6. Em **Meus agendamentos**, busca pelo WhatsApp e cancela com mais de 24 h de antecedência (`my-appointments` e `client-cancel`).
 
-O horário escolhido é o de **estar pronta** (`readyTime`); a API calcula o início voltando a duração total (serviço × pessoas). A quantidade de pessoas (`people`) multiplica o valor do serviço e a duração, mas não o deslocamento.
+O horário escolhido é o de **início** (`startTime`); a API calcula o término somando a duração total (serviço × pessoas), e o resumo mostra o término previsto. Ao enviar, a cliente vê "Agendamento em análise" e recebe a confirmação pelo WhatsApp. A quantidade de pessoas (`people`) multiplica o valor do serviço e a duração, mas não o deslocamento.
 
 **Se a API estiver indisponível:** o widget mostra um aviso e um link "Agendar pelo WhatsApp"; o resto do site não é afetado.
 
@@ -126,13 +128,27 @@ O horário escolhido é o de **estar pronta** (`readyTime`); a API calcula o in�
 | Id | Serviço | Duração | Preço |
 |---|---|---|---|
 | 1 | Maquiagem | 60 min | R$ 350 |
-| 2 | Penteado | 90 min (site mostra 60 a 90) | R$ 350 |
+| 2 | Penteado | 90 min | R$ 350 |
 | 3 | Maquiagem + Penteado | 150 min | R$ 700 |
 | 4 | Escova e Babyliss | 60 min | R$ 300 |
 
 Aplicado pela migration `AtualizarServicosSocial` da API (`dotnet ef database update`).
 
 As durações são estimativas e devem ser ajustadas ao tempo real de atendimento. Esses registros foram criados direto no banco local; em produção é preciso cadastrá-los de novo.
+
+---
+
+## Painel Ateliê (área da Lari)
+
+A mesma gestão do app, no navegador. Abre pelo endereço **`/#painel`** (não há link no site). O login é o mesmo do app (`Admin:Username` / senha da API).
+
+- **Pedidos em análise** (de qualquer data) com **Aprovar** e **Recusar** (motivo opcional, enviado à cliente).
+- **Agenda do dia** com navegação entre dias: serviço, horário, WhatsApp, endereço, valores, descrição e **fotos de referência** (baixadas com o token e ampliáveis).
+- Atalhos de **WhatsApp** e **mapa**, **Desmarcar** atendimento confirmado e **Bloquear/Desbloquear** agenda (dia inteiro ou intervalo).
+
+Código em `src/painel/`, carregado sob demanda (`React.lazy`): quem só visita o site não baixa o painel. O token fica no `sessionStorage` (some ao fechar a aba) e, quando expira (2 h) ou a API responde 401, o painel volta para o login. Enquanto aberto, a página recebe `noindex`.
+
+Em produção, o domínio do site precisa estar em `Cors:AllowedOrigins` na API (o painel usa o header `Authorization`, já liberado).
 
 ---
 
@@ -158,7 +174,7 @@ Sem a API no ar, o site funciona normalmente, só o widget de agendamento mostra
 ### Com o agendamento
 1. Suba o PostgreSQL e a API (veja o README da AgendamentoApi):
    ```bash
-   cd ../../AgendamentoAPI/AgendamentoApi
+   cd "../API e App/AgendamentoApi"
    dotnet run --launch-profile http   # http://localhost:5102
    ```
 2. Confirme que `VITE_AGENDAMENTO_API` (em `.env.development`) aponta para `http://localhost:5102/api`.
@@ -186,7 +202,7 @@ As variáveis são embutidas no build: ao mudá-las, rode `npm run build` de nov
 - **Textos:** edite o componente da seção em `src/components/` (por exemplo, a Trajetória está em `AboutMe.tsx`). Ele é JSX: `class` vira `className` e `style` é um objeto.
 - **Depoimentos e avaliações:** ficam em `src/data/reviews.ts`. O mesmo conteúdo alimenta o carrossel da Home e o do Google. Para as avaliações do Google serem reais, será preciso integrar com a API do Google Places ou copiar os textos manualmente.
 - **Cursos:** cada curso é um bloco `.curso-card` em `src/components/Courses.tsx`; o link do botão é um `wa.me` com o nome do curso já codificado.
-- **Fotos:** coloque as imagens em `public/fotos/` e referencie por `/fotos/...`. Atenção ao peso (veja abaixo).
+- **Fotos:** coloque as imagens já otimizadas em `public/img/` e referencie por `/img/...`. Atenção ao peso (veja abaixo).
 - **Cores e tipografia:** variáveis CSS em `:root` no topo de `src/styles/main.css` (`--rose`, `--rose-dark`, `--cream`…).
 - **Preços do Social:** estão em dois lugares, no cartão de preços de `src/components/SocialService.tsx` e nos serviços da API. Atualize os dois.
 
@@ -200,14 +216,14 @@ Antes de publicar:
 1. Hospedar a **AgendamentoApi com HTTPS** e definir `VITE_AGENDAMENTO_API` com a URL pública antes do build. Páginas HTTPS não conseguem chamar uma API HTTP.
 2. Colocar o domínio do site em `Cors:AllowedOrigins` na API.
 3. Cadastrar na API os serviços do Social (tabela acima).
-4. **Otimizar as fotos.** A pasta `fotos/` pesa cerca de **145 MB**, com muitos JPGs originais de câmera. Convém redimensionar (por exemplo, 1600 px no lado maior) e comprimir, ou converter para WebP, para o site carregar rápido no celular.
+4. **Tirar as fotos originais do build.** `public/img/` é leve (cerca de 3 MB), mas `public/fotos/` pesa cerca de **144 MB** (JPGs originais de câmera) e é copiada inteira para o `dist/`. Só `Courses.tsx` usa uma imagem de lá. Otimize essa imagem para `public/img/` e mova ou remova `public/fotos/` antes de publicar.
 5. Revisar os links ainda vazios ou de exemplo.
 
 ---
 
 ## Limitações conhecidas e próximos passos
 
-- **Fotos pesadas** (145 MB) e sem versões responsivas (`srcset`) nem carregamento preguiçoso (`loading="lazy"`).
+- **`public/fotos/` pesa 144 MB** e vai inteira para o `dist/`. As demais imagens já são leves, mas não há versões responsivas (`srcset`).
 - **Avaliações do Google são simuladas:** os 7 textos vêm do documento, e o selo "5,0" foi definido manualmente. Não há integração com o Google.
 - **Seção Equipe e bloco de redes da Home estão ocultos**; os nomes e descrições da Equipe são de exemplo.
 - **Cartões de Instagram e TikTok** na seção Redes trazem listas de exemplo ("Antes e depois de noivas", "Penteado em 60 segundos") que não vêm do documento.

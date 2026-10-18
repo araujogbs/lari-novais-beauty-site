@@ -1,18 +1,16 @@
 export function AboutMe() {
   return (
     <>
-      <section id="sobre" className="sobre-hero">
-        <div>
-          <div className="section-label">Sobre Mim</div>
-          <h1>
-            A <em>artista</em> por trás
-            <br />
-            dos pincéis
-          </h1>
-        </div>
-      </section>
-      <section>
+      <section id="sobre">
         <div className="container">
+          <div className="sobre-head">
+            <div className="section-label">Sobre Mim</div>
+            <h1>
+              A <em>artista</em> por trás
+              <br />
+              dos pincéis
+            </h1>
+          </div>
           <div className="sobre-grid reveal">
             <div className="sobre-text">
               <h3>Trajetória</h3>
@@ -43,9 +41,8 @@ export function AboutMe() {
               <p>
                 Hoje, a minha assinatura é bem clara: sofisticação e naturalidade. Meu aperfeiçoamento é constante para
                 que minhas clientes sintam total satisfação ao se olharem no espelho e encontrarem a melhor versão de
-                si. E, fechando o ciclo que começou nos bancos do Senac, hoje atuo também como professora e educadora na
-                instituição, formando novos profissionais da beleza e compartilhando o que aprendi em mais de uma década
-                de mercado.
+                si. E, fechando o ciclo que começou como aluna do Senac, hoje atuo também como educadora na instituição,
+                formando novos profissionais da beleza e compartilhando o que aprendi em mais de uma década de mercado.
               </p>
             </div>
             <div className="sobre-photos">

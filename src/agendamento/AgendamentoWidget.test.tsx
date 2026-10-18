@@ -27,7 +27,15 @@ function mockApi(override?: Handler) {
       res = json({ distanceKm: 12.34, travelFee: 40, street: 'Rua A', city: 'SP' });
     else if (url.endsWith('/appointments') && init?.method === 'POST') res = json({}, 201);
     else if (url.includes('my-appointments'))
-      res = json([{ id: 7, serviceName: 'Maquiagem', startTime: '2030-01-10T12:00:00Z', clientAddress: 'Rua A' }]);
+      res = json([
+        {
+          id: 7,
+          serviceName: 'Maquiagem',
+          startTime: '2030-01-10T12:00:00Z',
+          clientAddress: 'Rua A',
+          status: 'Pending',
+        },
+      ]);
     else if (url.includes('client-cancel')) res = json({});
     return Promise.resolve(res);
   });
@@ -69,13 +77,13 @@ describe('AgendamentoWidget', () => {
     expect(screen.getByText('R$ 330,00')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Confirmar agendamento' }));
-    expect(await screen.findByText('Agendamento confirmado!')).toBeInTheDocument();
-    expect(screen.getByText('Maria, seu horário está reservado.')).toBeInTheDocument();
+    expect(await screen.findByText('Agendamento em análise')).toBeInTheDocument();
+    expect(screen.getByText('Maria, você receberá a confirmação pelo WhatsApp.')).toBeInTheDocument();
 
     const post = fetchMock.mock.calls.find(isPost);
     const body = post?.[1]?.body;
     expect(body).toBeInstanceOf(FormData);
-    expect((body as FormData).get('readyTime')).toBe('2030-01-10T09:00:00-03:00');
+    expect((body as FormData).get('startTime')).toBe('2030-01-10T09:00:00-03:00');
     expect((body as FormData).get('people')).toBe('1');
   });
 
@@ -124,6 +132,7 @@ describe('AgendamentoWidget', () => {
     await user.type(within(panel).getByLabelText('WhatsApp usado no agendamento'), '11912345678');
     await user.click(within(panel).getByRole('button', { name: 'Buscar' }));
     expect(await within(panel).findByText('Maquiagem')).toBeInTheDocument();
+    expect(within(panel).getByText('Em análise')).toBeInTheDocument();
 
     await user.click(within(panel).getByRole('button', { name: 'Cancelar' }));
     await waitFor(() => {

@@ -4,15 +4,15 @@ import * as api from './api';
 import { ApiError } from './api';
 import {
   acceptFiles,
-  ARRIVAL_NOTICE,
   buildAppointmentForm,
   CURLY_HAIR_NOTICE,
   durationLabel,
   EMPTY_VALUES,
+  endTimeFor,
   firstError,
   MAX_FILES,
   parsePeople,
-  startTimeFor,
+  START_TIME_INFO,
   total,
 } from './booking';
 import type { BookingDoneInfo, BookingValues, FeeEstimate, Service } from './types';
@@ -193,11 +193,14 @@ export function NewBooking({ services, onBooked }: Props) {
 
       <div className="ag-step">
         <h4>
-          <span>2</span> Dia e horário em que você precisa estar pronta
+          <span>2</span> Dia e horário de início
+          <button type="button" className="ag-info" aria-label="Como escolher o horário" aria-describedby="agStartInfo">
+            i
+            <span className="ag-info-tip" role="tooltip" id="agStartInfo">
+              {START_TIME_INFO}
+            </span>
+          </button>
         </h4>
-        <p className="ag-notice ag-notice--alert" role="note">
-          {ARRIVAL_NOTICE}
-        </p>
         <div className="form-group">
           <label htmlFor="agDate">Data do evento</label>
           <input
@@ -212,9 +215,6 @@ export function NewBooking({ services, onBooked }: Props) {
           />
         </div>
         <div className="ag-slots">
-          {slots.status === 'idle' && (
-            <p className="ag-hint">Escolha o serviço e a data para ver os horários em que você pode estar pronta.</p>
-          )}
           {slots.status === 'loading' && <p className="ag-hint">Buscando horários…</p>}
           {slots.status === 'error' && <p className="ag-msg">{slots.message}</p>}
           {slots.status === 'ready' && !slots.data?.length && (
@@ -401,13 +401,13 @@ export function NewBooking({ services, onBooked }: Props) {
                 <strong>{fmtDateBR(date) || '—'}</strong>
               </div>
               <div>
-                <span>Pronta às</span>
+                <span>Início do atendimento</span>
                 <strong>{slot || '—'}</strong>
               </div>
               {slot && (
                 <div>
-                  <span>Início do atendimento</span>
-                  <strong>{startTimeFor(service, people, slot)}</strong>
+                  <span>Término previsto</span>
+                  <strong>{endTimeFor(service, people, slot)}</strong>
                 </div>
               )}
               <div>
