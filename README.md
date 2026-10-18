@@ -1,6 +1,6 @@
 # Lari Novais Beauty — Site
 
-Site institucional de uma maquiadora e penteadista profissional que atende a domicílio (São Paulo). Apresenta a profissional, os serviços de **noivas**, **atendimento social** e **cursos**, reúne depoimentos de clientes e converte visitas em contato por **WhatsApp**. O Atendimento Social tem **agendamento online** integrado à [AgendamentoApi](../API%20e%20App/README.md).
+Site institucional de uma maquiadora e penteadista profissional que atende a domicílio (São Paulo). Apresenta a profissional, os serviços de **noivas**, **atendimento social** e **cursos**, reúne depoimentos de clientes e converte visitas em contato por **WhatsApp**. O Atendimento Social tem **agendamento online** integrado à AgendamentoApi, do repositório [lari-novais-beauty-agendamento](https://github.com/araujogbs/lari-novais-beauty-agendamento) (localmente, na pasta `../API e App`).
 
 - **Tipo:** site de uma página (one-page) em **React + TypeScript**, com build e servidor de desenvolvimento do **Vite**.
 - **Fontes:** Cormorant Garamond e Inter (Google Fonts).
