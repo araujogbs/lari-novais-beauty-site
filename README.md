@@ -1,5 +1,29 @@
 # Lari Novais Beauty — Site
 
+Site institucional da maquiadora e penteadista Lari Novais, de São Paulo, com **agendamento online** e o **painel da profissional** integrados à API de agendamento ([lari-novais-beauty-agendamento](https://github.com/araujogbs/lari-novais-beauty-agendamento), que também tem o app).
+
+<p align="center"><img src="docs/site-home.jpg" width="820" alt="Página inicial do site" /></p>
+
+<table>
+  <tr>
+    <td align="center" valign="top" width="25%"><img src="docs/site-celular.jpg" alt="Site no celular" /><br /><sub>No celular</sub></td>
+    <td align="center" valign="top" width="37%"><img src="docs/site-agendamento.png" alt="Agendamento online com horários livres e taxa de deslocamento" /><br /><sub>Agendamento online: horários livres, taxa por CEP e resumo</sub></td>
+    <td align="center" valign="top" width="38%"><img src="docs/painel.png" alt="Painel Ateliê com pedidos em análise e agenda do dia" /><br /><sub>Painel da Lari: aprovar, recusar e agenda do dia (dados fictícios)</sub></td>
+  </tr>
+</table>
+
+## Destaques técnicos
+
+- **React 19 + TypeScript em modo strict + Vite**, com ESLint (`typescript-eslint` strict type-checked), Prettier e testes com Vitest + Testing Library. `npm run check` roda tudo de uma vez.
+- **Agendamento online integrado à API:** horários livres em tempo real, taxa de deslocamento pelo CEP, quantidade de pessoas, fotos de referência e envio em `multipart/form-data`. Se a API cair, o widget oferece o WhatsApp e o resto do site continua funcionando.
+- **Painel da profissional carregado sob demanda** (`React.lazy`) em `/#painel`: quem só visita o site não baixa esse código. A sessão fica no `sessionStorage` e volta ao login quando o token expira.
+- **Formulários sem back-end próprio:** montam a mensagem e abrem o WhatsApp com o texto pronto.
+- **Datas sempre no fuso de Brasília**, independente do fuso do aparelho de quem acessa.
+
+---
+
+## Sobre o site
+
 Site institucional de uma maquiadora e penteadista profissional que atende a domicílio (São Paulo). Apresenta a profissional, os serviços de **noivas**, **atendimento social** e **cursos**, reúne depoimentos de clientes e converte visitas em contato por **WhatsApp**. O Atendimento Social tem **agendamento online** integrado à AgendamentoApi, do repositório [lari-novais-beauty-agendamento](https://github.com/araujogbs/lari-novais-beauty-agendamento) (localmente, na pasta `../API e App`).
 
 - **Tipo:** site de uma página (one-page) em **React + TypeScript**, com build e servidor de desenvolvimento do **Vite**.
