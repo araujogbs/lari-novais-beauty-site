@@ -35,9 +35,24 @@
   letter-spacing: 2px;
   color: var(--text-muted);
 }
+/* o <nav> e as <section> do painel não devem herdar o menu fixo e o espaçamento das seções do site (main.css) */
 .pn-top-actions {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  background: none;
+  backdrop-filter: none;
+  border: 0;
+  z-index: auto;
   display: flex;
   gap: 0.5rem;
+}
+.pn-top-actions a {
+  color: var(--text);
+  font-size: 0.85rem;
+  letter-spacing: normal;
+  text-transform: none;
 }
 .pn-main {
   max-width: 860px;
@@ -181,6 +196,7 @@
 
 /* seções */
 .pn-section {
+  padding: 0;
   margin-bottom: 2.5rem;
 }
 .pn-section h3,
