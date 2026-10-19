@@ -1,4 +1,5 @@
-import type { CSSProperties, ReactElement } from 'react';
+import { type CSSProperties, type ReactElement, useEffect, useRef } from 'react';
+import { prefersReducedMotion, SPARKLE_PATH } from '../lib/motion';
 
 type Kind = 'sun' | 'moon' | 'constellation';
 
@@ -13,7 +14,7 @@ interface Sprite {
 }
 
 const RAY_COUNT = 24;
-const SPARKLE = 'M0 -7 L1.6 -1.6 L7 0 L1.6 1.6 L0 7 L-1.6 1.6 L-7 0 L-1.6 -1.6Z';
+const SPARKLE = SPARKLE_PATH;
 
 /** Sol de tarô: coroa de raios alternados, anéis e pontos de luz. */
 function SunMandala(): ReactElement {
@@ -96,39 +97,6 @@ function Constellation(): ReactElement {
   );
 }
 
-/** Fases da lua em linha fina, usada como assinatura no hero. */
-export function MoonPhases(): ReactElement {
-  const full = 'M0 -12 A12 12 0 1 1 0 12 A12 12 0 1 1 0 -12Z';
-  const phases: { d?: string; fill: boolean }[] = [
-    { fill: false },
-    { d: 'M0 -12 A12 12 0 0 1 0 12 A6 12 0 0 0 0 -12Z', fill: true },
-    { d: 'M0 -12 A12 12 0 0 1 0 12Z', fill: true },
-    { d: 'M0 -12 A12 12 0 0 1 0 12 A6 12 0 0 1 0 -12Z', fill: true },
-    { d: full, fill: true },
-    { d: 'M0 -12 A12 12 0 0 0 0 12 A6 12 0 0 0 0 -12Z', fill: true },
-    { d: 'M0 -12 A12 12 0 0 0 0 12Z', fill: true },
-    { d: 'M0 -12 A12 12 0 0 0 0 12 A6 12 0 0 1 0 -12Z', fill: true },
-    { fill: false },
-  ];
-  return (
-    <svg
-      className="moon-phases"
-      viewBox="0 0 270 30"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="0.8"
-      aria-hidden="true"
-    >
-      {phases.map((p, i) => (
-        <g key={i} transform={`translate(${15 + i * 30} 15)`}>
-          <circle r="12" />
-          {p.fill && <path d={p.d} fill="currentColor" stroke="none" />}
-        </g>
-      ))}
-    </svg>
-  );
-}
-
 const PATTERN: readonly { kind: Kind; size: number; bleed: number }[] = [
   { kind: 'sun', size: 400, bleed: 0.5 },
   { kind: 'constellation', size: 190, bleed: 0.06 },
@@ -155,8 +123,30 @@ const ART: Record<Kind, () => ReactElement> = { sun: SunMandala, moon: MoonOrbit
 
 /** Sóis, luas e constelações de inspiração mística ao fundo do site, bem sutis. */
 export function CelestialSprites() {
+  const layer = useRef<HTMLDivElement>(null);
+
+  // Os sóis e as luas giram conforme a página rola (o CSS lê --scroll-turn, em graus).
+  useEffect(() => {
+    const el = layer.current;
+    if (!el || prefersReducedMotion()) return;
+    let raf = 0;
+    const onScroll = (): void => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        el.style.setProperty('--scroll-turn', (window.scrollY * 0.06).toFixed(2));
+      });
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
   return (
-    <div className="celestial" aria-hidden="true">
+    <div className="celestial" aria-hidden="true" ref={layer}>
       {SPRITES.map((s, i) => {
         const Art = ART[s.kind];
         const style: CSSProperties = {

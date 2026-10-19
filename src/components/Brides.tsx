@@ -1,9 +1,11 @@
 import { BrideForm } from './BrideForm';
+import { Constellation } from './Constellation';
 
 export function Brides() {
   return (
     <>
-      <section id="noivas" className="noivas-hero">
+      <section id="noivas" className="noivas-hero has-constellation">
+        <Constellation id="noivas" side="right" />
         <div>
           <div className="section-label">Noivas</div>
           <h1>

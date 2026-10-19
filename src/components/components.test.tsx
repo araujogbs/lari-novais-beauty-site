@@ -15,12 +15,21 @@ afterEach(() => {
 
 describe('Nav', () => {
   it('alterna o menu mobile', async () => {
-    render(<Nav />);
+    render(<Nav theme="light" onToggleTheme={() => undefined} />);
     const toggle = screen.getByRole('button', { name: 'Abrir menu' });
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await userEvent.click(toggle);
     expect(toggle).toHaveAttribute('aria-expanded', 'true');
     expect(document.getElementById('navMenu')).toHaveClass('active');
+  });
+
+  it('troca entre modo dia e noturno', async () => {
+    const onToggle = vi.fn();
+    const { rerender } = render(<Nav theme="light" onToggleTheme={onToggle} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Ativar modo noturno' }));
+    expect(onToggle).toHaveBeenCalledTimes(1);
+    rerender(<Nav theme="dark" onToggleTheme={onToggle} />);
+    expect(screen.getByRole('button', { name: 'Ativar modo dia' })).toHaveAttribute('aria-pressed', 'true');
   });
 });
 

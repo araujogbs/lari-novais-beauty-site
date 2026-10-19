@@ -1,7 +1,23 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { todayISO } from '../utils';
 import { AgendamentoWidget } from './AgendamentoWidget';
+import { addMonths, monthOf } from './calendar';
+
+/** Dia 10 do mês que vem: sempre no futuro e alcançado com um clique em "Próximo mês". */
+const DAY = `${addMonths(monthOf(todayISO()), 1)}-10`;
+
+/** Disponibilidade no formato da API: `slotsFor` decide quantos horários cada dia tem. */
+function availabilityFor(url: string, slotsFor: (date: string) => number = () => 5): Response {
+  const q = new URL(url, 'http://x').searchParams;
+  const [y = 0, m = 1, d = 1] = (q.get('from') ?? '').split('-').map(Number);
+  const days = Array.from({ length: Number(q.get('days')) }, (_, i) => {
+    const date = new Date(Date.UTC(y, m - 1, d + i)).toISOString().slice(0, 10);
+    return { date, slots: slotsFor(date) };
+  });
+  return json(days);
+}
 
 type Handler = (url: string, init?: RequestInit) => Response | undefined;
 
@@ -23,6 +39,7 @@ function mockApi(override?: Handler) {
     let res = json(null, 404);
     if (url.endsWith('/services')) res = json(SERVICES);
     else if (url.includes('available-slots')) res = json(['09:00', '10:00']);
+    else if (url.includes('/availability')) res = availabilityFor(url);
     else if (url.includes('estimate-fee'))
       res = json({ distanceKm: 12.34, travelFee: 40, street: 'Rua A', city: 'SP' });
     else if (url.endsWith('/appointments') && init?.method === 'POST') res = json({}, 201);
@@ -47,7 +64,8 @@ const isPost = ([, init]: [Input, (RequestInit | undefined)?]): boolean => init?
 
 async function fillValidForm(user: ReturnType<typeof userEvent.setup>): Promise<void> {
   await user.click(await screen.findByLabelText(/Maquiagem/));
-  await user.type(screen.getByLabelText('Data do evento'), '2030-01-10');
+  await user.click(screen.getByRole('button', { name: 'Próximo mês' }));
+  await user.click(await screen.findByRole('button', { name: /, 10 de .*: livre$/ }));
   await user.click(await screen.findByRole('button', { name: '09:00' }));
   await user.type(screen.getByLabelText('Seu nome completo'), 'Maria Souza');
   await user.type(screen.getByLabelText('WhatsApp'), '11912345678');
@@ -83,8 +101,23 @@ describe('AgendamentoWidget', () => {
     const post = fetchMock.mock.calls.find(isPost);
     const body = post?.[1]?.body;
     expect(body).toBeInstanceOf(FormData);
-    expect((body as FormData).get('startTime')).toBe('2030-01-10T09:00:00-03:00');
+    expect((body as FormData).get('startTime')).toBe(`${DAY}T09:00:00-03:00`);
     expect((body as FormData).get('people')).toBe('1');
+
+    // links para salvar na agenda da cliente
+    const google = screen.getByRole('link', { name: 'Google Agenda' });
+    expect(google.getAttribute('href')).toContain(`dates=${DAY.replace(/-/g, '')}T090000`);
+    expect(screen.getByRole('button', { name: 'Apple / Outlook' })).toBeInTheDocument();
+  });
+
+  it('marca os dias lotados e não deixa escolhê-los', async () => {
+    mockApi((url) => (url.includes('/availability') ? availabilityFor(url, (d) => (d === DAY ? 0 : 2)) : undefined));
+    const user = userEvent.setup();
+    render(<AgendamentoWidget />);
+    await user.click(await screen.findByLabelText(/Maquiagem/));
+    await user.click(screen.getByRole('button', { name: 'Próximo mês' }));
+    expect(await screen.findByRole('button', { name: /, 10 de .*: lotado$/ })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /, 11 de .*: últimos horários$/ })).toBeEnabled();
   });
 
   it('mostra erro de validação sem chamar a API de criação', async () => {

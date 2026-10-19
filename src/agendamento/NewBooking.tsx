@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { brl, digits, fmtDateBR, maskCep, maskPhone, todayISO, waLink } from '../utils';
+import { brl, digits, fmtDateBR, maskCep, maskPhone, waLink } from '../utils';
 import * as api from './api';
 import { ApiError } from './api';
+import { AvailabilityCalendar } from './AvailabilityCalendar';
 import {
   acceptFiles,
   buildAppointmentForm,
@@ -15,6 +16,7 @@ import {
   START_TIME_INFO,
   total,
 } from './booking';
+import { dayLabel } from './calendar';
 import type { BookingDoneInfo, BookingValues, FeeEstimate, Service } from './types';
 import { useAsync } from './useAsync';
 import type { ServicesState } from './useServices';
@@ -132,6 +134,9 @@ export function NewBooking({ services, onBooked }: Props) {
         serviceName: service.name,
         when: `${fmtDateBR(date)} às ${slot}`,
         total: total(service, feeData, people),
+        date,
+        start: slot,
+        end: endTimeFor(service, people, slot),
       });
     } catch (e) {
       const status = e instanceof ApiError ? e.status : 0;
@@ -201,19 +206,25 @@ export function NewBooking({ services, onBooked }: Props) {
             </span>
           </button>
         </h4>
-        <div className="form-group">
-          <label htmlFor="agDate">Data do evento</label>
-          <input
-            type="date"
-            id="agDate"
-            min={todayISO()}
+        {service ? (
+          <AvailabilityCalendar
+            serviceId={service.id}
+            people={people}
             value={date}
-            onChange={(e) => {
-              setDate(e.target.value);
+            refreshKey={slotsNonce}
+            onChange={(d) => {
+              setDate(d);
               setSlot('');
             }}
           />
-        </div>
+        ) : (
+          <p className="ag-hint">Escolha o serviço para ver os dias livres.</p>
+        )}
+        {date && (
+          <p className="ag-cal-picked">
+            Horários de início em <strong>{dayLabel(date)}</strong>
+          </p>
+        )}
         <div className="ag-slots">
           {slots.status === 'loading' && <p className="ag-hint">Buscando horários…</p>}
           {slots.status === 'error' && <p className="ag-msg">{slots.message}</p>}
@@ -221,11 +232,12 @@ export function NewBooking({ services, onBooked }: Props) {
             <p className="ag-hint">Sem horários livres nesse dia. Tente outra data.</p>
           )}
           {slots.status === 'ready' &&
-            slots.data?.map((h) => (
+            slots.data?.map((h, i) => (
               <button
                 type="button"
                 key={h}
                 className={h === slot ? 'ag-slot active' : 'ag-slot'}
+                style={{ animationDelay: `${Math.min(i, 12) * 35}ms` }}
                 onClick={() => {
                   setSlot(h);
                 }}

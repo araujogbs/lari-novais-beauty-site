@@ -1,7 +1,10 @@
+import { Constellation } from './Constellation';
+
 export function AboutMe() {
   return (
     <>
-      <section id="sobre">
+      <section id="sobre" className="has-constellation">
+        <Constellation id="sobre" side="left" />
         <div className="container">
           <div className="sobre-head">
             <div className="section-label">Sobre Mim</div>

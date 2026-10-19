@@ -9,11 +9,16 @@ html {
 body {
   font-family: 'Inter', sans-serif;
   color: var(--text);
-  background: var(--white);
+  background: var(--surface);
+  transition:
+    background-color 0.6s ease,
+    color 0.6s ease;
 }
 
 :root {
-  --white: #ffffff;
+  --white: #ffffff; /* branco de verdade (texto sobre fotos) */
+  --surface: #ffffff; /* fundo da página e dos cartões */
+  --on-rose: #ffffff; /* texto sobre botões e selos rosa */
   /* Teste de rosa mais aceso. Paleta anterior: cream #f4e0e2, rose #a85d6b, rose-light #ebcfd3, rose-dark #8a4553 */
   --cream: #fbe1e8; /* rosa chá: fundo de seções e blocos */
   --rose: #c2537a; /* rosa vivo */
@@ -22,6 +27,40 @@ body {
   --text: #2c2c2c;
   --text-light: #6b6b6b;
   --text-muted: #7d6b6e;
+  --gold: #b08a4f;
+  --celestial: var(--rose); /* sóis, luas e constelações */
+  --nav-bg: rgba(255, 255, 255, 0.94);
+  --nav-bg-scrolled: rgba(255, 255, 255, 0.58);
+  --ph-a: #e9cdd1; /* fundo das fotos enquanto carregam */
+  --ph-b: #d9aeb5;
+  --error: #a33;
+  --ok: #4f8a5b;
+  --warn: #b5762a;
+  --off: #b3a5aa;
+}
+
+/* MODO NOTURNO: céu azul-noite, rosa mais luminoso e detalhes em dourado */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --surface: #0d1230;
+  --on-rose: #1a1030;
+  --cream: #161d45;
+  --rose: #ee8fb1;
+  --rose-light: #3a2c5a;
+  --rose-dark: #f6b3ca;
+  --text: #f4e9ee;
+  --text-light: #c9bfd2;
+  --text-muted: #a99fb8;
+  --gold: #e6c78d;
+  --celestial: #e6c78d;
+  --nav-bg: rgba(13, 18, 48, 0.9);
+  --nav-bg-scrolled: rgba(13, 18, 48, 0.62);
+  --ph-a: #1e2654;
+  --ph-b: #2a2f5e;
+  --error: #ff9b9b;
+  --ok: #8fd19c;
+  --warn: #f0b768;
+  --off: #5f5b80;
 }
 
 /* NAV */
@@ -35,7 +74,7 @@ nav {
   align-items: center;
   padding: 0 4rem;
   height: 70px;
-  background: rgba(255, 255, 255, 0.94);
+  background: var(--nav-bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(194, 83, 122, 0.12);
   transition:
@@ -45,7 +84,7 @@ nav {
 }
 /* ao rolar, o header fica mais translúcido */
 nav.nav-scrolled {
-  background: rgba(255, 255, 255, 0.58);
+  background: var(--nav-bg-scrolled);
   border-bottom-color: rgba(194, 83, 122, 0.06);
   box-shadow: 0 6px 24px rgba(158, 58, 94, 0.04);
 }
@@ -105,12 +144,12 @@ nav a:hover {
   align-items: center;
   text-align: center;
   padding: 8rem 2rem 4rem;
-  background: linear-gradient(180deg, var(--cream) 0%, var(--white) 100%);
+  background: linear-gradient(180deg, var(--cream) 0%, var(--surface) 100%);
 }
 .hero-img {
   width: min(360px, 65vw);
   aspect-ratio: 3/4;
-  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
+  background: linear-gradient(135deg, var(--ph-a), var(--ph-b));
   border-radius: 180px;
   margin-bottom: 3rem;
   overflow: hidden;
@@ -207,7 +246,7 @@ nav a:hover {
 }
 .btn-primary {
   background: var(--rose);
-  color: var(--white);
+  color: var(--on-rose);
   border-color: var(--rose);
 }
 .btn-primary:hover {
@@ -355,7 +394,7 @@ section {
 .photo-placeholder {
   width: 100%;
   aspect-ratio: 3/4;
-  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
+  background: linear-gradient(135deg, var(--ph-a), var(--ph-b));
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -405,7 +444,7 @@ section {
 }
 .service-card-img {
   height: 280px;
-  background: linear-gradient(135deg, #ecd3d6, #dcb4ba);
+  background: linear-gradient(135deg, var(--ph-a), var(--ph-b));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -445,7 +484,7 @@ section {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
+  background: linear-gradient(135deg, var(--ph-a), var(--ph-b));
   margin: 0 auto 1rem;
   display: flex;
   justify-content: center;
@@ -591,7 +630,7 @@ section {
 .sobre-photo {
   min-height: 0;
   overflow: hidden;
-  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
+  background: linear-gradient(135deg, var(--ph-a), var(--ph-b));
   border-radius: 8px;
   display: flex;
   justify-content: center;
@@ -639,7 +678,7 @@ section {
   justify-content: center;
   text-align: center;
   padding: 8rem 2rem 2rem;
-  background: linear-gradient(180deg, var(--cream) 0%, var(--white) 100%);
+  background: linear-gradient(180deg, var(--cream) 0%, var(--surface) 100%);
 }
 .noivas-hero h1 {
   font-family: 'Cormorant Garamond', serif;
@@ -699,7 +738,7 @@ section {
 }
 .noiva-photo {
   aspect-ratio: 3/4;
-  background: linear-gradient(135deg, #ecd3d6, #dcb4ba);
+  background: linear-gradient(135deg, var(--ph-a), var(--ph-b));
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -784,7 +823,7 @@ section {
 .form-group select,
 .form-group textarea {
   width: 100%;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid rgba(194, 83, 122, 0.2);
   padding: 0.9rem 1rem;
   color: var(--text);
@@ -845,7 +884,7 @@ section {
 }
 .occasion-photo {
   aspect-ratio: 3/4;
-  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
+  background: linear-gradient(135deg, var(--ph-a), var(--ph-b));
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -895,7 +934,7 @@ section {
   gap: 2rem;
 }
 .curso-card {
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid rgba(194, 83, 122, 0.15);
   border-radius: 12px;
   overflow: hidden;
@@ -906,7 +945,7 @@ section {
 }
 .curso-img {
   height: 220px;
-  background: linear-gradient(135deg, #ecd3d6, #dcb4ba);
+  background: linear-gradient(135deg, var(--ph-a), var(--ph-b));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -988,7 +1027,7 @@ section {
   text-transform: uppercase;
   text-decoration: none;
   background: var(--rose);
-  color: var(--white);
+  color: var(--on-rose);
   border-radius: 8px;
   border: 1px solid transparent;
   transition: background 0.3s;
@@ -1006,7 +1045,7 @@ section {
   gap: 2rem;
 }
 .equipe-member {
-  background: var(--white);
+  background: var(--surface);
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(194, 83, 122, 0.1);
@@ -1069,7 +1108,7 @@ section {
 }
 .equipe-gallery .gallery-placeholder {
   aspect-ratio: 1/1;
-  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
+  background: linear-gradient(135deg, var(--ph-a), var(--ph-b));
   border-radius: 8px;
   display: flex;
   justify-content: center;
@@ -1087,7 +1126,7 @@ section {
   gap: 2.5rem;
 }
 .rede-card {
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid rgba(194, 83, 122, 0.15);
   border-radius: 12px;
   padding: 2.5rem 2rem;
@@ -1150,7 +1189,7 @@ section {
   margin-top: 2rem;
 }
 .depo-item {
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid rgba(194, 83, 122, 0.15);
   border-radius: 12px;
   padding: 2.5rem;
@@ -1187,7 +1226,7 @@ section {
 }
 .video-placeholder {
   aspect-ratio: 16/9;
-  background: linear-gradient(135deg, #e9cdd1, #d9aeb5);
+  background: linear-gradient(135deg, var(--ph-a), var(--ph-b));
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -1263,7 +1302,7 @@ section {
   flex: 0 0 min(340px, 85%);
   scroll-snap-align: start;
   text-align: left;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid rgba(194, 83, 122, 0.2);
   border-radius: 12px;
   padding: 1.8rem;
@@ -1281,7 +1320,7 @@ section {
   height: 40px;
   border-radius: 50%;
   background: var(--rose);
-  color: var(--white);
+  color: var(--on-rose);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1322,7 +1361,7 @@ section {
   height: 40px;
   border-radius: 50%;
   border: 1px solid var(--rose-light);
-  background: var(--white);
+  background: var(--surface);
   color: var(--rose-dark);
   font-size: 1.1rem;
   cursor: pointer;
@@ -1429,7 +1468,7 @@ section {
   height: 26px;
   border-radius: 50%;
   background: var(--rose);
-  color: var(--white);
+  color: var(--on-rose);
   font-family: 'Inter', sans-serif;
   font-size: 0.75rem;
   display: inline-flex;
@@ -1444,7 +1483,7 @@ section {
   height: 20px;
   border-radius: 50%;
   border: 1px solid var(--rose);
-  background: var(--white);
+  background: var(--surface);
   color: var(--rose);
   font-family: 'Cormorant Garamond', serif;
   font-size: 0.9rem;
@@ -1465,7 +1504,7 @@ section {
   padding: 0.8rem 1rem;
   border-radius: 8px;
   background: var(--text);
-  color: var(--white);
+  color: var(--surface);
   font-family: 'Inter', sans-serif;
   font-size: 0.78rem;
   font-style: normal;
@@ -1523,7 +1562,7 @@ section {
   grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: 0.8rem;
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid rgba(194, 83, 122, 0.25);
   border-radius: 8px;
   padding: 0.9rem 1rem;
@@ -1551,7 +1590,7 @@ section {
 .ag-slot {
   padding: 0.55rem 1rem;
   border: 1px solid var(--rose-light);
-  background: var(--white);
+  background: var(--surface);
   border-radius: 8px;
   font-family: 'Inter', sans-serif;
   font-size: 0.85rem;
@@ -1562,7 +1601,7 @@ section {
 }
 .ag-slot.active {
   background: var(--rose);
-  color: var(--white);
+  color: var(--on-rose);
   border-color: var(--rose);
 }
 .ag-grid {
@@ -1576,12 +1615,12 @@ section {
 .ag-fee {
   font-size: 0.82rem;
   color: var(--rose-dark);
-  background: var(--white);
+  background: var(--surface);
   border-radius: 8px;
   padding: 0.8rem 1rem;
 }
 .ag-summary {
-  background: var(--white);
+  background: var(--surface);
   border-radius: 8px;
   padding: 1rem 1.2rem;
   margin-bottom: 1rem;
@@ -1610,7 +1649,7 @@ section {
 }
 .ag-msg {
   font-size: 0.85rem;
-  color: #a33;
+  color: var(--error);
   margin-bottom: 1rem;
   line-height: 1.6;
 }
@@ -1639,7 +1678,8 @@ section {
 }
 .ag-lookup input {
   flex: 1;
-  background: var(--white);
+  color: var(--text);
+  background: var(--surface);
   border: 1px solid rgba(194, 83, 122, 0.2);
   padding: 0.9rem 1rem;
   border-radius: 8px;
@@ -1651,7 +1691,7 @@ section {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  background: var(--white);
+  background: var(--surface);
   border-radius: 8px;
   padding: 1rem 1.2rem;
   margin-bottom: 0.7rem;
@@ -1709,7 +1749,7 @@ section {
   border-radius: 50%;
   border: none;
   background: var(--text);
-  color: var(--white);
+  color: var(--surface);
   font-size: 0.9rem;
   line-height: 1;
   cursor: pointer;
@@ -1732,7 +1772,7 @@ section {
   height: 56px;
   border-radius: 50%;
   background: var(--rose);
-  color: var(--white);
+  color: var(--on-rose);
   font-size: 1.6rem;
   display: inline-flex;
   align-items: center;
@@ -1765,7 +1805,7 @@ footer {
   text-align: center;
   padding: 3rem 2rem;
   border-top: 1px solid rgba(194, 83, 122, 0.15);
-  background: var(--white);
+  background: var(--surface);
 }
 footer .logo {
   font-family: 'Cormorant Garamond', serif;
@@ -1812,7 +1852,7 @@ footer p {
     top: 70px;
     left: 0;
     right: 0;
-    background: var(--white);
+    background: var(--surface);
     flex-direction: column;
     padding: 2rem;
     gap: 1.2rem;
@@ -1892,7 +1932,7 @@ footer p {
 
 /* ROSA: blocos coloridos sobre fundo rosa */
 .service-card {
-  background: var(--white);
+  background: var(--surface);
 }
 
 /* NOIVAS: tipografia harmonizada com o título principal */
@@ -1930,8 +1970,11 @@ footer p {
 }
 .celestial-sprite {
   position: absolute;
-  color: var(--rose);
+  color: var(--celestial);
   opacity: 0.16;
+  transition:
+    color 0.8s ease,
+    opacity 0.8s ease;
 }
 .celestial-sun,
 .celestial-moon {
@@ -1975,19 +2018,26 @@ footer p {
 .hero {
   position: relative;
 }
-.moon-phases {
-  position: absolute;
-  bottom: 2.2rem;
-  left: 50%;
-  width: 230px;
-  transform: translateX(-50%);
-  color: var(--rose);
-  opacity: 0.55;
-}
 
 /* BLOCOS ROSA */
 .section-rose {
   background: var(--cream);
+}
+
+/* Seções que vêm logo depois de outra com o mesmo fundo: sem isso os dois espaçamentos
+   se somam (224px de vazio). O scroll-margin evita que o menu cubra o título ao clicar no link. */
+#depoimentos,
+#redes,
+#contato {
+  padding-top: 2.5rem;
+  scroll-margin-top: 70px;
+}
+@media (max-width: 968px) {
+  #depoimentos,
+  #redes,
+  #contato {
+    padding-top: 1.5rem;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   nav {
@@ -2045,4 +2095,614 @@ footer p {
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* ===================== CÉU INTERATIVO ===================== */
+
+/* Botão de modo noturno no menu */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--rose-light);
+  background: transparent;
+  color: var(--rose-dark);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    border-color 0.3s,
+    color 0.3s,
+    transform 0.4s;
+}
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+.theme-toggle:hover {
+  border-color: var(--rose);
+  transform: rotate(-15deg);
+}
+.theme-toggle:focus-visible,
+.cst-info:focus-visible,
+.ag-day:focus-visible {
+  outline: 2px solid var(--rose);
+  outline-offset: 2px;
+}
+
+/* Céu estrelado (modo noturno) e chuva de estrelinhas do agendamento */
+.starry-sky,
+.sparkle-trail {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.starry-sky {
+  z-index: -1;
+  animation: ln-fade-in 1.2s ease both;
+}
+.sparkle-trail {
+  z-index: 300;
+}
+:root[data-theme='dark'] .hero,
+:root[data-theme='dark'] .noivas-hero {
+  background: linear-gradient(180deg, rgba(22, 29, 69, 0.85) 0%, transparent 100%);
+}
+:root[data-theme='dark'] .celestial-sprite {
+  opacity: 0.24;
+}
+:root[data-theme='dark'] .celestial-sun,
+:root[data-theme='dark'] .celestial-moon {
+  opacity: 0.2;
+}
+
+/* Hero: título palavra por palavra */
+.hero-word {
+  display: inline-block;
+  animation: ln-word 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 110ms + 200ms);
+}
+
+/* Hero: profundidade que segue o mouse */
+.hero-img.visible {
+  transform: perspective(900px) rotateY(calc(var(--px, 0) * 5deg)) rotateX(calc(var(--py, 0) * -5deg));
+  transition:
+    transform 0.5s ease-out,
+    opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hero-carousel {
+  transform: scale(1.06) translate(calc(var(--px, 0) * -8px), calc(var(--py, 0) * -8px));
+  transition: transform 0.5s ease-out;
+}
+.carousel-dots {
+  z-index: 1;
+}
+
+/* Brilho dourado que atravessa os botões principais */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 236, 190, 0.7) 47%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 236, 190, 0.7) 53%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: ln-shimmer 5s ease-in-out infinite 1.5s;
+  pointer-events: none;
+}
+.btn-primary:disabled::after {
+  display: none;
+}
+
+/* A lua de hoje */
+.moon-today {
+  margin-top: 3rem;
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+}
+.moon-phases {
+  display: flex;
+  gap: 0.6rem;
+  color: var(--celestial);
+}
+.moon-phases svg {
+  width: 20px;
+  height: 20px;
+  opacity: 0.4;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+.moon-phases svg.now {
+  opacity: 1;
+  transform: scale(1.35);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--celestial) 55%, transparent));
+}
+.moon-caption {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+.moon-caption strong {
+  color: var(--rose-dark);
+  font-weight: 500;
+}
+
+/* Sóis e luas do fundo giram com a rolagem (além do giro lento de sempre) */
+.celestial-sun,
+.celestial-moon {
+  transition: transform 0.4s ease-out;
+}
+.celestial-sun {
+  transform: rotate(calc(var(--scroll-turn, 0) * 1deg));
+}
+.celestial-moon {
+  transform: rotate(calc(var(--scroll-turn, 0) * -0.7deg));
+}
+
+/* Social e Cursos começam com o mesmo degradê rosa do topo de Noivas,
+   para não parecerem continuação da seção branca anterior */
+#social,
+#cursos {
+  background: linear-gradient(180deg, var(--cream) 0%, var(--surface) 26rem);
+}
+:root[data-theme='dark'] #social,
+:root[data-theme='dark'] #cursos {
+  background: linear-gradient(180deg, rgba(22, 29, 69, 0.85) 0%, transparent 26rem);
+}
+
+/* Constelações no canto das seções, alternando direita e esquerda */
+.has-constellation {
+  position: relative;
+}
+.constellation {
+  position: absolute;
+  top: 1.5rem;
+  z-index: 2;
+  width: 210px;
+  margin: 0;
+  color: var(--celestial);
+  transition: color 0.8s ease;
+}
+.constellation--left {
+  left: max(1.5rem, calc((100% - 1100px) / 2 - 160px));
+}
+.constellation--right {
+  right: max(1.5rem, calc((100% - 1100px) / 2 - 160px));
+}
+.constellation.constellation--left figcaption {
+  justify-content: flex-start;
+  text-align: left;
+}
+.constellation.constellation--right figcaption {
+  justify-content: flex-end;
+  text-align: right;
+}
+/* Telas médias e celular: fica pequena no topo da seção, do mesmo lado, antes do título */
+@media (max-width: 1240px) {
+  .constellation {
+    position: static;
+    width: 180px;
+    margin-bottom: 1rem;
+  }
+  .constellation--left {
+    margin-right: auto;
+  }
+  .constellation--right {
+    margin-left: auto;
+  }
+  .noivas-hero.has-constellation {
+    flex-direction: column;
+  }
+  .noivas-hero .constellation--left {
+    align-self: flex-start;
+  }
+}
+@media (max-width: 600px) {
+  .constellation {
+    width: 140px;
+    margin-bottom: 0.5rem;
+  }
+}
+.constellation > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.cst-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0.7;
+}
+.cst-star {
+  fill: currentColor;
+  transform: scale(0);
+  transition: transform 0.5s cubic-bezier(0.4, 1.8, 0.5, 1);
+}
+.cst-star.on {
+  transform: scale(1);
+}
+:root[data-theme='dark'] .cst-star {
+  filter: drop-shadow(0 0 4px rgba(230, 199, 141, 0.7));
+}
+.cst-label {
+  fill: var(--text-muted);
+  font:
+    500 9px 'Inter',
+    sans-serif;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+.cst-done .cst-label {
+  opacity: 1;
+}
+.constellation figcaption {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.5rem;
+  margin-top: 0.3rem;
+}
+.cst-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text);
+}
+.cst-nick {
+  order: 3;
+  flex-basis: 100%;
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.cst-info {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  background: transparent;
+  color: var(--gold);
+  display: inline-grid;
+  place-items: center;
+  cursor: help;
+  animation: ln-glow 3.2s ease-in-out infinite;
+}
+.cst-info > svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+.cst-tip {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  width: 300px;
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--surface);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  line-height: 1.6;
+  text-align: left;
+  text-transform: none;
+  letter-spacing: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0.25s;
+  z-index: 30;
+  pointer-events: none;
+}
+/* a explicação abre para baixo, alinhada ao lado da constelação, para não sair da tela */
+.cst-tip::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  border: 6px solid transparent;
+  border-bottom-color: var(--text);
+}
+.constellation--left .cst-tip {
+  left: -12px;
+  transform: translateY(-4px);
+}
+.constellation--left .cst-tip::after {
+  left: 18px;
+}
+.constellation--right .cst-tip {
+  left: auto;
+  right: -12px;
+  transform: translateY(-4px);
+}
+.constellation--right .cst-tip::after {
+  right: 18px;
+}
+.cst-info:hover .cst-tip,
+.cst-info:focus .cst-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+@media (max-width: 600px) {
+  .cst-tip {
+    width: min(300px, 82vw);
+  }
+}
+
+/* Calendário de disponibilidade */
+.ag-cal {
+  background: var(--surface);
+  border: 1px solid rgba(194, 83, 122, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+}
+.ag-cal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+.ag-cal-head strong {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 400;
+  color: var(--text);
+}
+.ag-cal-head strong::first-letter {
+  text-transform: uppercase;
+}
+.ag-cal-head button {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--rose-light);
+  background: transparent;
+  color: var(--rose-dark);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.ag-cal-head button:hover:not(:disabled) {
+  background: var(--rose-light);
+}
+.ag-cal-head button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.ag-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+.ag-cal-dow {
+  text-align: center;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding-bottom: 0.2rem;
+}
+.ag-day {
+  aspect-ratio: 1 / 1;
+  max-height: 3.4rem;
+  min-width: 0;
+  border: 1px solid rgba(194, 83, 122, 0.18);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    transform 0.2s,
+    background-color 0.3s;
+}
+.ag-day small {
+  font-size: 0.56rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+.ag-day--livre small {
+  color: var(--ok);
+}
+.ag-day--poucos small {
+  color: var(--warn);
+}
+.ag-day--lotado small {
+  color: var(--off);
+}
+.ag-day:hover:not(:disabled) {
+  border-color: var(--rose);
+  transform: translateY(-2px);
+}
+.ag-day:disabled {
+  cursor: default;
+  color: var(--off);
+  border-color: transparent;
+}
+.ag-day.active {
+  background: var(--rose);
+  border-color: var(--rose);
+  color: var(--on-rose);
+}
+.ag-day.active small {
+  color: var(--on-rose);
+}
+.ag-cal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  margin-top: 0.8rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.ag-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-right: 0.3rem;
+  vertical-align: 1px;
+}
+.ag-dot--livre {
+  background: var(--ok);
+}
+.ag-dot--poucos {
+  background: var(--warn);
+}
+.ag-dot--lotado {
+  background: var(--off);
+}
+.ag-cal + .ag-hint {
+  margin-top: 0.6rem;
+}
+.ag-cal-picked {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+.ag-cal-picked strong {
+  color: var(--text);
+  font-weight: 500;
+}
+.ag-slot {
+  color: var(--text);
+  animation: ln-pop 0.35s ease both;
+}
+@media (max-width: 420px) {
+  .ag-cal {
+    padding: 0.7rem;
+  }
+  /* no celular pequeno o texto vira um ponto colorido */
+  .ag-day small {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    font-size: 0;
+  }
+}
+
+/* Salvar na agenda (depois do pedido) */
+.ag-save {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1.2rem;
+}
+.ag-save-btns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+.ag-done .ag-save .btn {
+  margin-top: 0;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid var(--rose-light);
+}
+
+@keyframes ln-word {
+  from {
+    opacity: 0.08;
+    transform: translateY(0.35em);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes ln-shimmer {
+  0%,
+  60% {
+    transform: translateX(-120%);
+  }
+  85%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+@keyframes ln-glow {
+  50% {
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--gold) 14%, transparent);
+  }
+}
+@keyframes ln-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ln-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-word,
+  .cst-info,
+  .ag-slot,
+  .starry-sky {
+    animation: none;
+  }
+  .btn-primary::after {
+    display: none;
+  }
+  .hero-img.visible,
+  .hero-carousel {
+    transform: none;
+  }
+  .cst-star,
+  .cst-label,
+  body {
+    transition: none;
+  }
 }

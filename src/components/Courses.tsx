@@ -1,7 +1,10 @@
+import { Constellation } from './Constellation';
+
 export function Courses() {
   return (
     <>
-      <section id="cursos">
+      <section id="cursos" className="has-constellation">
+        <Constellation id="cursos" side="left" />
         <div className="container">
           <div className="section-center" style={{ textAlign: 'center' }}>
             <div className="section-label">Cursos</div>

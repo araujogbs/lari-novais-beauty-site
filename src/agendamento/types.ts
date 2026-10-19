@@ -36,10 +36,21 @@ export interface BookingValues {
   msg: string;
 }
 
+/** Quantos horários de início ainda estão livres num dia (AAAA-MM-DD). */
+export interface DayAvailability {
+  date: string;
+  slots: number;
+}
+
 export interface BookingDoneInfo {
   nome: string;
   fone: string;
   serviceName: string;
   when: string;
   total: number;
+  /** AAAA-MM-DD, para salvar na agenda da cliente. */
+  date: string;
+  /** Início e término previstos, "HH:mm". */
+  start: string;
+  end: string;
 }

@@ -14,9 +14,11 @@ import { SocialNetworksHome } from './components/SocialNetworksHome';
 import { SocialService } from './components/SocialService';
 import { Team } from './components/Team';
 import { Testimonials } from './components/Testimonials';
+import { SparkleTrail, StarrySky } from './components/SkyEffects';
 import { lazy, Suspense } from 'react';
 import { useHash } from './hooks/useHash';
 import { useReveal } from './hooks/useReveal';
+import { useTheme } from './hooks/useTheme';
 
 // Painel da Lari: carregado só quando aberto, para não pesar no site
 const AdminPanel = lazy(() => import('./painel/AdminPanel'));
@@ -27,6 +29,7 @@ export function App() {
   const hash = useHash();
   const isPainel = hash === PAINEL_HASH;
   useReveal(isPainel);
+  const [theme, toggleTheme] = useTheme(!isPainel);
 
   if (isPainel) {
     return (
@@ -38,8 +41,10 @@ export function App() {
 
   return (
     <div className="site">
+      {theme === 'dark' && <StarrySky />}
+      <SparkleTrail />
       <CelestialSprites />
-      <Nav />
+      <Nav theme={theme} onToggleTheme={toggleTheme} />
       <Hero />
       <Portfolio />
       <AboutHome />

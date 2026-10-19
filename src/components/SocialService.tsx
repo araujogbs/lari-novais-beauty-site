@@ -1,4 +1,5 @@
 import { AgendamentoWidget } from '../agendamento/AgendamentoWidget';
+import { Constellation } from './Constellation';
 
 const SOCIAL_GALLERY: readonly { src: string; alt: string }[] = [
   { src: '/img/social-1.jpg', alt: 'Formanda com penteado baixo e maquiagem luminosa' },
@@ -14,7 +15,8 @@ const SOCIAL_GALLERY: readonly { src: string; alt: string }[] = [
 export function SocialService() {
   return (
     <>
-      <section id="social">
+      <section id="social" className="has-constellation">
+        <Constellation id="social" side="left" />
         <div className="container">
           <div className="section-center" style={{ textAlign: 'center' }}>
             <div className="section-label">Atendimento Social</div>

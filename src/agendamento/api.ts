@@ -1,5 +1,5 @@
 import { API_URL } from '../config';
-import type { Appointment, FeeEstimate, Service } from './types';
+import type { Appointment, DayAvailability, FeeEstimate, Service } from './types';
 
 export class ApiError extends Error {
   constructor(
@@ -36,6 +36,11 @@ export const getServices = () => request<Service[] | null>('/services');
 
 export const getSlots = (date: string, serviceId: number, people: number) =>
   request<string[] | null>(`/appointments/available-slots?date=${date}&serviceId=${serviceId}&people=${people}`);
+
+export const getAvailability = (from: string, days: number, serviceId: number, people: number) =>
+  request<DayAvailability[] | null>(
+    `/appointments/availability?from=${from}&days=${days}&serviceId=${serviceId}&people=${people}`,
+  );
 
 export const estimateFee = (cep: string) => request<FeeEstimate>(`/appointments/estimate-fee?cep=${cep}`);
 
