@@ -271,7 +271,7 @@ As variáveis são embutidas no build: ao mudá-las, rode `npm run build` de nov
 
 O site é estático: rode `npm run build` e publique o conteúdo da pasta `dist/` em qualquer hospedagem de arquivos (Netlify, Vercel, GitHub Pages, Cloudflare Pages, hospedagem comum).
 
-A recomendação é o **Cloudflare Pages** (gratuito) ligado ao GitHub: cada push publica sozinho. A navegação é por hash (`#painel`), então não precisa configurar rewrite.
+A recomendação é o **Cloudflare Pages** (gratuito) ligado ao GitHub: cada push publica sozinho. Configuração: build `npm run build`, saída `dist`, Node 22 (`.node-version`). A navegação é por hash (`#painel`), então não precisa configurar rewrite. O `public/_headers` define os cabeçalhos de segurança e o cache longo de `/assets/*` (arquivos com hash no nome).
 
 Antes de publicar:
 1. Hospedar a **AgendamentoApi com HTTPS**. O repositório da API tem a pasta `deploy/` com Docker, Caddy (HTTPS automático) e backup, e o passo a passo. Confira `VITE_AGENDAMENTO_API` e `VITE_SITE_URL` no `.env.production` antes do build. Páginas HTTPS não conseguem chamar uma API HTTP.
