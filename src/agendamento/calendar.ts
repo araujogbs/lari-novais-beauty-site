@@ -13,6 +13,14 @@ export function addMonths(ym: string, n: number): string {
   return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}`;
 }
 
+/** Soma meses a "AAAA-MM-DD"; se o dia não existir no mês final (31/01 + 1 mês), usa o último dia dele. */
+export function addMonthsToDate(iso: string, n: number): string {
+  const ym = addMonths(monthOf(iso), n);
+  const [y = 0, m = 1] = ym.split('-').map(Number);
+  const lastDay = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  return `${ym}-${pad(Math.min(Number(iso.slice(8)), lastDay))}`;
+}
+
 /** Dias do mês e quantas casas vazias vêm antes do dia 1 (semana começando na segunda). */
 export function monthGrid(ym: string): { blanks: number; days: string[] } {
   const [y = 0, m = 1] = ym.split('-').map(Number);
@@ -30,6 +38,16 @@ export function monthLabel(ym: string): string {
   return new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString('pt-BR', {
     month: 'long',
     year: 'numeric',
+    timeZone: 'UTC',
+  });
+}
+
+/** "2027-01-19" -> "19 de janeiro" */
+export function shortDateLabel(iso: string): string {
+  const [y = 0, m = 1, d = 1] = iso.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, d, 12)).toLocaleDateString('pt-BR', {
+    day: 'numeric',
+    month: 'long',
     timeZone: 'UTC',
   });
 }

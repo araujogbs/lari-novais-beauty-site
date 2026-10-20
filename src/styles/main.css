@@ -188,6 +188,7 @@ nav a:hover {
   gap: 0.5rem;
 }
 .dot {
+  position: relative;
   border: 0;
   padding: 0;
   width: 8px;
@@ -199,6 +200,12 @@ nav a:hover {
 }
 .dot.active {
   background: rgba(255, 255, 255, 0.9);
+}
+/* área de toque maior que a bolinha, para acertar no celular */
+.dot::before {
+  content: '';
+  position: absolute;
+  inset: -8px -4px;
 }
 
 .hero h1 {
@@ -1882,8 +1889,12 @@ footer p {
   }
   .team-grid,
   .pacotes-grid,
-  .equipe-grid {
+  .equipe-grid,
+  .steps-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .steps-grid {
+    gap: 1.25rem;
   }
   .pillars-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1908,11 +1919,16 @@ footer p {
   .team-grid,
   .pacotes-grid,
   .equipe-grid,
-  .pillars-grid {
+  .pillars-grid,
+  .steps-grid {
     grid-template-columns: 1fr;
   }
+  .step-card {
+    padding: 1.5rem;
+  }
   .noivas-grid,
-  .social-gallery {
+  .social-gallery,
+  .equipe-gallery {
     grid-template-columns: repeat(2, 1fr);
   }
   .hero h1 {
@@ -1928,6 +1944,40 @@ footer p {
   .video-placeholder-grid {
     grid-template-columns: 1fr;
   }
+  /* botões com texto longo quebram em duas linhas: menos recuo e texto centralizado */
+  .btn {
+    padding: 0.85rem 1.6rem;
+    text-align: center;
+  }
+  .sobre-head {
+    margin-bottom: 2.5rem;
+  }
+  .sobre-head h1 {
+    font-size: 2.4rem;
+  }
+  .certificates {
+    grid-template-columns: 1.3fr 1fr;
+    padding: 1.5rem 1.25rem;
+    gap: 0.25rem 1rem;
+  }
+  .noivas-form {
+    padding: 1.75rem 1.25rem;
+    gap: 1.25rem;
+  }
+  .curso-meta {
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+  }
+  .rede-card {
+    padding: 2rem 1.25rem;
+  }
+}
+/* itens de grade não alargam a coluna além da tela por causa de um texto longo */
+.rede-grid > *,
+.cursos-grid > *,
+.services-grid > *,
+.portfolio-grid > * {
+  min-width: 0;
 }
 
 /* ROSA: blocos coloridos sobre fundo rosa */
@@ -2170,17 +2220,6 @@ footer p {
   animation-delay: calc(var(--i, 0) * 110ms + 200ms);
 }
 
-/* Hero: profundidade que segue o mouse */
-.hero-img.visible {
-  transform: perspective(900px) rotateY(calc(var(--px, 0) * 5deg)) rotateX(calc(var(--py, 0) * -5deg));
-  transition:
-    transform 0.5s ease-out,
-    opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.hero-carousel {
-  transform: scale(1.06) translate(calc(var(--px, 0) * -8px), calc(var(--py, 0) * -8px));
-  transition: transform 0.5s ease-out;
-}
 .carousel-dots {
   z-index: 1;
 }
@@ -2319,6 +2358,10 @@ footer p {
   .constellation {
     width: 140px;
     margin-bottom: 0.5rem;
+  }
+  .constellation .cst-nick {
+    font-size: 0.66rem;
+    letter-spacing: 1px;
   }
 }
 .constellation > svg {
@@ -2467,6 +2510,19 @@ footer p {
   border: 1px solid rgba(194, 83, 122, 0.2);
   border-radius: 12px;
   padding: 1rem;
+}
+.ag-cal-window {
+  margin: 0 0 0.9rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 8px;
+  background: var(--cream);
+  color: var(--text-light);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+.ag-cal-window strong {
+  color: var(--rose-dark);
+  font-weight: 500;
 }
 .ag-cal-head {
   display: flex;
@@ -2695,10 +2751,6 @@ footer p {
   }
   .btn-primary::after {
     display: none;
-  }
-  .hero-img.visible,
-  .hero-carousel {
-    transform: none;
   }
   .cst-star,
   .cst-label,

@@ -92,7 +92,7 @@ export function AboutMe() {
               <div className="cert-item">SENAC Tatuapé Serra de Bragança</div>
               <div className="cert-item">O Poder da Juba</div>
               <div className="cert-item">Patricia Tavares</div>
-              <div className="cert-item">Professora e Educadora</div>
+              <div className="cert-item">Educadora</div>
               <div className="cert-item">SENAC</div>
               <div className="cert-item">+ especializações extras</div>
               <div className="cert-item"></div>

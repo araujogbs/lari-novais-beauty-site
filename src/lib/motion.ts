@@ -4,8 +4,6 @@ const matches = (query: string): boolean => typeof window.matchMedia === 'functi
 export const prefersReducedMotion = (): boolean => matches('(prefers-reduced-motion: reduce)');
 
 /** Mouse ou trackpad (efeitos de cursor ficam só no computador). */
-export const hasFinePointer = (): boolean => matches('(pointer: fine)');
-
 export const prefersDark = (): boolean => matches('(prefers-color-scheme: dark)');
 
 /** Chuva de estrelinhas a partir de um ponto da tela (desenhada pelo SparkleTrail). */

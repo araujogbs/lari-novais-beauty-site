@@ -56,28 +56,28 @@ export function Team() {
           <div className="equipe-gallery reveal">
             <div className="gallery-placeholder">
               <img
-                src="/fotos/Atendimento Social/IMG_6627.jpg"
+                src="/img/equipe-1.jpg"
                 alt="Trabalho"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
               />
             </div>
             <div className="gallery-placeholder">
               <img
-                src="/fotos/Noivas/CASAMENTO-106.jpg"
+                src="/img/equipe-2.jpg"
                 alt="Trabalho"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
               />
             </div>
             <div className="gallery-placeholder">
               <img
-                src="/fotos/Fotos modelos/Make Beauty/IMG_8972.JPG"
+                src="/img/equipe-3.jpg"
                 alt="Trabalho"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
               />
             </div>
             <div className="gallery-placeholder">
               <img
-                src="/fotos/Noivas/IMG_8518.JPG"
+                src="/img/equipe-4.jpg"
                 alt="Trabalho"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
               />

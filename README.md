@@ -84,7 +84,6 @@ Site/
 │   ├── styles/main.css        # Todos os estilos
 │   └── **/*.test.ts(x)        # Testes (Vitest + Testing Library)
 ├── public/img/                # Imagens otimizadas usadas pelo site (hero, home, cursos, Lari)
-├── public/fotos/              # Fotos originais (Lari, Noivas, Social, Modelos); quase não usadas
 ├── public/og-image.jpg · favicon.svg · robots.txt   # prévia de link (1200 x 630), ícone e robôs de busca
 ├── .env.example               # Modelo das variáveis de ambiente
 ├── .env.development · .env.production   # usados por `npm run dev` e `npm run build`
@@ -94,7 +93,7 @@ Site/
 └── README.md
 ```
 
-Os arquivos de `public/` são copiados como estão para o `dist/` e referenciados por `/img/...` (e `/fotos/...`) no HTML.
+Os arquivos de `public/` são copiados como estão para o `dist/` e referenciados por `/img/...` no HTML. As fotos originais ficam fora do site, na pasta `Fotos do site/` do projeto: otimize a imagem (até 1200 px, JPG) antes de colocar em `public/img/`.
 
 ---
 
@@ -104,7 +103,7 @@ A navegação fixa no topo tem: **Home · Sobre Mim · Noivas · Social · Curso
 
 | Seção | Âncora | O que tem |
 |---|---|---|
-| **Home** | `#home` | Hero com carrossel automático de fotos (troca a cada 4 s; a foto acompanha levemente o mouse), título que aparece palavra por palavra, botões e **a lua de hoje**. Em seguida: portfólio em 3 blocos (Noivas, Eventos Sociais, Cursos), apresentação "Olá, eu sou a Lari" (sem o título "Quem sou eu"), cartões de serviços |
+| **Home** | `#home` | Hero com carrossel automático de fotos (troca a cada 4 s), título que aparece palavra por palavra, botões e **a lua de hoje**. Em seguida: portfólio em 3 blocos (Noivas, Eventos Sociais, Cursos), apresentação "Olá, eu sou a Lari" (sem o título "Quem sou eu"), cartões de serviços |
 | **Depoimentos** | `#depoimentos` | Carrossel com as 7 avaliações reais do documento. **Só existe na Home** |
 | **Sobre Mim** | `#sobre` | Constelação **Lyra**. "A artista por trás dos pincéis": trajetória em texto e currículo (Senac, Anhembi Morumbi, Style Academy, Visagismo, O Poder da Juba e especializações) |
 | **Noivas** | `#noivas` | Constelação **Corona Borealis**. Frase de posicionamento, "Do primeiro contato ao altar" em 6 passos, galeria de inspirações, pacote único ("a partir de R$ 3.000,00") e formulário da noiva |
@@ -153,7 +152,7 @@ O tema celeste do site (sóis e luas de tarô) ganhou movimento:
 | **Sóis e luas do fundo** | Giram conforme a página rola (as luas no sentido contrário), além do giro lento de sempre | `CelestialSprites.tsx` |
 | **A lua de hoje** | Fase calculada de verdade (mês sinódico a partir de uma lua nova de referência), desenhada como se vê do Brasil: "Hoje, 19 de outubro, a lua está em quarto crescente, 55% iluminada" | `MoonToday.tsx`, `lib/moon.ts` |
 | **Modo noturno** | Botão de lua/sol no menu. Fundo azul-noite, céu estrelado em canvas, rosa mais luminoso e desenhos em dourado. Segue o modo escuro do aparelho até a visitante escolher, e lembra a escolha (`localStorage`). O painel da Lari fica sempre claro | `hooks/useTheme.ts`, `SkyEffects.tsx`, tokens em `:root[data-theme='dark']` |
-| **Hero** | Título que aparece palavra por palavra e foto que acompanha levemente o mouse | `Hero.tsx` |
+| **Hero** | Título que aparece palavra por palavra | `Hero.tsx` |
 | **Botões principais** | Um brilho dourado atravessa os botões rosa de tempos em tempos | `.btn-primary::after` |
 | **Chuva de estrelinhas** | Ao concluir um agendamento | `sparkleBurst` em `lib/motion.ts` |
 
@@ -278,14 +277,13 @@ Antes de publicar:
 1. Hospedar a **AgendamentoApi com HTTPS**. O repositório da API tem a pasta `deploy/` com Docker, Caddy (HTTPS automático) e backup, e o passo a passo. Confira `VITE_AGENDAMENTO_API` e `VITE_SITE_URL` no `.env.production` antes do build. Páginas HTTPS não conseguem chamar uma API HTTP.
 2. Colocar o domínio do site em `Cors:AllowedOrigins` na API (o `deploy/` faz isso a partir de `SITE_DOMAIN`).
 3. Cadastrar na API os serviços do Social (`deploy/seed-servicos.sql`).
-4. **Tirar as fotos originais do build.** `public/img/` é leve (cerca de 3 MB), mas `public/fotos/` pesa cerca de **144 MB** (JPGs originais de câmera) e é copiada inteira para o `dist/`. Só `Courses.tsx` usa uma imagem de lá. Otimize essa imagem para `public/img/` e mova ou remova `public/fotos/` antes de publicar.
-5. Revisar os links ainda vazios ou de exemplo.
+4. Revisar os links ainda vazios ou de exemplo.
 
 ---
 
 ## Limitações conhecidas e próximos passos
 
-- **`public/fotos/` pesa 144 MB** e vai inteira para o `dist/`. As demais imagens já são leves, mas não há versões responsivas (`srcset`).
+- **Imagens sem versões responsivas (`srcset`).** Todas ficam em `public/img/` (cerca de 3 MB no total), mas o celular baixa o mesmo arquivo que o computador.
 - **Avaliações do Google são simuladas:** os 7 textos vêm do documento, e o selo "5,0" foi definido manualmente. Não há integração com o Google.
 - **Seção Equipe e bloco de redes da Home estão ocultos**; os nomes e descrições da Equipe são de exemplo.
 - **Cartões de Instagram e TikTok** na seção Redes trazem listas de exemplo ("Antes e depois de noivas", "Penteado em 60 segundos") que não vêm do documento.

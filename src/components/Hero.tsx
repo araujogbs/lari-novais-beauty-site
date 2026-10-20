@@ -1,5 +1,4 @@
-import { type CSSProperties, useEffect, useRef } from 'react';
-import { hasFinePointer, prefersReducedMotion } from '../lib/motion';
+import type { CSSProperties } from 'react';
 import { HeroCarousel } from './HeroCarousel';
 import { MoonToday } from './MoonToday';
 
@@ -16,28 +15,9 @@ function Words({ text, from = 0 }: { text: string; from?: number }) {
 }
 
 export function Hero() {
-  const frame = useRef<HTMLDivElement>(null);
-
-  // A foto acompanha levemente o mouse, como se tivesse profundidade.
-  useEffect(() => {
-    const el = frame.current;
-    if (!el || !hasFinePointer() || prefersReducedMotion()) return;
-    const onMove = (e: PointerEvent): void => {
-      const r = el.getBoundingClientRect();
-      const px = (e.clientX - (r.left + r.width / 2)) / (window.innerWidth / 2);
-      const py = (e.clientY - (r.top + r.height / 2)) / (window.innerHeight / 2);
-      el.style.setProperty('--px', Math.max(-1, Math.min(1, px)).toFixed(3));
-      el.style.setProperty('--py', Math.max(-1, Math.min(1, py)).toFixed(3));
-    };
-    window.addEventListener('pointermove', onMove);
-    return () => {
-      window.removeEventListener('pointermove', onMove);
-    };
-  }, []);
-
   return (
     <section id="home" className="hero">
-      <div className="hero-img reveal" ref={frame}>
+      <div className="hero-img reveal">
         <HeroCarousel />
       </div>
       <h1>

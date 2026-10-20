@@ -48,7 +48,7 @@ export function Courses() {
             <div className="curso-card">
               <div className="curso-img">
                 <img
-                  src="/fotos/Fotos modelos/Cacheado e Crespo/IMG_0220.JPG"
+                  src="/img/curso-penteado.jpg"
                   alt="Penteado Profissional"
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />

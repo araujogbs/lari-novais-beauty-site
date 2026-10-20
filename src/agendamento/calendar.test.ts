@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addMonths, availabilityLevel, googleCalendarUrl, icsContent, monthGrid } from './calendar';
+import { addMonths, addMonthsToDate, availabilityLevel, googleCalendarUrl, icsContent, monthGrid } from './calendar';
 
 const EVENT = { title: 'Maquiagem', details: 'Pedido em análise', date: '2026-11-07', start: '15:00', end: '16:30' };
 
@@ -16,6 +16,12 @@ describe('calendário', () => {
   it('avança e volta meses atravessando o ano', () => {
     expect(addMonths('2026-12', 1)).toBe('2027-01');
     expect(addMonths('2027-01', -1)).toBe('2026-12');
+  });
+
+  it('calcula o último dia da agenda aberta (3 meses)', () => {
+    expect(addMonthsToDate('2026-10-19', 3)).toBe('2027-01-19');
+    // 30 de novembro + 3 meses: fevereiro não tem dia 30
+    expect(addMonthsToDate('2026-11-30', 3)).toBe('2027-02-28');
   });
 
   it('classifica a disponibilidade do dia', () => {

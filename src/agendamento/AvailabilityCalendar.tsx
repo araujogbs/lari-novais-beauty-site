@@ -1,11 +1,22 @@
 import { useState } from 'react';
 import { todayISO } from '../utils';
 import * as api from './api';
-import { addMonths, AVAILABILITY_TEXT, availabilityLevel, dayLabel, monthGrid, monthLabel, monthOf } from './calendar';
+import {
+  addMonths,
+  addMonthsToDate,
+  AVAILABILITY_TEXT,
+  availabilityLevel,
+  dayLabel,
+  monthGrid,
+  monthLabel,
+  monthOf,
+  shortDateLabel,
+} from './calendar';
 import { useAsync } from './useAsync';
 
 const WEEKDAYS = ['seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'];
-const MAX_MONTHS_AHEAD = 12;
+/** A agenda abre só até 3 meses à frente (de hoje até o mesmo dia daqui a 3 meses). */
+export const BOOKING_WINDOW_MONTHS = 3;
 
 interface Props {
   serviceId: number;
@@ -19,10 +30,12 @@ interface Props {
 /** Calendário do mês com a disponibilidade de cada dia (livre, últimos horários, lotado). */
 export function AvailabilityCalendar({ serviceId, people, value, onChange, refreshKey }: Props) {
   const today = todayISO();
+  const lastDay = addMonthsToDate(today, BOOKING_WINDOW_MONTHS);
   const firstMonth = monthOf(today);
+  const lastMonth = monthOf(lastDay);
   const [month, setMonth] = useState(() => monthOf(value || today));
   const { blanks, days } = monthGrid(month);
-  const open = days.filter((d) => d >= today);
+  const open = days.filter((d) => d >= today && d <= lastDay);
   const from = open[0] ?? '';
 
   const availability = useAsync(from ? `${serviceId}|${people}|${from}|${open.length}|${refreshKey}` : null, () =>
@@ -34,6 +47,9 @@ export function AvailabilityCalendar({ serviceId, people, value, onChange, refre
 
   return (
     <div className="ag-cal">
+      <p className="ag-cal-window">
+        Agenda aberta até 3 meses à frente: no momento está aberta até <strong>{shortDateLabel(lastDay)}</strong>.
+      </p>
       <div className="ag-cal-head">
         <button
           type="button"
@@ -49,7 +65,7 @@ export function AvailabilityCalendar({ serviceId, people, value, onChange, refre
         <button
           type="button"
           aria-label="Próximo mês"
-          disabled={month >= addMonths(firstMonth, MAX_MONTHS_AHEAD)}
+          disabled={month >= lastMonth}
           onClick={() => {
             setMonth((m) => addMonths(m, 1));
           }}
@@ -67,10 +83,11 @@ export function AvailabilityCalendar({ serviceId, people, value, onChange, refre
           <span key={`b${i}`} aria-hidden="true" />
         ))}
         {days.map((d) => {
-          const past = d < today;
+          const past = d < today || d > lastDay;
           const slots = slotsByDay.get(d);
           const level = slots === undefined ? null : availabilityLevel(slots);
-          const text = past ? 'indisponível' : level ? AVAILABILITY_TEXT[level] : '';
+          const text =
+            d > lastDay ? 'agenda ainda não aberta' : past ? 'indisponível' : level ? AVAILABILITY_TEXT[level] : '';
           const classes = ['ag-day', level ? `ag-day--${level}` : '', d === value ? 'active' : '']
             .filter(Boolean)
             .join(' ');

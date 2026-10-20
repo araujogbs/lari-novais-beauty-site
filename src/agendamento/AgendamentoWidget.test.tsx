@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { todayISO } from '../utils';
 import { AgendamentoWidget } from './AgendamentoWidget';
-import { addMonths, monthOf } from './calendar';
+import { addMonths, addMonthsToDate, monthOf } from './calendar';
 
 /** Dia 10 do mês que vem: sempre no futuro e alcançado com um clique em "Próximo mês". */
 const DAY = `${addMonths(monthOf(todayISO()), 1)}-10`;
@@ -108,6 +108,27 @@ describe('AgendamentoWidget', () => {
     const google = screen.getByRole('link', { name: 'Google Agenda' });
     expect(google.getAttribute('href')).toContain(`dates=${DAY.replace(/-/g, '')}T090000`);
     expect(screen.getByRole('button', { name: 'Apple / Outlook' })).toBeInTheDocument();
+  });
+
+  it('abre a agenda só até 3 meses à frente e avisa isso', async () => {
+    mockApi();
+    const user = userEvent.setup();
+    render(<AgendamentoWidget />);
+    await user.click(await screen.findByLabelText(/Maquiagem/));
+    expect(screen.getByText(/Agenda aberta até 3 meses à frente/)).toBeInTheDocument();
+
+    const next = screen.getByRole('button', { name: 'Próximo mês' });
+    for (let i = 0; i < 3; i++) await user.click(next);
+    expect(next).toBeDisabled();
+
+    const lastDay = addMonthsToDate(todayISO(), 3);
+    const dayAfter = Number(lastDay.slice(8)) + 1;
+    const after = screen.queryByRole('button', { name: new RegExp(`, ${dayAfter} de .*: agenda ainda não aberta$`) });
+    // se o último dia for o fim do mês, não há dia seguinte nessa tela
+    if (after) expect(after).toBeDisabled();
+    expect(
+      await screen.findByRole('button', { name: new RegExp(`, ${Number(lastDay.slice(8))} de .*: livre$`) }),
+    ).toBeEnabled();
   });
 
   it('marca os dias lotados e não deixa escolhê-los', async () => {
