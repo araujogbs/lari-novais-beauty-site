@@ -2,6 +2,8 @@
 
 Site institucional da maquiadora e penteadista Lari Novais, de São Paulo, com **agendamento online** e o **painel da profissional** integrados à API de agendamento ([lari-novais-beauty-agendamento](https://github.com/araujogbs/lari-novais-beauty-agendamento), que também tem o app).
 
+**No ar em [larinovaisbeauty.com.br](https://larinovaisbeauty.com.br)** (Cloudflare), com a API em `https://api.larinovaisbeauty.com.br`.
+
 <p align="center"><img src="docs/site-home.jpg" width="820" alt="Página inicial do site" /></p>
 
 <table>
@@ -178,17 +180,17 @@ O horário escolhido é o de **início** (`startTime`); a API calcula o término
 
 **Regras que vêm do backend** (não do site): expediente das 6h às 22h, sem sobreposição de horários, aprovação dos pedidos e prazo de 3 dias, cancelamento de confirmados só com mais de 24 h, limites de requisições por IP (resposta 429) e cálculo de deslocamento a partir do CEP. Detalhes no README da AgendamentoApi.
 
-### Serviços cadastrados na API (ambiente local)
-| Id | Serviço | Duração | Preço |
-|---|---|---|---|
-| 1 | Maquiagem | 60 min | R$ 350 |
-| 2 | Penteado | 90 min | R$ 350 |
-| 3 | Maquiagem + Penteado | 150 min | R$ 700 |
-| 4 | Escova e Babyliss | 60 min | R$ 300 |
+### Serviços cadastrados na API
+| Serviço | Duração | Preço |
+|---|---|---|
+| Maquiagem | 60 min | R$ 350 |
+| Penteado | 90 min | R$ 350 |
+| Escova e Babyliss | 60 min | R$ 300 |
+| Maquiagem + Penteado | 150 min | R$ 700 |
 
-Preços e durações ajustados pela migration `AtualizarServicosSocial` da API (`dotnet ef database update`), que atualiza os serviços já existentes pelo nome.
+Em produção foram cadastrados pelo `deploy/seed-servicos.sql` da API; no banco local, ajustados pela migration `AtualizarServicosSocial`. Os ids mudam de um banco para o outro, por isso o site sempre lê a lista da API.
 
-As durações são estimativas e devem ser ajustadas ao tempo real de atendimento. Esses registros foram criados direto no banco local; em produção é preciso cadastrá-los de novo.
+As durações são estimativas e devem ser ajustadas ao tempo real de atendimento.
 
 ---
 
@@ -269,20 +271,25 @@ As variáveis são embutidas no build: ao mudá-las, rode `npm run build` de nov
 
 ## Publicação
 
-O site é estático: rode `npm run build` e publique o conteúdo da pasta `dist/` em qualquer hospedagem de arquivos (Netlify, Vercel, GitHub Pages, Cloudflare Pages, hospedagem comum).
+O site está no ar em **[larinovaisbeauty.com.br](https://larinovaisbeauty.com.br)**, publicado pelo **Cloudflare Workers** (arquivos estáticos, gratuito) ligado a este repositório: **cada push na `master` publica sozinho**. Não há passo manual de deploy.
 
-A recomendação é o **Cloudflare Pages** (gratuito) ligado ao GitHub: cada push publica sozinho. Configuração: build `npm run build`, saída `dist`, Node 22 (`.node-version`). A navegação é por hash (`#painel`), então não precisa configurar rewrite. O `public/_headers` define os cabeçalhos de segurança e o cache longo de `/assets/*` (arquivos com hash no nome).
+| Item | Configuração |
+|---|---|
+| Build | `npm run build`, saída `dist`, Node 22 (`.node-version`) |
+| Domínio | `larinovaisbeauty.com.br` ligado ao Worker; `www` redireciona (301) para o domínio principal por uma Redirect Rule da Cloudflare |
+| DNS | Cloudflare, com DNSSEC; o domínio é registrado no registro.br |
+| Cabeçalhos | `public/_headers`: segurança (HSTS, `X-Frame-Options`, `nosniff`, Referrer e Permissions Policy) e cache longo de `/assets/*` (arquivos com hash no nome) |
+| API | `https://api.larinovaisbeauty.com.br`, com CORS liberado só para o domínio do site (veja o README da API) |
 
-Antes de publicar:
-1. Hospedar a **AgendamentoApi com HTTPS**. O repositório da API tem a pasta `deploy/` com Docker, Caddy (HTTPS automático) e backup, e o passo a passo. Confira `VITE_AGENDAMENTO_API` e `VITE_SITE_URL` no `.env.production` antes do build. Páginas HTTPS não conseguem chamar uma API HTTP.
-2. Colocar o domínio do site em `Cors:AllowedOrigins` na API (o `deploy/` faz isso a partir de `SITE_DOMAIN`).
-3. Cadastrar na API os serviços do Social (`deploy/seed-servicos.sql`).
-4. Revisar os links ainda vazios ou de exemplo.
+A navegação é por hash (`#painel`), então não precisa configurar rewrite. Ao mudar o domínio ou o WhatsApp, ajuste o `.env.production`: as variáveis são embutidas no build.
+
+Para publicar em outra hospedagem, basta servir a pasta `dist/` (Netlify, Vercel, Cloudflare Pages, hospedagem comum); o `_headers` só vale na Cloudflare e na Netlify.
 
 ---
 
 ## Limitações conhecidas e próximos passos
 
+- **Mensagens de WhatsApp e eventos do Google Agenda ainda em simulação na API** (a cliente vê a confirmação na tela, mas não recebe mensagem automática). Integração com a API oficial da Meta em andamento.
 - **Imagens sem versões responsivas (`srcset`).** Todas ficam em `public/img/` (cerca de 3 MB no total), mas o celular baixa o mesmo arquivo que o computador.
 - **Avaliações do Google são simuladas:** os 7 textos vêm do documento, e o selo "5,0" foi definido manualmente. Não há integração com o Google.
 - **Seção Equipe e bloco de redes da Home estão ocultos**; os nomes e descrições da Equipe são de exemplo.
