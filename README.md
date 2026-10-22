@@ -291,7 +291,7 @@ Para publicar em outra hospedagem, basta servir a pasta `dist/` (Netlify, Vercel
 
 - **Mensagens de WhatsApp e eventos do Google Agenda ainda em simulação na API** (a cliente vê a confirmação na tela, mas não recebe mensagem automática). Integração com a API oficial da Meta em andamento.
 - **Imagens sem versões responsivas (`srcset`).** Todas ficam em `public/img/` (cerca de 3 MB no total), mas o celular baixa o mesmo arquivo que o computador.
-- **Avaliações do Google são simuladas:** os 7 textos vêm do documento, e o selo "5,0" foi definido manualmente. Não há integração com o Google.
+- **Avaliações do Google copiadas à mão:** os 7 textos vêm do perfil real (todas 5 estrelas) e o selo "5,0" é fixo; não há integração automática com o Google (a Places API traz só 5 avaliações e exige chave e endpoint no servidor).
 - **Seção Equipe e bloco de redes da Home estão ocultos**; os nomes e descrições da Equipe são de exemplo.
 - **Cartões de Instagram e TikTok** na seção Redes trazem listas de exemplo ("Antes e depois de noivas", "Penteado em 60 segundos") que não vêm do documento.
 - **Conteúdo do portfólio** da Home e rótulos das fotos são genéricos; vale revisar com a cliente.
