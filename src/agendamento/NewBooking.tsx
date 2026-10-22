@@ -3,6 +3,7 @@ import { brl, digits, fmtDateBR, maskCep, maskPhone, waLink } from '../utils';
 import * as api from './api';
 import { ApiError } from './api';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
+import { addToken } from './myBookings';
 import {
   acceptFiles,
   buildAppointmentForm,
@@ -128,7 +129,7 @@ export function NewBooking({ services, onBooked }: Props) {
     setBusy(true);
     setError('');
     try {
-      await api.createAppointment(
+      const created = await api.createAppointment(
         buildAppointmentForm(
           values,
           chosen,
@@ -137,6 +138,7 @@ export function NewBooking({ services, onBooked }: Props) {
           picked.map((p) => p.file),
         ),
       );
+      if (created?.manageToken) addToken(created.manageToken);
       onBooked({
         nome: values.nome.trim(),
         fone: values.fone,

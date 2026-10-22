@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { todayISO } from '../utils';
@@ -45,11 +45,13 @@ function mockApi(override?: Handler) {
     else if (url.includes('/availability')) res = availabilityFor(url);
     else if (url.includes('estimate-fee'))
       res = json({ distanceKm: 12.34, travelFee: 40, street: 'Rua A', city: 'SP' });
-    else if (url.endsWith('/appointments') && init?.method === 'POST') res = json({}, 201);
-    else if (url.includes('my-appointments'))
+    else if (url.endsWith('/appointments') && init?.method === 'POST')
+      res = json({ id: 7, manageToken: '7.abc123' }, 201);
+    else if (url.endsWith('/appointments/lookup'))
       res = json([
         {
           id: 7,
+          manageToken: '7.abc123',
           serviceName: 'Maquiagem',
           startTime: '2030-01-10T12:00:00Z',
           clientAddress: 'Rua A',
@@ -77,6 +79,8 @@ async function fillValidForm(user: ReturnType<typeof userEvent.setup>): Promise<
 }
 
 afterEach(() => {
+  localStorage.clear();
+  window.history.replaceState(null, '', '/');
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
 });
@@ -100,7 +104,7 @@ describe('AgendamentoWidget', () => {
     await user.click(screen.getByRole('button', { name: 'Confirmar agendamento' }));
     expect(await screen.findByText('Agendamento em análise')).toBeInTheDocument();
     expect(screen.getByText(/Maria, você receberá a confirmação pelo WhatsApp/)).toBeInTheDocument();
-    expect(screen.getByText(/PIX do sinal/)).toBeInTheDocument();
+    expect(screen.getAllByText(/PIX do sinal/).length).toBeGreaterThan(0);
 
     const post = fetchMock.mock.calls.find(isPost);
     const body = post?.[1]?.body;
@@ -198,32 +202,53 @@ describe('AgendamentoWidget', () => {
     expect(screen.getByRole('button', { name: 'Confirmar agendamento' })).toBeDisabled();
   });
 
-  it('lista e cancela agendamentos pelo telefone', async () => {
+  it('guarda o código do agendamento feito aqui e lista em Meus agendamentos', async () => {
+    mockApi();
+    const user = userEvent.setup();
+    render(<AgendamentoWidget />);
+    await fillValidForm(user);
+    await user.click(screen.getByRole('button', { name: 'Confirmar agendamento' }));
+    await user.click(await screen.findByRole('button', { name: 'Ver meus agendamentos' }));
+
+    expect(JSON.parse(localStorage.getItem('lari.agendamentos') ?? '[]')).toEqual(['7.abc123']);
+    expect(await screen.findByText('Em análise')).toBeInTheDocument();
+  });
+
+  it('lista e cancela pelo código secreto, sem pedir telefone', async () => {
+    localStorage.setItem('lari.agendamentos', JSON.stringify(['7.abc123']));
     const fetchMock = mockApi();
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     const user = userEvent.setup();
     render(<AgendamentoWidget />);
     await user.click(screen.getByRole('button', { name: 'Meus agendamentos' }));
-    const panel = screen.getByLabelText('WhatsApp usado no agendamento').closest<HTMLElement>('.ag-panel');
-    if (!panel) throw new Error('painel não encontrado');
+    expect(screen.queryByLabelText('WhatsApp usado no agendamento')).not.toBeInTheDocument();
 
-    await user.type(within(panel).getByLabelText('WhatsApp usado no agendamento'), '11912345678');
-    await user.click(within(panel).getByRole('button', { name: 'Buscar' }));
-    expect(await within(panel).findByText('Maquiagem')).toBeInTheDocument();
-    expect(within(panel).getByText('Em análise')).toBeInTheDocument();
+    expect(await screen.findByText('Em análise')).toBeInTheDocument();
+    const lookup = fetchMock.mock.calls.find(([u]) => urlOf(u).endsWith('/appointments/lookup'));
+    expect(JSON.parse(lookup?.[1]?.body as string)).toEqual({ tokens: ['7.abc123'] });
 
-    await user.click(within(panel).getByRole('button', { name: 'Cancelar' }));
+    await user.click(screen.getByRole('button', { name: 'Cancelar' }));
     await waitFor(() => {
-      expect(fetchMock.mock.calls.some(([u]) => urlOf(u).includes('/7/client-cancel'))).toBe(true);
+      const cancel = fetchMock.mock.calls.find(([u]) => urlOf(u).includes('/7/client-cancel'));
+      expect(JSON.parse(cancel?.[1]?.body as string)).toEqual({ token: '7.abc123' });
     });
   });
 
-  it('valida o telefone antes de buscar', async () => {
-    mockApi();
+  it('sem código neste aparelho, explica e não consulta a API', async () => {
+    const fetchMock = mockApi();
     const user = userEvent.setup();
     render(<AgendamentoWidget />);
     await user.click(screen.getByRole('button', { name: 'Meus agendamentos' }));
-    await user.click(screen.getByRole('button', { name: 'Buscar' }));
-    expect(screen.getByText('Informe um WhatsApp válido.')).toBeInTheDocument();
+    expect(screen.getByText(/Nenhum agendamento neste aparelho/)).toBeInTheDocument();
+    expect(fetchMock.mock.calls.some(([u]) => urlOf(u).endsWith('/appointments/lookup'))).toBe(false);
+  });
+
+  it('abre Meus agendamentos pelo link do WhatsApp e limpa o código da barra de endereço', async () => {
+    window.history.replaceState(null, '', '/#ag=7.abc123');
+    mockApi();
+    render(<AgendamentoWidget />);
+    expect(await screen.findByText('Em análise')).toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem('lari.agendamentos') ?? '[]')).toEqual(['7.abc123']);
+    expect(window.location.hash).toBe('');
   });
 });

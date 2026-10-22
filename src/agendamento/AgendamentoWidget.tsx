@@ -5,6 +5,7 @@ import { API_URL } from '../config';
 import { waLink } from '../utils';
 import { BookingDone } from './BookingDone';
 import { MyAppointments } from './MyAppointments';
+import { addToken, tokenFromHash } from './myBookings';
 import { NewBooking } from './NewBooking';
 import type { BookingDoneInfo } from './types';
 import { useServices } from './useServices';
@@ -12,11 +13,24 @@ import { useServices } from './useServices';
 type Tab = 'novo' | 'meus';
 
 export function AgendamentoWidget() {
-  const [tab, setTab] = useState<Tab>('novo');
+  // Link do WhatsApp ("/#ag=código"): guarda o código e já abre "Meus agendamentos".
+  const [linked] = useState(() => {
+    const token = tokenFromHash(window.location.hash);
+    if (token) addToken(token);
+    return token !== null;
+  });
+  const [tab, setTab] = useState<Tab>(linked ? 'meus' : 'novo');
   const [done, setDone] = useState<BookingDoneInfo | null>(null);
-  const [lookupPhone, setLookupPhone] = useState('');
+  const [lookupNonce, setLookupNonce] = useState(0);
   const services = useServices();
   const root = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!linked) return;
+    // Tira o código da barra de endereço (não fica no histórico nem em prints) e leva até o painel.
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+    root.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [linked]);
 
   useEffect(() => {
     if (done) root.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -42,7 +56,7 @@ export function AgendamentoWidget() {
         <BookingDone
           info={done}
           onViewAppointments={() => {
-            setLookupPhone(done.fone);
+            setLookupNonce((n) => n + 1);
             setDone(null);
             setTab('meus');
           }}
@@ -67,6 +81,7 @@ export function AgendamentoWidget() {
           type="button"
           className={tab === 'meus' ? 'ag-tab active' : 'ag-tab'}
           onClick={() => {
+            setLookupNonce((n) => n + 1);
             setTab('meus');
           }}
         >
@@ -78,7 +93,7 @@ export function AgendamentoWidget() {
         <NewBooking services={services} onBooked={setDone} />
       </div>
       <div className="ag-panel" id="agMeus" hidden={tab !== 'meus'}>
-        <MyAppointments initialPhone={lookupPhone} />
+        <MyAppointments refreshKey={lookupNonce} />
       </div>
     </div>
   );

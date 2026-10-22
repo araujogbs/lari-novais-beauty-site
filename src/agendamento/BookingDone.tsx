@@ -83,7 +83,10 @@ export function BookingDone({ info, onViewAppointments }: Props) {
           </button>
         </div>
       </div>
-      <p className="ag-hint">Para ver ou cancelar (com mais de 24 h de antecedência), use "Meus agendamentos".</p>
+      <p className="ag-hint">
+        Este agendamento fica guardado neste aparelho em "Meus agendamentos", onde você vê o PIX do sinal e pode
+        cancelar (com mais de 24 h de antecedência). O link para abrir em outro aparelho também chega por WhatsApp.
+      </p>
       <button type="button" className="btn btn-primary" onClick={onViewAppointments}>
         Ver meus agendamentos
       </button>

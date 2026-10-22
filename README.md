@@ -297,7 +297,7 @@ Para publicar em outra hospedagem, basta servir a pasta `dist/` (Netlify, Vercel
 - **Conteúdo do portfólio** da Home e rótulos das fotos são genéricos; vale revisar com a cliente.
 - **Horário de atendimento da API é fixo** (6h às 22h, constantes `WorkStart`/`WorkEnd` no `AppointmentsController`).
 - **Fuso:** o widget envia o horário com `-03:00` fixo, o que está correto enquanto o Brasil não adotar horário de verão.
-- **"Meus agendamentos" usa só o telefone** como identificação (limitação da API).
+- **"Meus agendamentos" funciona por código secreto, não por telefone.** Cada pedido gera um código (`id.assinatura`) que o navegador guarda e que também vai num link de WhatsApp (`/#ag=código`). Quem só sabe o telefone de alguém não vê nada. Limitação: em outro aparelho, só pelo link do WhatsApp (depende da integração oficial) ou falando com a Lari.
 - **Analytics:** Cloudflare Web Analytics em configuração automática (sem cookies). `sitemap.xml` e `robots.txt` já estão no ar.
 - **Antes e depois** (slider de comparação) ficou para depois: depende de pares de fotos reais.
 - **Acessibilidade:** o menu e os carrosséis precisam de revisão (foco por teclado, textos alternativos mais descritivos, contraste dos rótulos rosa claro).

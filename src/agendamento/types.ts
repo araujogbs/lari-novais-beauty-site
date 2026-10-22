@@ -19,6 +19,8 @@ export type AppointmentStatus = 'Pending' | 'Confirmed';
 
 export interface Appointment {
   id: number | string;
+  /** Código secreto do agendamento, usado para cancelar. */
+  manageToken?: string;
   serviceName: string;
   startTime: string;
   clientAddress?: string;

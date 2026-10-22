@@ -46,14 +46,21 @@ export const getAvailability = (from: string, days: number, serviceIds: readonly
 
 export const estimateFee = (cep: string) => request<FeeEstimate>(`/appointments/estimate-fee?cep=${cep}`);
 
-export const createAppointment = (body: FormData) => request<unknown>('/appointments', { method: 'POST', body });
+/** Devolve o código secreto do agendamento, que a cliente usa para acompanhar e cancelar. */
+export const createAppointment = (body: FormData) =>
+  request<{ id: number; manageToken: string } | null>('/appointments', { method: 'POST', body });
 
-export const getMyAppointments = (phone: string) =>
-  request<Appointment[] | null>(`/appointments/my-appointments?phone=${encodeURIComponent(phone)}`);
+/** Agendamentos futuros dos códigos secretos guardados neste aparelho. */
+export const lookupAppointments = (tokens: readonly string[]) =>
+  request<Appointment[] | null>('/appointments/lookup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tokens }),
+  });
 
-export const cancelAppointment = (id: number | string, phone: string) =>
+export const cancelAppointment = (id: number | string, token: string) =>
   request<unknown>(`/appointments/${id}/client-cancel`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ phone }),
+    body: JSON.stringify({ token }),
   });
