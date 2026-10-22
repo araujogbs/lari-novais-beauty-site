@@ -298,7 +298,7 @@ Para publicar em outra hospedagem, basta servir a pasta `dist/` (Netlify, Vercel
 - **Horário de atendimento da API é fixo** (6h às 22h, constantes `WorkStart`/`WorkEnd` no `AppointmentsController`).
 - **Fuso:** o widget envia o horário com `-03:00` fixo, o que está correto enquanto o Brasil não adotar horário de verão.
 - **"Meus agendamentos" usa só o telefone** como identificação (limitação da API).
-- **Sem analytics nem `sitemap.xml`.** Open Graph, dados estruturados, favicon e `robots.txt` já estão no ar. Como o site é uma página só, as seções não aparecem separadas no Google.
+- **Analytics:** Cloudflare Web Analytics em configuração automática (sem cookies). `sitemap.xml` e `robots.txt` já estão no ar.
 - **Antes e depois** (slider de comparação) ficou para depois: depende de pares de fotos reais.
 - **Acessibilidade:** o menu e os carrosséis precisam de revisão (foco por teclado, textos alternativos mais descritivos, contraste dos rótulos rosa claro).
 - Ideias: vídeos curtos de depoimento, blog, integração real com o Google Reviews, lembretes de agendamento.

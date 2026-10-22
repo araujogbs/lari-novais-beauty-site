@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://larinovaisbeauty.com.br/sitemap.xml
