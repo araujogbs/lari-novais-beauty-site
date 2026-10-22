@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { brl, digits, fmtWhen, maskPhone } from '../utils';
 import * as api from './api';
+import { PixQr } from './PixQr';
 import type { Appointment } from './types';
 import { useAsync } from './useAsync';
 
@@ -111,18 +112,21 @@ export function MyAppointments({ initialPhone = '' }: Props) {
                   <span className="ag-deposit">Sinal recebido. Obrigada!</span>
                 )}
                 {owesDeposit(a) && a.pixCode && (
-                  <>
-                    <code className="ag-pix">{a.pixCode}</code>
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={() => {
-                        void copyPix(a);
-                      }}
-                    >
-                      {copied === a.id ? 'Código copiado!' : 'Copiar PIX'}
-                    </button>
-                  </>
+                  <div className="ag-pix-box">
+                    <div className="ag-pix-text">
+                      <code className="ag-pix">{a.pixCode}</code>
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={() => {
+                          void copyPix(a);
+                        }}
+                      >
+                        {copied === a.id ? 'Código copiado!' : 'Copiar PIX'}
+                      </button>
+                    </div>
+                    <PixQr code={a.pixCode} />
+                  </div>
                 )}
               </div>
               <button

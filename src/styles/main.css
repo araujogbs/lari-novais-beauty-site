@@ -1722,12 +1722,30 @@ section {
   word-break: break-all;
   font-size: 0.72rem;
   background: #fff;
+  color: #2b2b2b; /* texto escuro também no modo noturno, onde o fundo do cartão é escuro */
   border: 1px dashed rgba(194, 83, 122, 0.4);
   border-radius: 6px;
   user-select: all;
 }
 .ag-appt > div {
   min-width: 0;
+}
+.ag-appt .ag-pix-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+.ag-appt .ag-pix-text {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+.ag-pix-qr {
+  background: #fff;
+  padding: 6px;
+  border-radius: 8px;
+  flex: none;
 }
 .ag-deposit-note {
   margin-top: 0.6rem;
