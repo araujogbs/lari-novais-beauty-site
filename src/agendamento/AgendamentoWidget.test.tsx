@@ -28,7 +28,10 @@ type Input = string | URL | Request;
 const urlOf = (input: Input): string =>
   typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
 
-const SERVICES = [{ id: 1, name: 'Maquiagem', durationMinutes: 60, price: 290 }];
+const SERVICES = [
+  { id: 1, name: 'Maquiagem', durationMinutes: 60, price: 290 },
+  { id: 2, name: 'Penteado', durationMinutes: 90, price: 300 },
+];
 
 /** Simula a AgendamentoApi. `override` tem prioridade sobre as respostas padrão. */
 function mockApi(override?: Handler) {
@@ -96,18 +99,39 @@ describe('AgendamentoWidget', () => {
 
     await user.click(screen.getByRole('button', { name: 'Confirmar agendamento' }));
     expect(await screen.findByText('Agendamento em análise')).toBeInTheDocument();
-    expect(screen.getByText('Maria, você receberá a confirmação pelo WhatsApp.')).toBeInTheDocument();
+    expect(screen.getByText(/Maria, você receberá a confirmação pelo WhatsApp/)).toBeInTheDocument();
+    expect(screen.getByText(/PIX do sinal/)).toBeInTheDocument();
 
     const post = fetchMock.mock.calls.find(isPost);
     const body = post?.[1]?.body;
     expect(body).toBeInstanceOf(FormData);
     expect((body as FormData).get('startTime')).toBe(`${DAY}T09:00:00-03:00`);
     expect((body as FormData).get('people')).toBe('1');
+    expect((body as FormData).getAll('serviceItemIds')).toEqual(['1']);
 
     // links para salvar na agenda da cliente
     const google = screen.getByRole('link', { name: 'Google Agenda' });
     expect(google.getAttribute('href')).toContain(`dates=${DAY.replace(/-/g, '')}T090000`);
     expect(screen.getByRole('button', { name: 'Apple / Outlook' })).toBeInTheDocument();
+  });
+
+  it('permite marcar mais de um serviço e soma o valor', async () => {
+    const fetchMock = mockApi();
+    const user = userEvent.setup();
+    render(<AgendamentoWidget />);
+    await fillValidForm(user);
+    await user.click(screen.getByLabelText(/Penteado/));
+    await user.click(await screen.findByRole('button', { name: '09:00' }));
+
+    expect(screen.getByText('Maquiagem + Penteado')).toBeInTheDocument();
+    expect(screen.getByText('R$ 590,00')).toBeInTheDocument();
+    // os horários e a agenda são pedidos para a soma dos serviços
+    expect(fetchMock.mock.calls.some(([u]) => urlOf(u).includes('serviceIds=1,2'))).toBe(true);
+
+    await user.click(screen.getByRole('button', { name: 'Confirmar agendamento' }));
+    expect(await screen.findByText('Agendamento em análise')).toBeInTheDocument();
+    const body = fetchMock.mock.calls.find(isPost)?.[1]?.body as FormData;
+    expect(body.getAll('serviceItemIds')).toEqual(['1', '2']);
   });
 
   it('abre a agenda só até 3 meses à frente e avisa isso', async () => {

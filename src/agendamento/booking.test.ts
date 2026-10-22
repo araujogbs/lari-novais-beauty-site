@@ -12,7 +12,10 @@ import {
 } from './booking';
 import type { BookingValues, Service } from './types';
 
-const service: Service = { id: 3, name: 'Maquiagem + Penteado', durationMinutes: 120, price: 550 };
+const makeup: Service = { id: 1, name: 'Maquiagem', durationMinutes: 60, price: 380 };
+const hair: Service = { id: 2, name: 'Penteado', durationMinutes: 90, price: 380 };
+const service: Service = { id: 3, name: 'Escova e Babyliss', durationMinutes: 60, price: 300 };
+const services = [service];
 const valid: BookingValues = {
   nome: ' Maria Souza ',
   fone: '(11) 91234-5678',
@@ -26,23 +29,23 @@ const file = (type: string, size = 10): File => new File([new Uint8Array(size)],
 
 describe('firstError', () => {
   it('valida na ordem dos passos', () => {
-    expect(firstError(valid, undefined, '2030-01-10', '09:00')).toBe('Escolha o serviço.');
-    expect(firstError(valid, service, '', '09:00')).toBe('Escolha a data e o horário.');
-    expect(firstError(valid, service, '2030-01-10', '')).toBe('Escolha a data e o horário.');
-    expect(firstError(EMPTY_VALUES, service, '2030-01-10', '09:00')).toBe('Informe o seu nome completo.');
-    expect(firstError({ ...valid, fone: '1191' }, service, '2030-01-10', '09:00')).toBe(
+    expect(firstError(valid, [], '2030-01-10', '09:00')).toBe('Escolha o serviço.');
+    expect(firstError(valid, services, '', '09:00')).toBe('Escolha a data e o horário.');
+    expect(firstError(valid, services, '2030-01-10', '')).toBe('Escolha a data e o horário.');
+    expect(firstError(EMPTY_VALUES, services, '2030-01-10', '09:00')).toBe('Informe o seu nome completo.');
+    expect(firstError({ ...valid, fone: '1191' }, services, '2030-01-10', '09:00')).toBe(
       'Informe um WhatsApp válido com DDD.',
     );
-    expect(firstError({ ...valid, cep: '', end: '' }, service, '2030-01-10', '09:00')).toBe(
+    expect(firstError({ ...valid, cep: '', end: '' }, services, '2030-01-10', '09:00')).toBe(
       'Informe o CEP ou o endereço do atendimento.',
     );
-    expect(firstError({ ...valid, msg: '  ' }, service, '2030-01-10', '09:00')).toBe(
+    expect(firstError({ ...valid, msg: '  ' }, services, '2030-01-10', '09:00')).toBe(
       'Conte como você quer a sua produção.',
     );
   });
 
   it('retorna null quando tudo está preenchido', () => {
-    expect(firstError(valid, service, '2030-01-10', '09:00')).toBeNull();
+    expect(firstError(valid, services, '2030-01-10', '09:00')).toBeNull();
   });
 });
 
@@ -63,11 +66,11 @@ describe('acceptFiles', () => {
 
 describe('buildAppointmentForm', () => {
   it('monta o multipart com horário de Brasília e dados normalizados', () => {
-    const fd = buildAppointmentForm(valid, service, '2030-01-10', '09:00', [file('image/png')]);
+    const fd = buildAppointmentForm(valid, services, '2030-01-10', '09:00', [file('image/png')]);
     expect(fd.get('clientName')).toBe('Maria Souza');
     expect(fd.get('clientAddress')).toBe('Av. Paulista, 120, apto 32 — CEP 01310-100');
     expect(fd.get('cep')).toBe('01310100');
-    expect(fd.get('serviceItemId')).toBe('3');
+    expect(fd.getAll('serviceItemIds')).toEqual(['3']);
     expect(fd.get('startTime')).toBe('2030-01-10T09:00:00-03:00');
     expect(fd.get('people')).toBe('2');
     expect(fd.get('description')).toBe('Atendimento Social.\nCasamento');
@@ -75,7 +78,7 @@ describe('buildAppointmentForm', () => {
   });
 
   it('omite o CEP quando incompleto e assume 1 pessoa se a quantidade for inválida', () => {
-    const fd = buildAppointmentForm({ ...valid, cep: '0131', qtd: '' }, service, '2030-01-10', '09:00', []);
+    const fd = buildAppointmentForm({ ...valid, cep: '0131', qtd: '' }, services, '2030-01-10', '09:00', []);
     expect(fd.has('cep')).toBe(false);
     expect(fd.get('people')).toBe('1');
   });
@@ -83,13 +86,22 @@ describe('buildAppointmentForm', () => {
 
 describe('total', () => {
   it('soma serviço e deslocamento', () => {
-    expect(total(service, { distanceKm: 10, travelFee: 40 })).toBe(590);
-    expect(total(service, undefined)).toBe(550);
-    expect(total(undefined, undefined)).toBe(0);
+    expect(total(services, { distanceKm: 10, travelFee: 40 })).toBe(340);
+    expect(total(services, undefined)).toBe(300);
+    expect(total([], undefined)).toBe(0);
   });
 
   it('multiplica o serviço pelo número de pessoas, sem multiplicar o deslocamento', () => {
-    expect(total(service, { distanceKm: 10, travelFee: 40 }, 2)).toBe(1140);
+    expect(total(services, { distanceKm: 10, travelFee: 40 }, 2)).toBe(640);
+  });
+});
+
+describe('vários serviços', () => {
+  it('soma o valor e envia todos os serviços', () => {
+    expect(total([makeup, hair], undefined)).toBe(760);
+    expect(total([makeup, hair], { distanceKm: 10, travelFee: 40 }, 2)).toBe(1560);
+    const fd = buildAppointmentForm(valid, [makeup, hair], '2030-01-10', '09:00', []);
+    expect(fd.getAll('serviceItemIds')).toEqual(['1', '2']);
   });
 });
 
@@ -116,6 +128,8 @@ describe('durationLabel', () => {
 describe('término previsto', () => {
   it('soma a duração total (serviço x pessoas) ao horário de início', () => {
     expect(plusMinutes('09:00', 90)).toBe('10:30');
-    expect(endTimeFor({ id: 1, name: 'Maquiagem', durationMinutes: 60, price: 350 }, 2, '15:00')).toBe('17:00');
+    expect(endTimeFor([makeup], 2, '15:00')).toBe('17:00');
+    // vários serviços somam a duração: maquiagem (60) + penteado (90) = 150 min
+    expect(endTimeFor([makeup, hair], 1, '15:00')).toBe('17:30');
   });
 });

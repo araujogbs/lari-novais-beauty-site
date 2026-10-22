@@ -23,6 +23,11 @@ export interface Appointment {
   startTime: string;
   clientAddress?: string;
   status?: AppointmentStatus;
+  /** Sinal para garantir o horário, exigido depois que a Lari confirma o pedido. */
+  depositAmount?: number | null;
+  depositPaid?: boolean;
+  /** PIX copia e cola do sinal (só enquanto o sinal está a pagar). */
+  pixCode?: string | null;
 }
 
 /** Valores digitados no formulário de novo agendamento. */

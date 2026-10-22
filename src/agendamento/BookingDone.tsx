@@ -48,7 +48,10 @@ export function BookingDone({ info, onViewAppointments }: Props) {
         &#10003;
       </div>
       <h3>Agendamento em análise</h3>
-      <p>{info.nome.split(' ')[0]}, você receberá a confirmação pelo WhatsApp.</p>
+      <p>
+        {info.nome.split(' ')[0]}, você receberá a confirmação pelo WhatsApp. Junto dela vai o PIX do sinal, que garante
+        o seu horário.
+      </p>
       <div className="ag-summary">
         <div>
           <span>Serviço</span>

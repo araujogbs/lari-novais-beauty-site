@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { digits, fmtWhen, maskPhone } from '../utils';
+import { brl, digits, fmtWhen, maskPhone } from '../utils';
 import * as api from './api';
 import type { Appointment } from './types';
 import { useAsync } from './useAsync';
@@ -17,6 +17,9 @@ interface Query {
 const errMsg = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 const isValidPhone = (p: string): boolean => digits(p).length >= 10;
 
+/** Sinal ainda a pagar: confirmado, com valor e sem pagamento registrado. */
+const owesDeposit = (a: Appointment): boolean => a.status === 'Confirmed' && !!a.depositAmount && !a.depositPaid;
+
 export function MyAppointments({ initialPhone = '' }: Props) {
   const [phone, setPhone] = useState(initialPhone);
   const [query, setQuery] = useState<Query | null>(
@@ -24,6 +27,17 @@ export function MyAppointments({ initialPhone = '' }: Props) {
   );
   const [formError, setFormError] = useState('');
   const [cancelError, setCancelError] = useState('');
+  const [copied, setCopied] = useState<Appointment['id'] | null>(null);
+
+  const copyPix = async (a: Appointment): Promise<void> => {
+    if (!a.pixCode) return;
+    try {
+      await navigator.clipboard.writeText(a.pixCode);
+      setCopied(a.id);
+    } catch {
+      setCancelError('Não foi possível copiar. Selecione o código e copie manualmente.');
+    }
+  };
 
   const result = useAsync<Appointment[] | null>(query ? `${query.phone}|${query.nonce}` : null, () =>
     api.getMyAppointments(query?.phone ?? ''),
@@ -87,6 +101,29 @@ export function MyAppointments({ initialPhone = '' }: Props) {
                 )}
                 <span>{fmtWhen(a.startTime)}</span>
                 {a.clientAddress && <span>{a.clientAddress}</span>}
+                {owesDeposit(a) && (
+                  <span className="ag-deposit">
+                    Sinal para garantir o horário: <strong>{brl(a.depositAmount ?? 0)}</strong>
+                    {a.pixCode ? ' (PIX copia e cola)' : '. A Lari envia a chave PIX por WhatsApp.'}
+                  </span>
+                )}
+                {a.status === 'Confirmed' && a.depositPaid && (
+                  <span className="ag-deposit">Sinal recebido. Obrigada!</span>
+                )}
+                {owesDeposit(a) && a.pixCode && (
+                  <>
+                    <code className="ag-pix">{a.pixCode}</code>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => {
+                        void copyPix(a);
+                      }}
+                    >
+                      {copied === a.id ? 'Código copiado!' : 'Copiar PIX'}
+                    </button>
+                  </>
+                )}
               </div>
               <button
                 type="button"

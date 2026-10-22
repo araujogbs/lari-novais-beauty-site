@@ -37,14 +37,21 @@ export function parsePeople(qtd: string): number {
   return Number.isNaN(n) ? 1 : Math.min(Math.max(n, 1), MAX_PEOPLE);
 }
 
-/** O serviço é cobrado por pessoa; o deslocamento é único. */
-export function total(service: Service | undefined, fee: FeeEstimate | undefined, people = 1): number {
-  return (service?.price ?? 0) * people + (fee?.travelFee ?? 0);
+/** Valor dos serviços escolhidos para uma pessoa. */
+export const servicesPrice = (services: readonly Service[]): number => services.reduce((sum, s) => sum + s.price, 0);
+
+/** Duração dos serviços escolhidos para uma pessoa, em minutos. */
+export const servicesMinutes = (services: readonly Service[]): number =>
+  services.reduce((sum, s) => sum + s.durationMinutes, 0);
+
+/** Os serviços são cobrados por pessoa; o deslocamento é único. */
+export function total(services: readonly Service[], fee: FeeEstimate | undefined, people = 1): number {
+  return servicesPrice(services) * people + (fee?.travelFee ?? 0);
 }
 
 /** Primeira mensagem de erro de validação, ou `null` se o formulário estiver completo. */
-export function firstError(v: BookingValues, service: Service | undefined, date: string, slot: string): string | null {
-  if (!service) return 'Escolha o serviço.';
+export function firstError(v: BookingValues, services: readonly Service[], date: string, slot: string): string | null {
+  if (!services.length) return 'Escolha o serviço.';
   if (!date || !slot) return 'Escolha a data e o horário.';
   if (!v.nome.trim()) return 'Informe o seu nome completo.';
   if (digits(v.fone).length < 10) return 'Informe um WhatsApp válido com DDD.';
@@ -73,13 +80,13 @@ export function plusMinutes(hhmm: string, minutes: number): string {
 }
 
 /** Término previsto: o horário de início mais a duração total (serviço x pessoas). */
-export function endTimeFor(service: Service, people: number, start: string): string {
-  return plusMinutes(start, service.durationMinutes * people);
+export function endTimeFor(services: readonly Service[], people: number, start: string): string {
+  return plusMinutes(start, servicesMinutes(services) * people);
 }
 
 export function buildAppointmentForm(
   v: BookingValues,
-  service: Service,
+  services: readonly Service[],
   date: string,
   slot: string,
   files: readonly File[],
@@ -95,7 +102,9 @@ export function buildAppointmentForm(
   fd.append('clientAddress', endereco);
   if (cep.length === 8) fd.append('cep', cep);
   fd.append('description', descricao);
-  fd.append('serviceItemId', String(service.id));
+  services.forEach((s) => {
+    fd.append('serviceItemIds', String(s.id));
+  });
   fd.append('people', String(qtd));
   fd.append('startTime', `${date}T${slot}:00-03:00`); // início do atendimento em horário de Brasília; a API calcula o término
   files.forEach((f) => {

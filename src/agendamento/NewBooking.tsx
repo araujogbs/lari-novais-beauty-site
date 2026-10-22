@@ -13,6 +13,7 @@ import {
   firstError,
   MAX_FILES,
   parsePeople,
+  servicesPrice,
   START_TIME_INFO,
   total,
 } from './booking';
@@ -34,7 +35,7 @@ interface PickedFile {
 const errMsg = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 export function NewBooking({ services, onBooked }: Props) {
-  const [serviceId, setServiceId] = useState<number | null>(null);
+  const [serviceIds, setServiceIds] = useState<number[]>([]);
   const [date, setDate] = useState('');
   const [slot, setSlot] = useState('');
   const [slotsNonce, setSlotsNonce] = useState(0);
@@ -45,7 +46,15 @@ export function NewBooking({ services, onBooked }: Props) {
   const errorRef = useRef<HTMLParagraphElement>(null);
 
   const serviceList = services.status === 'ready' ? services.services : [];
-  const service: Service | undefined = serviceList.find((s) => s.id === serviceId);
+  // Mais de um serviço pode ser marcado; o valor e a duração somam (na ordem da lista).
+  const chosen: Service[] = serviceList.filter((s) => serviceIds.includes(s.id));
+  const chosenIds = chosen.map((s) => s.id);
+  const chosenKey = chosenIds.join(',');
+
+  const toggleService = (id: number): void => {
+    setServiceIds((ids) => (ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]));
+    setSlot('');
+  };
 
   const set = <K extends keyof BookingValues>(key: K, value: BookingValues[K]): void => {
     setValues((v) => ({ ...v, [key]: value }));
@@ -53,8 +62,8 @@ export function NewBooking({ services, onBooked }: Props) {
 
   /* ---------- horários livres ---------- */
   const people = parsePeople(values.qtd);
-  const slots = useAsync(service && date ? `${service.id}|${date}|${people}|${slotsNonce}` : null, () =>
-    api.getSlots(date, service?.id ?? 0, people),
+  const slots = useAsync(chosen.length && date ? `${chosenKey}|${date}|${people}|${slotsNonce}` : null, () =>
+    api.getSlots(date, chosenIds, people),
   );
 
   /* ---------- CEP / deslocamento ---------- */
@@ -111,8 +120,8 @@ export function NewBooking({ services, onBooked }: Props) {
   /* ---------- envio ---------- */
   const submit = async (): Promise<void> => {
     if (busy) return;
-    const invalid = firstError(values, service, date, slot);
-    if (invalid || !service) {
+    const invalid = firstError(values, chosen, date, slot);
+    if (invalid || !chosen.length) {
       setError(invalid ?? 'Escolha o serviço.');
       return;
     }
@@ -122,7 +131,7 @@ export function NewBooking({ services, onBooked }: Props) {
       await api.createAppointment(
         buildAppointmentForm(
           values,
-          service,
+          chosen,
           date,
           slot,
           picked.map((p) => p.file),
@@ -131,12 +140,12 @@ export function NewBooking({ services, onBooked }: Props) {
       onBooked({
         nome: values.nome.trim(),
         fone: values.fone,
-        serviceName: service.name,
+        serviceName: chosen.map((s) => s.name).join(' + '),
         when: `${fmtDateBR(date)} às ${slot}`,
-        total: total(service, feeData, people),
+        total: total(chosen, feeData, people),
         date,
         start: slot,
-        end: endTimeFor(service, people, slot),
+        end: endTimeFor(chosen, people, slot),
       });
     } catch (e) {
       const status = e instanceof ApiError ? e.status : 0;
@@ -159,6 +168,7 @@ export function NewBooking({ services, onBooked }: Props) {
         <h4>
           <span>1</span> Escolha o serviço
         </h4>
+        <p className="ag-hint">Você pode marcar mais de um (por exemplo, maquiagem e penteado).</p>
         <div className="ag-services">
           {services.status === 'loading' && <p className="ag-hint">Carregando serviços…</p>}
           {services.status === 'error' && (
@@ -176,13 +186,12 @@ export function NewBooking({ services, onBooked }: Props) {
           {serviceList.map((s) => (
             <label className="ag-service" key={s.id}>
               <input
-                type="radio"
+                type="checkbox"
                 name="agServico"
                 value={s.id}
-                checked={s.id === serviceId}
+                checked={serviceIds.includes(s.id)}
                 onChange={() => {
-                  setServiceId(s.id);
-                  setSlot('');
+                  toggleService(s.id);
                 }}
               />
               <span className="ag-service-name">{s.name}</span>
@@ -206,9 +215,9 @@ export function NewBooking({ services, onBooked }: Props) {
             </span>
           </button>
         </h4>
-        {service ? (
+        {chosen.length ? (
           <AvailabilityCalendar
-            serviceId={service.id}
+            serviceIds={chosenIds}
             people={people}
             value={date}
             refreshKey={slotsNonce}
@@ -402,11 +411,11 @@ export function NewBooking({ services, onBooked }: Props) {
           <span>4</span> Confirmação
         </h4>
         <div className="ag-summary">
-          {service ? (
+          {chosen.length ? (
             <>
               <div>
-                <span>Serviço</span>
-                <strong>{service.name}</strong>
+                <span>{chosen.length > 1 ? 'Serviços' : 'Serviço'}</span>
+                <strong>{chosen.map((s) => s.name).join(' + ')}</strong>
               </div>
               <div>
                 <span>Data</span>
@@ -419,12 +428,14 @@ export function NewBooking({ services, onBooked }: Props) {
               {slot && (
                 <div>
                   <span>Término previsto</span>
-                  <strong>{endTimeFor(service, people, slot)}</strong>
+                  <strong>{endTimeFor(chosen, people, slot)}</strong>
                 </div>
               )}
               <div>
-                <span>{people > 1 ? `Serviço (${people} pessoas × ${brl(service.price)})` : 'Valor do serviço'}</span>
-                <strong>{brl(service.price * people)}</strong>
+                <span>
+                  {people > 1 ? `Serviços (${people} pessoas × ${brl(servicesPrice(chosen))})` : 'Valor dos serviços'}
+                </span>
+                <strong>{brl(servicesPrice(chosen) * people)}</strong>
               </div>
               {feeData && (
                 <div>
@@ -434,8 +445,11 @@ export function NewBooking({ services, onBooked }: Props) {
               )}
               <div className="ag-total">
                 <span>Total</span>
-                <strong>{brl(total(service, feeData, people))}</strong>
+                <strong>{brl(total(chosen, feeData, people))}</strong>
               </div>
+              <p className="ag-hint ag-deposit-note">
+                Para garantir o horário, depois que a Lari confirmar o seu pedido você recebe o PIX do sinal.
+              </p>
             </>
           ) : (
             <p className="ag-hint">O resumo aparece aqui.</p>

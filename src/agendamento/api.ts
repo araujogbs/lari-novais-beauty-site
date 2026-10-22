@@ -34,12 +34,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const getServices = () => request<Service[] | null>('/services');
 
-export const getSlots = (date: string, serviceId: number, people: number) =>
-  request<string[] | null>(`/appointments/available-slots?date=${date}&serviceId=${serviceId}&people=${people}`);
+export const getSlots = (date: string, serviceIds: readonly number[], people: number) =>
+  request<string[] | null>(
+    `/appointments/available-slots?date=${date}&serviceIds=${serviceIds.join(',')}&people=${people}`,
+  );
 
-export const getAvailability = (from: string, days: number, serviceId: number, people: number) =>
+export const getAvailability = (from: string, days: number, serviceIds: readonly number[], people: number) =>
   request<DayAvailability[] | null>(
-    `/appointments/availability?from=${from}&days=${days}&serviceId=${serviceId}&people=${people}`,
+    `/appointments/availability?from=${from}&days=${days}&serviceIds=${serviceIds.join(',')}&people=${people}`,
   );
 
 export const estimateFee = (cep: string) => request<FeeEstimate>(`/appointments/estimate-fee?cep=${cep}`);

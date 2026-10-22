@@ -22,6 +22,12 @@ export interface AdminAppointment {
   distanceKm?: number | null;
   referenceImages?: string[] | null;
   people?: number;
+  /** Serviços do pedido, já juntos ("Maquiagem + Penteado"), e o valor deles (sem deslocamento). */
+  serviceNames?: string | null;
+  totalPrice?: number | null;
+  /** Sinal calculado ao aprovar; `depositPaidAt` é preenchido quando a Lari marca que recebeu. */
+  depositAmount?: number | null;
+  depositPaidAt?: string | null;
   startTime: string;
   endTime: string;
   status: AdminStatus;

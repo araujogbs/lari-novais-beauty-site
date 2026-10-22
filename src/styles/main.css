@@ -1709,6 +1709,29 @@ section {
   color: var(--text-light);
   margin-top: 0.2rem;
 }
+.ag-appt .ag-deposit {
+  color: var(--text);
+  font-size: 0.85rem;
+}
+.ag-appt .ag-pix {
+  display: block;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.7rem;
+  max-height: 4.5rem;
+  overflow: auto;
+  word-break: break-all;
+  font-size: 0.72rem;
+  background: #fff;
+  border: 1px dashed rgba(194, 83, 122, 0.4);
+  border-radius: 6px;
+  user-select: all;
+}
+.ag-appt > div {
+  min-width: 0;
+}
+.ag-deposit-note {
+  margin-top: 0.6rem;
+}
 .ag-status {
   display: inline-block;
   margin-left: 0.5rem;

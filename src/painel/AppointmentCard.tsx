@@ -11,6 +11,7 @@ interface Props {
   showDate?: boolean;
   onApprove: (id: number) => Promise<void>;
   onReject: (id: number, reason: string) => Promise<void>;
+  onDepositPaid: (id: number) => Promise<void>;
   onCancel: (item: AdminAppointment) => Promise<void>;
   onOpenImage: (url: string) => void;
 }
@@ -25,7 +26,16 @@ const BADGES: Record<AdminStatus, string> = {
 };
 
 /** Um atendimento (ou bloqueio) no painel, com as ações possíveis para o status dele. */
-export function AppointmentCard({ item, token, showDate = false, onApprove, onReject, onCancel, onOpenImage }: Props) {
+export function AppointmentCard({
+  item,
+  token,
+  showDate = false,
+  onApprove,
+  onReject,
+  onDepositPaid,
+  onCancel,
+  onOpenImage,
+}: Props) {
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
@@ -35,7 +45,9 @@ export function AppointmentCard({ item, token, showDate = false, onApprove, onRe
   const isBlocked = item.status === 'Blocked';
   const isInactive = item.status === 'Cancelled' || item.status === 'Rejected' || item.status === 'Expired';
   const images = item.referenceImages ?? [];
-  const servicePrice = (item.serviceItem?.price ?? 0) * people;
+  const servicePrice = item.totalPrice ?? (item.serviceItem?.price ?? 0) * people;
+  const serviceLabel = item.serviceNames ?? item.serviceItem?.name ?? 'Serviço';
+  const owesDeposit = item.status === 'Confirmed' && !!item.depositAmount && !item.depositPaidAt;
 
   const run = async (action: () => Promise<void>): Promise<void> => {
     setBusy(true);
@@ -54,7 +66,7 @@ export function AppointmentCard({ item, token, showDate = false, onApprove, onRe
           <p className="pn-when">
             {showDate && `${fmtDay(item.startTime)} · `}
             {fmtTime(item.startTime)} às {fmtTime(item.endTime)}
-            {!isBlocked && ` · ${item.serviceItem?.name ?? 'Serviço'}${people > 1 ? ` (${people} pessoas)` : ''}`}
+            {!isBlocked && ` · ${serviceLabel}${people > 1 ? ` (${people} pessoas)` : ''}`}
           </p>
           {isPending && item.expiresAt && (
             <p className="pn-deadline">
@@ -82,6 +94,12 @@ export function AppointmentCard({ item, token, showDate = false, onApprove, onRe
               </>
             )}
           </p>
+          {item.status === 'Confirmed' && !!item.depositAmount && (
+            <p className="pn-line">
+              Sinal {brl(item.depositAmount)}:{' '}
+              {item.depositPaidAt ? <strong>recebido</strong> : <strong>aguardando pagamento</strong>}
+            </p>
+          )}
           {item.description && <p className="pn-desc">{item.description}</p>}
           {images.length > 0 && (
             <div className="pn-thumbs">
@@ -169,6 +187,16 @@ export function AppointmentCard({ item, token, showDate = false, onApprove, onRe
                 </a>
               )}
             </>
+          )}
+          {owesDeposit && (
+            <button
+              type="button"
+              className="pn-btn pn-btn--ok"
+              disabled={busy}
+              onClick={() => void run(() => onDepositPaid(item.id))}
+            >
+              {busy ? 'Salvando…' : 'Sinal recebido'}
+            </button>
           )}
           {(item.status === 'Confirmed' || isBlocked) && (
             <button

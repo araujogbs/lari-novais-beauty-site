@@ -65,6 +65,10 @@ export const approve = (token: string, id: number) =>
 export const reject = (token: string, id: number, reason: string) =>
   call<unknown>(token, `/appointments/${id}/reject`, json({ reason: reason.trim() || null }));
 
+/** Marca que o sinal do pedido confirmado foi recebido. */
+export const markDepositPaid = (token: string, id: number) =>
+  call<unknown>(token, `/appointments/${id}/deposit-paid`, { method: 'POST' });
+
 /** Desmarca um atendimento ou desfaz um bloqueio (a API espera a string JSON "Cancelled"). */
 export const cancel = (token: string, id: number) =>
   call<unknown>(token, `/appointments/${id}/status`, { ...json('Cancelled'), method: 'PATCH' });

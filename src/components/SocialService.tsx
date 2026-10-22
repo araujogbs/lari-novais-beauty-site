@@ -35,15 +35,15 @@ export function SocialService() {
           <div className="pacote-single reveal" style={{ textAlign: 'center' }}>
             <div className="pacote-card featured">
               <h4>Maquiagem + Penteado</h4>
-              <p className="from">R$ 700,00</p>
+              <p className="from">R$ 760,00</p>
               <div className="price-list" style={{ textAlign: 'left' }}>
                 <div className="price-item">
                   <span className="service">Maquiagem</span>
-                  <span className="value">R$ 350,00</span>
+                  <span className="value">R$ 380,00</span>
                 </div>
                 <div className="price-item">
                   <span className="service">Penteado</span>
-                  <span className="value">R$ 350,00</span>
+                  <span className="value">R$ 380,00</span>
                 </div>
                 <div className="price-item">
                   <span className="service">Escova e Babyliss</span>
@@ -51,7 +51,8 @@ export function SocialService() {
                 </div>
               </div>
               <p className="price-note">
-                A taxa de deslocamento é cobrada à parte de acordo com o endereço de atendimento.
+                A taxa de deslocamento é cobrada à parte de acordo com o endereço de atendimento. Para garantir o
+                horário, é cobrado um sinal depois da confirmação do pedido.
               </p>
             </div>
           </div>

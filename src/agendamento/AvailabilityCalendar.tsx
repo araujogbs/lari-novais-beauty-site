@@ -19,7 +19,7 @@ const WEEKDAYS = ['seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'];
 export const BOOKING_WINDOW_MONTHS = 3;
 
 interface Props {
-  serviceId: number;
+  serviceIds: readonly number[];
   people: number;
   value: string;
   onChange: (date: string) => void;
@@ -28,7 +28,7 @@ interface Props {
 }
 
 /** Calendário do mês com a disponibilidade de cada dia (livre, últimos horários, lotado). */
-export function AvailabilityCalendar({ serviceId, people, value, onChange, refreshKey }: Props) {
+export function AvailabilityCalendar({ serviceIds, people, value, onChange, refreshKey }: Props) {
   const today = todayISO();
   const lastDay = addMonthsToDate(today, BOOKING_WINDOW_MONTHS);
   const firstMonth = monthOf(today);
@@ -38,8 +38,9 @@ export function AvailabilityCalendar({ serviceId, people, value, onChange, refre
   const open = days.filter((d) => d >= today && d <= lastDay);
   const from = open[0] ?? '';
 
-  const availability = useAsync(from ? `${serviceId}|${people}|${from}|${open.length}|${refreshKey}` : null, () =>
-    api.getAvailability(from, open.length, serviceId, people),
+  const availability = useAsync(
+    from ? `${serviceIds.join(',')}|${people}|${from}|${open.length}|${refreshKey}` : null,
+    () => api.getAvailability(from, open.length, serviceIds, people),
   );
   const slotsByDay = new Map(
     availability.status === 'ready' ? (availability.data ?? []).map((d) => [d.date, d.slots]) : [],

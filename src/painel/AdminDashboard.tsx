@@ -112,7 +112,7 @@ export function AdminDashboard({ token, onExpired }: Props) {
 
   const handleApprove = (id: number) =>
     act(() => adminApi.approve(token, id), {
-      text: 'Agendamento confirmado. A cliente vai receber a confirmação pelo WhatsApp.',
+      text: 'Agendamento confirmado. A cliente recebe a confirmação, com o PIX do sinal, pelo WhatsApp.',
       kind: 'ok',
     });
 
@@ -120,6 +120,12 @@ export function AdminDashboard({ token, onExpired }: Props) {
     act(() => adminApi.reject(token, id, reason), {
       text: 'Pedido recusado. O horário foi liberado e a cliente será avisada pelo WhatsApp.',
       kind: 'warn',
+    });
+
+  const handleDepositPaid = (id: number) =>
+    act(() => adminApi.markDepositPaid(token, id), {
+      text: 'Sinal registrado como recebido.',
+      kind: 'ok',
     });
 
   const handleCancel = async (item: AdminAppointment): Promise<void> => {
@@ -150,6 +156,7 @@ export function AdminDashboard({ token, onExpired }: Props) {
     token,
     onApprove: handleApprove,
     onReject: handleReject,
+    onDepositPaid: handleDepositPaid,
     onCancel: handleCancel,
     onOpenImage: setLightbox,
   };
