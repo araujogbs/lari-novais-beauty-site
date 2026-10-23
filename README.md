@@ -212,6 +212,8 @@ Peças: `public/sw.js` (service worker: mostra a notificação, atualiza a lista
 
 Código em `src/painel/`, carregado sob demanda (`React.lazy`): quem só visita o site não baixa o painel. O token fica no `localStorage` quando "Manter conectada neste aparelho" está marcado (padrão), ou no `sessionStorage` (some ao fechar a aba) quando não está; vale 30 dias (`Jwt:ExpiryDays` na API) e, quando expira ou a API responde 401, o painel volta para o login. "Sair" apaga o token. Enquanto aberto, a página recebe `noindex`.
 
+**Celular:** o painel foi pensado para o iPhone. Abaixo de 600 px os cartões ficam em coluna, as ações em grade de duas colunas (a principal, como Aprovar, ocupa a linha toda), botões e campos têm 44 px (campos com 16 px para o iOS não dar zoom), o campo de data tem altura explícita (o iOS ignora a altura sem `appearance: none`) e o cabeçalho respeita a área segura do iPhone. O aviso depois de aprovar ou recusar fica no fluxo da página e a tela rola até ele, sem flutuar sobre os botões.
+
 Em produção, o domínio do site precisa estar em `Cors:AllowedOrigins` na API (o painel usa o header `Authorization`, já liberado).
 
 ---
@@ -297,7 +299,7 @@ Para publicar em outra hospedagem, basta servir a pasta `dist/` (Netlify, Vercel
 
 ## Limitações conhecidas e próximos passos
 
-- **Mensagens de WhatsApp e eventos do Google Agenda ainda em simulação na API** (a cliente vê a confirmação na tela, mas não recebe mensagem automática). Integração com a API oficial da Meta em andamento.
+- **Mensagens de WhatsApp e eventos do Google Agenda ainda em simulação na API** (a cliente vê a confirmação na tela, mas não recebe mensagem automática). O WhatsApp automático foi adiado (a Meta só libera coexistência para parceiros): a Lari envia a confirmação e o PIX pelo botão "Enviar pelo WhatsApp" do painel.
 - **Imagens sem versões responsivas (`srcset`).** Todas ficam em `public/img/` (cerca de 3 MB no total), mas o celular baixa o mesmo arquivo que o computador.
 - **Avaliações do Google copiadas à mão:** os 7 textos vêm do perfil real (todas 5 estrelas) e o selo "5,0" é fixo; não há integração automática com o Google (a Places API traz só 5 avaliações e exige chave e endpoint no servidor).
 - **Seção Equipe e bloco de redes da Home estão ocultos**; os nomes e descrições da Equipe são de exemplo.
