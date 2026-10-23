@@ -107,7 +107,7 @@ export function Brides() {
             </div>
             <div className="noiva-photo">
               <img
-                src="/img/insp-3.jpg"
+                src="/img/insp-3.jpg?v=2"
                 alt="Noiva"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
               />
