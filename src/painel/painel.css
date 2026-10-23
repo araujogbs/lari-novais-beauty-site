@@ -479,21 +479,109 @@
   gap: 0.75rem;
 }
 
+/* iPhone com o painel instalado na Tela de Início: respeita o notch e a barra inferior */
+.pn-top {
+  padding-top: calc(0.9rem + env(safe-area-inset-top, 0px));
+}
+.pn-main {
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+}
+
 @media (max-width: 600px) {
   .pn-top {
-    padding: 0.75rem 1rem;
+    padding: calc(0.6rem + env(safe-area-inset-top, 0px)) 0.9rem 0.6rem;
+    gap: 0.5rem;
   }
   .pn-brand {
-    font-size: 1rem;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    min-width: 0;
+  }
+  .pn-brand small {
+    letter-spacing: 1px;
+  }
+  .pn-top-actions {
+    flex: none;
+  }
+  .pn-main {
+    padding: 1rem 0.9rem calc(3rem + env(safe-area-inset-bottom, 0px));
+  }
+  /* botões e campos no tamanho do dedo; 16px nos campos evita o zoom automático do iPhone */
+  .pn-btn {
+    min-height: 44px;
+    padding: 0.5rem 0.9rem;
+  }
+  .pn-top-actions .pn-btn {
+    min-height: 40px;
+    padding: 0.4rem 0.7rem;
+  }
+  .pn input {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .pn-section h3,
+  .pn-box h3 {
+    font-size: 1.4rem;
+    flex-wrap: wrap;
+  }
+  .pn-notice {
+    top: 64px;
+  }
+  .pn-notice-actions .pn-btn {
+    flex: 1 1 100%;
   }
   .pn-day-head {
     flex-direction: column;
     align-items: stretch;
   }
+  /* ‹ [data] › na primeira linha, "Hoje" ocupando a linha de baixo */
+  .pn-day-nav {
+    display: grid;
+    grid-template-columns: 44px 1fr 44px;
+    gap: 0.4rem;
+  }
+  .pn-day-nav .pn-btn {
+    padding: 0;
+  }
   .pn-day-nav input {
-    flex: 1;
+    width: 100%;
+    min-width: 0;
+  }
+  .pn-day-nav .pn-btn:last-child {
+    grid-column: 1 / -1;
+  }
+  .pn-block-btn {
+    width: 100%;
+  }
+  .pn-card {
+    padding: 1rem;
   }
   .pn-card-head {
     flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+  .pn-desc,
+  .pn-line {
+    overflow-wrap: anywhere;
+  }
+  /* ações em grade de duas colunas; o botão principal (Aprovar, Sinal recebido...) ocupa a linha toda */
+  .pn-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .pn-actions .pn-btn--ok,
+  .pn-actions .pn-btn--primary {
+    grid-column: 1 / -1;
+  }
+  .pn-thumb {
+    width: 84px;
+    height: 84px;
+  }
+  .pn-row {
+    grid-template-columns: 1fr;
+  }
+  .pn-login {
+    margin-top: 1.5rem;
+    padding: 1.5rem 1.2rem;
   }
 }

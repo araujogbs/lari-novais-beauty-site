@@ -1846,6 +1846,48 @@ section {
   .ag-lookup {
     flex-direction: column;
   }
+  /* Meus agendamentos: o cartão vira coluna (texto em cima, "Cancelar" embaixo, largo o bastante para o dedo) */
+  .ag-appt {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+  .ag-appt > .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+  /* o selo de status vai para a própria linha, em vez de quebrar ao lado do nome do serviço */
+  .ag-appt .ag-status {
+    display: block;
+    width: fit-content;
+    margin: 0.35rem 0 0.2rem;
+  }
+  .ag-appt span {
+    font-size: 0.88rem;
+  }
+  /* PIX: QR Code centralizado em cima, botão de copiar largo e código logo abaixo */
+  .ag-appt .ag-pix-box {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+  .ag-appt .ag-pix-box .ag-pix-qr {
+    align-self: center;
+    width: min(220px, 70vw);
+    height: auto;
+    aspect-ratio: 1;
+  }
+  .ag-appt .ag-pix-text {
+    flex: none;
+  }
+  .ag-appt .ag-pix-text .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+  .ag-appt .ag-pix {
+    max-height: 5.5rem;
+  }
 }
 
 /* FOOTER */
