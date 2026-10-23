@@ -87,8 +87,8 @@ export default function AdminPanel() {
           <>
             {expired && <p className="pn-notice pn-notice--warn">Sua sessão expirou. Entre de novo.</p>}
             <AdminLogin
-              onLoggedIn={(t) => {
-                saveToken(t);
+              onLoggedIn={(t, remember) => {
+                saveToken(t, remember);
                 setExpired(false);
                 setToken(t);
               }}

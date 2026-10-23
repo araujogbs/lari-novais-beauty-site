@@ -18,7 +18,7 @@ Site institucional da maquiadora e penteadista Lari Novais, de São Paulo, com *
 
 - **React 19 + TypeScript em modo strict + Vite**, com ESLint (`typescript-eslint` strict type-checked), Prettier e testes com Vitest + Testing Library. `npm run check` roda tudo de uma vez.
 - **Agendamento online integrado à API:** horários livres em tempo real, taxa de deslocamento pelo CEP, quantidade de pessoas, fotos de referência e envio em `multipart/form-data`. Se a API cair, o widget oferece o WhatsApp e o resto do site continua funcionando.
-- **Painel da profissional carregado sob demanda** (`React.lazy`) em `/#painel`: quem só visita o site não baixa esse código. A sessão fica no `sessionStorage` e volta ao login quando o token expira.
+- **Painel da profissional carregado sob demanda** (`React.lazy`) em `/#painel`: quem só visita o site não baixa esse código. A sessão fica no aparelho ("Manter conectada", marcado por padrão) e volta ao login quando o token expira (30 dias).
 - **Formulários sem back-end próprio:** montam a mensagem e abrem o WhatsApp com o texto pronto.
 - **Datas sempre no fuso de Brasília**, independente do fuso do aparelho de quem acessa.
 - **Céu interativo:** constelações que se desenham com a rolagem, sóis e luas que giram conforme a página desce, a fase real da lua no dia e um **modo noturno** com céu estrelado (canvas). Tudo respeita o "menos movimento" do aparelho.
@@ -210,7 +210,7 @@ O iPhone (iOS 16.4 ou mais novo) só recebe push de site **instalado na Tela de 
 
 Peças: `public/sw.js` (service worker: mostra a notificação, atualiza a lista e abre o painel ao tocar; precisa mostrar **toda** notificação, senão o iOS cancela a assinatura), `public/manifest.webmanifest` e os ícones `painel-icon-*.png` (o manifesto e o ícone só são injetados no `<head>` enquanto o painel está aberto, em `AdminPanel.tsx`), `src/painel/webPush.ts` e `PushToggle.tsx`. A API (`/push/web/*`, chaves VAPID em `VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY`) guarda as assinaturas e envia o push a cada pedido novo; sem as chaves o bloco falha com "indisponível".
 
-Código em `src/painel/`, carregado sob demanda (`React.lazy`): quem só visita o site não baixa o painel. O token fica no `sessionStorage` (some ao fechar a aba) e, quando expira (2 h) ou a API responde 401, o painel volta para o login. Enquanto aberto, a página recebe `noindex`.
+Código em `src/painel/`, carregado sob demanda (`React.lazy`): quem só visita o site não baixa o painel. O token fica no `localStorage` quando "Manter conectada neste aparelho" está marcado (padrão), ou no `sessionStorage` (some ao fechar a aba) quando não está; vale 30 dias (`Jwt:ExpiryDays` na API) e, quando expira ou a API responde 401, o painel volta para o login. "Sair" apaga o token. Enquanto aberto, a página recebe `noindex`.
 
 Em produção, o domínio do site precisa estar em `Cors:AllowedOrigins` na API (o painel usa o header `Authorization`, já liberado).
 

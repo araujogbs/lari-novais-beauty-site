@@ -164,6 +164,22 @@
   outline: 2px solid var(--rose-light);
   border-color: var(--rose);
 }
+.pn .pn-remember {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text);
+}
+.pn .pn-remember input {
+  width: 1.1rem;
+  min-height: 0;
+  height: 1.1rem;
+  accent-color: var(--rose);
+}
 .pn-error {
   color: #9e2a2b;
   font-size: 0.85rem;

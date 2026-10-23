@@ -57,6 +57,7 @@ async function logIn(user: ReturnType<typeof userEvent.setup>): Promise<void> {
 
 beforeEach(() => {
   sessionStorage.clear();
+  localStorage.clear();
 });
 
 afterEach(() => {
@@ -88,7 +89,9 @@ describe('Painel Ateliê', () => {
 
     const call = fetchMock.mock.calls.find(([u]) => urlOf(u).endsWith('/7/approve'));
     expect(new Headers(call?.[1]?.headers).get('Authorization')).toBe(`Bearer ${TOKEN}`);
-    expect(sessionStorage.length).toBe(1);
+    // "Manter conectada" vem marcado: o token fica no aparelho, não só na aba
+    expect(localStorage.length).toBe(1);
+    expect(sessionStorage.length).toBe(0);
   });
 
   it('recusa com motivo', async () => {
@@ -114,6 +117,32 @@ describe('Painel Ateliê', () => {
     expect(await screen.findByRole('link', { name: 'Enviar pelo WhatsApp' })).toBeInTheDocument();
   });
 
+  it('desmarcando "Manter conectada", o login vale só até fechar a aba', async () => {
+    mockApi();
+    const user = userEvent.setup();
+    render(<AdminPanel />);
+    await user.click(screen.getByRole('checkbox', { name: /Manter conectada/ }));
+    await logIn(user);
+
+    await screen.findByRole('region', { name: /Pedidos em análise/ });
+    expect(sessionStorage.length).toBe(1);
+    expect(localStorage.length).toBe(0);
+  });
+
+  it('abre direto no painel quando o aparelho já está conectado, e "Sair" esquece o login', async () => {
+    localStorage.setItem('lnb-painel-token', TOKEN);
+    mockApi();
+    const user = userEvent.setup();
+    render(<AdminPanel />);
+
+    expect(await screen.findByRole('region', { name: /Pedidos em análise/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Entrar' })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Sair' }));
+    expect(await screen.findByRole('button', { name: 'Entrar' })).toBeInTheDocument();
+    expect(sessionStorage.length + localStorage.length).toBe(0);
+  });
+
   it('mostra erro de login', async () => {
     mockApi((url) => (url.endsWith('/auth/login') ? json({ message: 'x' }, 401) : undefined));
     const user = userEvent.setup();
@@ -129,6 +158,6 @@ describe('Painel Ateliê', () => {
     await logIn(user);
     expect(await screen.findByText('Sua sessão expirou. Entre de novo.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Entrar' })).toBeInTheDocument();
-    expect(sessionStorage.length).toBe(0);
+    expect(sessionStorage.length + localStorage.length).toBe(0);
   });
 });

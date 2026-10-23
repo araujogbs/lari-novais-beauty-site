@@ -3,12 +3,14 @@ import type { SyntheticEvent } from 'react';
 import { login } from './adminApi';
 
 interface Props {
-  onLoggedIn: (token: string) => void;
+  /** `remember`: a Lari pediu para continuar conectada neste aparelho. */
+  onLoggedIn: (token: string, remember: boolean) => void;
 }
 
 export function AdminLogin({ onLoggedIn }: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(true);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -21,7 +23,7 @@ export function AdminLogin({ onLoggedIn }: Props) {
     setBusy(true);
     setError('');
     try {
-      onLoggedIn(await login(username.trim(), password));
+      onLoggedIn(await login(username.trim(), password), remember);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Não foi possível entrar.');
       setBusy(false);
@@ -55,6 +57,17 @@ export function AdminLogin({ onLoggedIn }: Props) {
           }}
         />
       </label>
+      <label className="pn-remember">
+        <input
+          type="checkbox"
+          checked={remember}
+          onChange={(e) => {
+            setRemember(e.target.checked);
+          }}
+        />
+        Manter conectada neste aparelho
+      </label>
+      <p className="pn-hint">Desmarque se este não for o seu celular ou computador.</p>
       {error && (
         <p className="pn-error" role="alert">
           {error}
