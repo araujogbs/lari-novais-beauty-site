@@ -65,6 +65,16 @@ export const approve = (token: string, id: number) =>
 export const reject = (token: string, id: number, reason: string) =>
   call<unknown>(token, `/appointments/${id}/reject`, json({ reason: reason.trim() || null }));
 
+/**
+ * Link do WhatsApp da cliente com a mensagem pronta: confirmação (com sinal e PIX) para pedido confirmado,
+ * ou aviso de recusa (com o motivo) para pedido recusado.
+ */
+export const getClientMessage = (token: string, id: number, reason?: string) =>
+  call<{ url: string }>(
+    token,
+    `/appointments/${id}/client-message${reason?.trim() ? `?reason=${encodeURIComponent(reason.trim())}` : ''}`,
+  );
+
 /** Marca que o sinal do pedido confirmado foi recebido. */
 export const markDepositPaid = (token: string, id: number) =>
   call<unknown>(token, `/appointments/${id}/deposit-paid`, { method: 'POST' });

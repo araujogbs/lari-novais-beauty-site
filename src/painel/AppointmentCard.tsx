@@ -12,6 +12,8 @@ interface Props {
   onApprove: (id: number) => Promise<void>;
   onReject: (id: number, reason: string) => Promise<void>;
   onDepositPaid: (id: number) => Promise<void>;
+  /** Monta a mensagem de confirmação (com o PIX) para enviar à cliente pelo WhatsApp. */
+  onSendMessage: (item: AdminAppointment) => Promise<void>;
   onCancel: (item: AdminAppointment) => Promise<void>;
   onOpenImage: (url: string) => void;
 }
@@ -33,6 +35,7 @@ export function AppointmentCard({
   onApprove,
   onReject,
   onDepositPaid,
+  onSendMessage,
   onCancel,
   onOpenImage,
 }: Props) {
@@ -187,6 +190,16 @@ export function AppointmentCard({
                 </a>
               )}
             </>
+          )}
+          {item.status === 'Confirmed' && (
+            <button
+              type="button"
+              className="pn-btn"
+              disabled={busy}
+              onClick={() => void run(() => onSendMessage(item))}
+            >
+              {owesDeposit ? 'Enviar PIX pelo WhatsApp' : 'Enviar confirmação'}
+            </button>
           )}
           {owesDeposit && (
             <button

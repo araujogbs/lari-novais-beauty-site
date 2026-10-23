@@ -21,6 +21,8 @@ type LoadResult = { key: string; date: string } & ({ data: Loaded } | { error: s
 interface Notice {
   text: string;
   kind: 'ok' | 'warn' | 'error';
+  /** Link do WhatsApp da cliente com a mensagem pronta; o aviso fica na tela até ser fechado. */
+  whatsappUrl?: string;
 }
 
 /** Soma dias a uma data AAAA-MM-DD (em horário local, sem fuso). */
@@ -72,9 +74,9 @@ export function AdminDashboard({ token, onExpired }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, key]);
 
-  // O aviso some sozinho depois de alguns segundos
+  // O aviso some sozinho depois de alguns segundos (menos o que traz o botão do WhatsApp)
   useEffect(() => {
-    if (!notice) return;
+    if (!notice || notice.whatsappUrl) return;
     const t = setTimeout(() => {
       setNotice(null);
     }, 6000);
@@ -95,11 +97,20 @@ export function AdminDashboard({ token, onExpired }: Props) {
     };
   }, [lightbox]);
 
+  /** Link do WhatsApp com a mensagem pronta para a cliente; null se a API não conseguiu montar. */
+  const whatsappLink = async (id: number, reason?: string): Promise<string | null> => {
+    try {
+      return (await adminApi.getClientMessage(token, id, reason)).url;
+    } catch {
+      return null;
+    }
+  };
+
   /** Executa uma ação, mostra o resultado e recarrega a agenda. */
-  const act = async (action: () => Promise<unknown>, success: Notice): Promise<void> => {
+  const act = async (action: () => Promise<unknown>, success: Notice | (() => Promise<Notice>)): Promise<void> => {
     try {
       await action();
-      setNotice(success);
+      setNotice(typeof success === 'function' ? await success() : success);
     } catch (e) {
       if (e instanceof SessionExpiredError) {
         onExpired();
@@ -110,17 +121,45 @@ export function AdminDashboard({ token, onExpired }: Props) {
     reload();
   };
 
+  // A mensagem sai do WhatsApp da própria Lari: o aviso traz o botão que abre a conversa com o texto pronto
   const handleApprove = (id: number) =>
-    act(() => adminApi.approve(token, id), {
-      text: 'Agendamento confirmado. A cliente recebe a confirmação, com o PIX do sinal, pelo WhatsApp.',
-      kind: 'ok',
-    });
+    act(
+      () => adminApi.approve(token, id),
+      async (): Promise<Notice> => {
+        const whatsappUrl = await whatsappLink(id);
+        return whatsappUrl
+          ? {
+              text: 'Agendamento confirmado. Envie a confirmação, com o PIX do sinal, para a cliente.',
+              kind: 'ok',
+              whatsappUrl,
+            }
+          : {
+              text: 'Agendamento confirmado, mas a mensagem não pôde ser montada. Use "Enviar confirmação" no atendimento.',
+              kind: 'warn',
+            };
+      },
+    );
 
   const handleReject = (id: number, reason: string) =>
-    act(() => adminApi.reject(token, id, reason), {
-      text: 'Pedido recusado. O horário foi liberado e a cliente será avisada pelo WhatsApp.',
-      kind: 'warn',
-    });
+    act(
+      () => adminApi.reject(token, id, reason),
+      async (): Promise<Notice> => {
+        const whatsappUrl = await whatsappLink(id, reason);
+        return whatsappUrl
+          ? { text: 'Pedido recusado e horário liberado. Avise a cliente pelo WhatsApp.', kind: 'warn', whatsappUrl }
+          : { text: 'Pedido recusado e horário liberado.', kind: 'warn' };
+      },
+    );
+
+  /** Botão "Enviar confirmação" de um atendimento já confirmado (reenviar o PIX, por exemplo). */
+  const handleSendMessage = async (item: AdminAppointment): Promise<void> => {
+    const whatsappUrl = await whatsappLink(item.id);
+    setNotice(
+      whatsappUrl
+        ? { text: `Mensagem para ${item.clientName} pronta.`, kind: 'ok', whatsappUrl }
+        : { text: 'Não foi possível montar a mensagem. Tente de novo.', kind: 'error' },
+    );
+  };
 
   const handleDepositPaid = (id: number) =>
     act(() => adminApi.markDepositPaid(token, id), {
@@ -157,6 +196,7 @@ export function AdminDashboard({ token, onExpired }: Props) {
     onApprove: handleApprove,
     onReject: handleReject,
     onDepositPaid: handleDepositPaid,
+    onSendMessage: handleSendMessage,
     onCancel: handleCancel,
     onOpenImage: setLightbox,
   };
@@ -165,7 +205,23 @@ export function AdminDashboard({ token, onExpired }: Props) {
     <div className="pn-dash">
       {notice && (
         <div className={`pn-notice pn-notice--${notice.kind}`} role="status">
-          {notice.text}
+          <span>{notice.text}</span>
+          {notice.whatsappUrl && (
+            <span className="pn-notice-actions">
+              <a className="pn-btn pn-btn--ok" href={notice.whatsappUrl} target="_blank" rel="noopener">
+                Enviar pelo WhatsApp
+              </a>
+              <button
+                type="button"
+                className="pn-btn"
+                onClick={() => {
+                  setNotice(null);
+                }}
+              >
+                Fechar
+              </button>
+            </span>
+          )}
         </div>
       )}
 

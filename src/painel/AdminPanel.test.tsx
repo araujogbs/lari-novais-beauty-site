@@ -38,6 +38,7 @@ function mockApi(override?: (url: string, init?: RequestInit) => Response | unde
     if (url.endsWith('/auth/login')) return Promise.resolve(json({ token: TOKEN }));
     if (url.endsWith('/appointments/pending')) return Promise.resolve(json(pending));
     if (url.includes('/appointments?date=')) return Promise.resolve(json([]));
+    if (url.includes('/client-message')) return Promise.resolve(json({ url: 'https://wa.me/5511912345678?text=ola' }));
     if (url.endsWith('/approve') || url.endsWith('/reject')) {
       pending = [];
       return Promise.resolve(json({}));
@@ -78,6 +79,11 @@ describe('Painel Ateliê', () => {
 
     await user.click(within(pendentes).getByRole('button', { name: 'Aprovar' }));
     expect(await screen.findByText(/Agendamento confirmado/)).toBeInTheDocument();
+    // a confirmação (com o PIX) sai do WhatsApp da Lari: o aviso traz o link com a mensagem pronta
+    expect(await screen.findByRole('link', { name: 'Enviar pelo WhatsApp' })).toHaveAttribute(
+      'href',
+      'https://wa.me/5511912345678?text=ola',
+    );
     expect(await within(pendentes).findByText('Nenhum pedido aguardando análise.')).toBeInTheDocument();
 
     const call = fetchMock.mock.calls.find(([u]) => urlOf(u).endsWith('/7/approve'));
@@ -100,6 +106,12 @@ describe('Painel Ateliê', () => {
       expect(call?.[1]?.body).toBe(JSON.stringify({ reason: 'Já tenho evento' }));
     });
     expect(await screen.findByText(/Pedido recusado/)).toBeInTheDocument();
+    // o motivo também vai na busca da mensagem pronta
+    const urls = fetchMock.mock.calls.map(([u]) => urlOf(u));
+    expect(urls.some((u) => u.includes('/7/client-message') && u.includes('reason=J%C3%A1%20tenho%20evento'))).toBe(
+      true,
+    );
+    expect(await screen.findByRole('link', { name: 'Enviar pelo WhatsApp' })).toBeInTheDocument();
   });
 
   it('mostra erro de login', async () => {
