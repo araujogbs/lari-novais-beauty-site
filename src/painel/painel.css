@@ -538,20 +538,37 @@
     align-items: stretch;
   }
   /* ‹ [data] › na primeira linha, "Hoje" ocupando a linha de baixo */
+  /* flex (e não grid) e altura explícita: o campo de data do iPhone ignora a altura e desmonta a linha */
   .pn-day-nav {
-    display: grid;
-    grid-template-columns: 44px 1fr 44px;
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.4rem;
+    width: 100%;
   }
   .pn-day-nav .pn-btn {
+    flex: none;
+    width: 44px;
+    height: 44px;
     padding: 0;
   }
-  .pn-day-nav input {
-    width: 100%;
-    min-width: 0;
-  }
   .pn-day-nav .pn-btn:last-child {
-    grid-column: 1 / -1;
+    flex: 1 1 100%;
+    width: auto;
+  }
+  .pn-day-nav input[type='date'] {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    height: 44px;
+    line-height: 1.2;
+    text-align: left;
+  }
+  .pn-day-nav input[type='date']::-webkit-date-and-time-value {
+    text-align: left;
+    min-height: 1.2em;
   }
   .pn-block-btn {
     width: 100%;
