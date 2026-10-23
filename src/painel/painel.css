@@ -524,23 +524,14 @@
     font-size: 1.4rem;
     flex-wrap: wrap;
   }
-  /* o aviso (ex.: "Agendamento confirmado") vira uma faixa fixa no rodapé, em vez de cobrir os cartões no topo */
+  /* o aviso (ex.: "Agendamento confirmado") fica no fluxo da página, sem flutuar sobre os botões;
+     o painel rola até ele quando aparece */
   .pn-notice {
-    position: fixed;
-    top: auto;
-    left: 0.6rem;
-    right: 0.6rem;
-    bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
-    z-index: 20;
-    margin: 0;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+    position: static;
+    scroll-margin-top: 5rem;
   }
   .pn-notice-actions .pn-btn {
     flex: 1 1 0;
-  }
-  /* espaço no fim da página para o aviso não esconder o último cartão */
-  .pn-dash {
-    padding-bottom: 12rem;
   }
   .pn-day-head {
     flex-direction: column;

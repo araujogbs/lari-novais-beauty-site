@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { fmtDateBR, todayISO } from '../utils';
 import * as adminApi from './adminApi';
 import { SessionExpiredError } from './adminApi';
@@ -50,6 +50,14 @@ export function AdminDashboard({ token, onExpired }: Props) {
   const data = result?.date === date && 'data' in result ? result.data : null;
   const loadError = result?.key === key && 'error' in result ? result.error : '';
   const loading = result?.key !== key;
+
+  // No celular o aviso fica no topo da página: leva a tela até ele quando aparece
+  const noticeRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    // jsdom (testes) não tem scrollIntoView
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (notice) noticeRef.current?.scrollIntoView?.({ block: 'start', behavior: 'smooth' });
+  }, [notice]);
 
   const reload = (): void => {
     setNonce((n) => n + 1);
@@ -217,7 +225,7 @@ export function AdminDashboard({ token, onExpired }: Props) {
   return (
     <div className="pn-dash">
       {notice && (
-        <div className={`pn-notice pn-notice--${notice.kind}`} role="status">
+        <div ref={noticeRef} className={`pn-notice pn-notice--${notice.kind}`} role="status">
           <span>{notice.text}</span>
           {notice.whatsappUrl && (
             <span className="pn-notice-actions">
