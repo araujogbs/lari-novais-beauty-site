@@ -19,10 +19,32 @@ export default function AdminPanel() {
     robots.name = 'robots';
     robots.content = 'noindex, nofollow';
     document.head.appendChild(robots);
+
+    // Para o iPhone instalar o painel na Tela de Início (e só então liberar o aviso de pedido novo): manifesto, nome
+    // e ícone próprios. Só enquanto o painel está aberto, para não mudar o resto do site.
+    const added: HTMLElement[] = [];
+    const add = (tag: 'link' | 'meta', attrs: Record<string, string>): void => {
+      const el = document.createElement(tag);
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+      document.head.appendChild(el);
+      added.push(el);
+    };
+    add('link', { rel: 'manifest', href: '/manifest.webmanifest' });
+    add('meta', { name: 'apple-mobile-web-app-capable', content: 'yes' });
+    add('meta', { name: 'mobile-web-app-capable', content: 'yes' });
+    add('meta', { name: 'apple-mobile-web-app-title', content: 'Painel Lari' });
+    const touchIcon = document.querySelector<HTMLLinkElement>('link[rel="apple-touch-icon"]');
+    const previousIcon = touchIcon?.getAttribute('href');
+    touchIcon?.setAttribute('href', '/painel-icon-180.png');
+
     window.scrollTo(0, 0);
     return () => {
       document.title = previousTitle;
       robots.remove();
+      added.forEach((el) => {
+        el.remove();
+      });
+      if (previousIcon) touchIcon?.setAttribute('href', previousIcon);
     };
   }, []);
 

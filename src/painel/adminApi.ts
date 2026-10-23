@@ -86,6 +86,25 @@ export const cancel = (token: string, id: number) =>
 export const blockSlot = (token: string, payload: BlockPayload) =>
   call<unknown>(token, '/appointments/block-slot', json(payload));
 
+/** Chave pública do VAPID, que o navegador usa para assinar o aviso (rota pública). */
+export async function getWebPushKey(): Promise<{ publicKey: string }> {
+  const res = await fetch(`${API_URL}/push/web/public-key`);
+  if (!res.ok) throw new ApiError('Avisos no navegador indisponíveis no servidor.', res.status);
+  return (await res.json()) as { publicKey: string };
+}
+
+export interface WebPushSubscriptionData {
+  endpoint: string;
+  keys: { p256dh: string; auth: string };
+}
+
+/** Cadastra este navegador para receber o aviso de pedido novo. */
+export const subscribeWebPush = (token: string, subscription: WebPushSubscriptionData) =>
+  call<unknown>(token, '/push/web/subscribe', json(subscription));
+
+export const unsubscribeWebPush = (token: string, endpoint: string) =>
+  call<unknown>(token, '/push/web/unsubscribe', json({ endpoint }));
+
 /** Foto de referência (rota protegida): baixa com o token e devolve o arquivo. */
 export async function fetchImage(token: string, name: string): Promise<Blob> {
   const res = await fetch(`${API_URL}/appointments/images/${encodeURIComponent(name)}`, {

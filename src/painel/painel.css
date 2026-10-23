@@ -200,6 +200,21 @@
   background: #fcebeb;
 }
 
+/* aviso de pedido novo (push) */
+.pn-push {
+  margin-bottom: 1.5rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.12));
+  border-radius: 10px;
+}
+.pn-push h3 {
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+}
+.pn-push .pn-hint {
+  margin-bottom: 0.7rem;
+}
+
 /* seções */
 .pn-section {
   padding: 0;

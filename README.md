@@ -201,6 +201,14 @@ A mesma gestão do app, no navegador. Abre pelo endereço **`/#painel`** (não h
 - **Pedidos em análise** (de qualquer data) com **Aprovar** e **Recusar** (motivo opcional, enviado à cliente) e o prazo para responder: sem resposta em 3 dias, a API expira o pedido e libera o horário.
 - **Agenda do dia** com navegação entre dias: serviço, horário, WhatsApp, endereço, valores, descrição e **fotos de referência** (baixadas com o token e ampliáveis).
 - Atalhos de **WhatsApp** e **mapa**, **Desmarcar** atendimento confirmado e **Bloquear/Desbloquear** agenda (dia inteiro ou intervalo).
+- **Mensagem pronta pelo WhatsApp da Lari:** depois de aprovar ou recusar, o aviso traz o botão "Enviar pelo WhatsApp" (confirmação com sinal e PIX, ou recusa com o motivo); atendimentos confirmados têm "Enviar PIX" / "Enviar confirmação" para reenviar.
+- **Aviso de pedido novo (push no navegador):** o bloco "Receber aviso de pedido novo" liga e desliga a notificação neste aparelho. Com o painel aberto, a lista também se atualiza sozinha quando chega o aviso.
+
+#### Aviso de pedido novo no iPhone
+
+O iPhone (iOS 16.4 ou mais novo) só recebe push de site **instalado na Tela de Início**: no Safari, abrir `/#painel`, tocar em Compartilhar → Adicionar à Tela de Início e abrir pelo ícone "Painel Lari"; dentro do painel instalado, tocar em **Ativar avisos** e permitir as notificações. No Safari comum o bloco só mostra essas instruções.
+
+Peças: `public/sw.js` (service worker: mostra a notificação, atualiza a lista e abre o painel ao tocar; precisa mostrar **toda** notificação, senão o iOS cancela a assinatura), `public/manifest.webmanifest` e os ícones `painel-icon-*.png` (o manifesto e o ícone só são injetados no `<head>` enquanto o painel está aberto, em `AdminPanel.tsx`), `src/painel/webPush.ts` e `PushToggle.tsx`. A API (`/push/web/*`, chaves VAPID em `VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY`) guarda as assinaturas e envia o push a cada pedido novo; sem as chaves o bloco falha com "indisponível".
 
 Código em `src/painel/`, carregado sob demanda (`React.lazy`): quem só visita o site não baixa o painel. O token fica no `sessionStorage` (some ao fechar a aba) e, quando expira (2 h) ou a API responde 401, o painel volta para o login. Enquanto aberto, a página recebe `noindex`.
 

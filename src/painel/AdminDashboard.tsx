@@ -4,6 +4,7 @@ import * as adminApi from './adminApi';
 import { SessionExpiredError } from './adminApi';
 import { AppointmentCard } from './AppointmentCard';
 import { BlockForm } from './BlockForm';
+import { PushToggle } from './PushToggle';
 import type { AdminAppointment, BlockPayload } from './types';
 
 interface Props {
@@ -73,6 +74,18 @@ export function AdminDashboard({ token, onExpired }: Props) {
     // `onExpired` muda a cada render do pai; a busca depende só do token, do dia e do recarregamento.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, key]);
+
+  // Chegou um pedido novo (aviso push) com o painel aberto: recarrega a lista na hora
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+    const onMessage = (e: MessageEvent<{ type?: string } | null>): void => {
+      if (e.data?.type === 'new-booking') setNonce((n) => n + 1);
+    };
+    navigator.serviceWorker.addEventListener('message', onMessage);
+    return () => {
+      navigator.serviceWorker.removeEventListener('message', onMessage);
+    };
+  }, []);
 
   // O aviso some sozinho depois de alguns segundos (menos o que traz o botão do WhatsApp)
   useEffect(() => {
@@ -224,6 +237,8 @@ export function AdminDashboard({ token, onExpired }: Props) {
           )}
         </div>
       )}
+
+      <PushToggle token={token} onExpired={onExpired} />
 
       <section className="pn-section" aria-labelledby="pnPendentes">
         <h3 id="pnPendentes">

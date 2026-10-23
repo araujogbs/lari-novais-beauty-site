@@ -12,3 +12,10 @@
 
 /img/*
   Cache-Control: public, max-age=604800
+
+# O navegador precisa rever o service worker e o manifesto a cada visita para pegar atualizações
+/sw.js
+  Cache-Control: no-cache
+
+/manifest.webmanifest
+  Cache-Control: no-cache
