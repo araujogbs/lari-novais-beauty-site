@@ -14,7 +14,7 @@
   align-items: center;
   gap: 1rem;
   padding: 0.9rem 1.5rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: #fff;
   border-bottom: 1px solid rgba(194, 83, 122, 0.15);
 }
 .pn-brand {
@@ -524,11 +524,23 @@
     font-size: 1.4rem;
     flex-wrap: wrap;
   }
+  /* o aviso (ex.: "Agendamento confirmado") vira uma faixa fixa no rodapé, em vez de cobrir os cartões no topo */
   .pn-notice {
-    top: 64px;
+    position: fixed;
+    top: auto;
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
+    z-index: 20;
+    margin: 0;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
   }
   .pn-notice-actions .pn-btn {
-    flex: 1 1 100%;
+    flex: 1 1 0;
+  }
+  /* espaço no fim da página para o aviso não esconder o último cartão */
+  .pn-dash {
+    padding-bottom: 12rem;
   }
   .pn-day-head {
     flex-direction: column;
