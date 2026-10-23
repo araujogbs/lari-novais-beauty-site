@@ -1,4 +1,4 @@
-import { digits, maskCep } from '../utils';
+import { digits, isValidPhone, maskCep } from '../utils';
 import type { BookingValues, FeeEstimate, Service } from './types';
 
 export const ACCEPTED_TYPES: readonly string[] = ['image/jpeg', 'image/png', 'image/webp'];
@@ -54,7 +54,7 @@ export function firstError(v: BookingValues, services: readonly Service[], date:
   if (!services.length) return 'Escolha o serviço.';
   if (!date || !slot) return 'Escolha a data e o horário.';
   if (!v.nome.trim()) return 'Informe o seu nome completo.';
-  if (digits(v.fone).length < 10) return 'Informe um WhatsApp válido com DDD.';
+  if (!isValidPhone(v.fone)) return 'Informe um WhatsApp válido com DDD.';
   if (!v.end.trim() && !digits(v.cep)) return 'Informe o CEP ou o endereço do atendimento.';
   if (!v.msg.trim()) return 'Conte como você quer a sua produção.';
   return null;

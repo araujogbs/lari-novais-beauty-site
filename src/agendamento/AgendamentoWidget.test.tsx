@@ -234,6 +234,40 @@ describe('AgendamentoWidget', () => {
     });
   });
 
+  it('some o PIX e o QR Code quando a Lari marca o sinal como recebido, sem recarregar a página', async () => {
+    localStorage.setItem('lari.agendamentos', JSON.stringify(['7.abc123']));
+    let paid = false;
+    mockApi((url) =>
+      url.endsWith('/appointments/lookup')
+        ? json([
+            {
+              id: 7,
+              manageToken: '7.abc123',
+              serviceName: 'Maquiagem',
+              startTime: '2030-01-10T12:00:00Z',
+              status: 'Confirmed',
+              depositAmount: 120,
+              depositPaid: paid,
+              pixCode: paid ? null : '00020126PIXDOSINAL6304ABCD',
+            },
+          ])
+        : undefined,
+    );
+    const user = userEvent.setup();
+    render(<AgendamentoWidget />);
+    await user.click(screen.getByRole('button', { name: 'Meus agendamentos' }));
+    expect(await screen.findByText('00020126PIXDOSINAL6304ABCD')).toBeInTheDocument();
+    expect(await screen.findByAltText('QR Code do PIX do sinal')).toBeInTheDocument();
+
+    // A Lari marca o sinal como recebido; a cliente volta para a aba
+    paid = true;
+    window.dispatchEvent(new Event('focus'));
+
+    expect(await screen.findByText('Sinal recebido. Obrigada!')).toBeInTheDocument();
+    expect(screen.queryByText('00020126PIXDOSINAL6304ABCD')).not.toBeInTheDocument();
+    expect(screen.queryByAltText('QR Code do PIX do sinal')).not.toBeInTheDocument();
+  });
+
   it('sem código neste aparelho, explica e não consulta a API', async () => {
     const fetchMock = mockApi();
     const user = userEvent.setup();

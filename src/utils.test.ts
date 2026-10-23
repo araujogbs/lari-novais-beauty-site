@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { brl, digits, fmtDateBR, maskCep, maskPhone, todayISO } from './utils';
+import { brl, digits, fmtDateBR, isValidPhone, maskCep, maskPhone, todayISO } from './utils';
 
 describe('todayISO', () => {
   afterEach(() => {
@@ -25,8 +25,32 @@ describe('maskPhone', () => {
     ['11912345678', '(11) 91234-5678'],
     ['1133334444', '(11) 3333-4444'],
     ['119123456789999', '(11) 91234-5678'],
+    // número colado com o 55 do país
+    ['5511912345678', '(11) 91234-5678'],
+    ['+55 11 91234-5678', '(11) 91234-5678'],
+    ['551133334444', '(11) 3333-4444'],
+    // DDD 55 de verdade (RS) continua valendo
+    ['55991234567', '(55) 99123-4567'],
   ])('%s -> %s', (input, expected) => {
     expect(maskPhone(input)).toBe(expected);
+  });
+});
+
+describe('isValidPhone', () => {
+  it.each([
+    ['(11) 91234-5678', true],
+    ['(11) 3333-4444', true],
+    ['(55) 99123-4567', true],
+    ['+55 11 91234-5678', true],
+    // 55 digitado no lugar do DDD: 11 dígitos, mas o 3º não é 9
+    ['(55) 11959-6457', false],
+    ['(11) 1234-5678', false],
+    ['(01) 91234-5678', false],
+    ['(11) 9123-4567', false],
+    ['1191', false],
+    ['', false],
+  ])('%s -> %s', (input, expected) => {
+    expect(isValidPhone(input)).toBe(expected);
   });
 });
 
