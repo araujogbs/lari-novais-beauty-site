@@ -20,24 +20,27 @@ export function Hero() {
       <div className="hero-img reveal">
         <HeroCarousel />
       </div>
-      <h1>
-        <Words text="Beleza com naturalidade," />
-        <br />
-        <em>
-          <Words text="técnica e identidade" from={3} />
-        </em>
-      </h1>
-      <p className="hero-sub">Maquiagem &amp; Penteados — São Paulo</p>
-      <div className="hero-btns">
-        <a href="#noivas" className="btn btn-primary">
-          Agendar Noiva
-        </a>
-        <a href="#social" className="btn btn-outline">
-          Ver Serviços
-        </a>
-        <a href="#cursos" className="btn btn-outline">
-          Conhecer Cursos
-        </a>
+      {/* No desktop o texto fica à esquerda e a foto à direita, para os botões aparecerem sem rolar */}
+      <div className="hero-text">
+        <h1>
+          <Words text="Beleza com naturalidade," />
+          <br />
+          <em>
+            <Words text="técnica e identidade" from={3} />
+          </em>
+        </h1>
+        <p className="hero-sub">Maquiagem &amp; Penteados — São&nbsp;Paulo</p>
+        <div className="hero-btns">
+          <a href="#noivas" className="btn btn-primary">
+            Agendar Noiva
+          </a>
+          <a href="#social" className="btn btn-outline">
+            Ver Serviços
+          </a>
+          <a href="#cursos" className="btn btn-outline">
+            Conhecer Cursos
+          </a>
+        </div>
       </div>
       <MoonToday />
     </section>

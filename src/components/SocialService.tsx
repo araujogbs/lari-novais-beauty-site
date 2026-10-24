@@ -34,8 +34,7 @@ export function SocialService() {
           </div>
           <div className="pacote-single reveal" style={{ textAlign: 'center' }}>
             <div className="pacote-card featured">
-              <h4>Maquiagem + Penteado</h4>
-              <p className="from">R$ 700,00</p>
+              <h4>Valores</h4>
               <div className="price-list" style={{ textAlign: 'left' }}>
                 <div className="price-item">
                   <span className="service">Maquiagem · 60 min</span>
@@ -45,8 +44,11 @@ export function SocialService() {
                   <span className="service">Penteado · 60 a 90 min</span>
                   <span className="value">R$ 380,00</span>
                 </div>
-                <div className="price-item">
-                  <span className="service">Maquiagem + Penteado · 120 a 150 min</span>
+                <div className="price-item price-item--featured">
+                  <span className="service">
+                    Maquiagem + Penteado · 120 a 150 min
+                    <span className="price-badge">Economize R$ 60</span>
+                  </span>
                   <span className="value">R$ 700,00</span>
                 </div>
                 <div className="price-item">

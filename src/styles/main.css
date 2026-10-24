@@ -89,7 +89,7 @@ nav.nav-scrolled {
   box-shadow: 0 6px 24px rgba(158, 58, 94, 0.04);
 }
 nav .logo {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.3rem;
   font-weight: 400;
   letter-spacing: 2px;
@@ -209,7 +209,7 @@ nav a:hover {
 }
 
 .hero h1 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   font-weight: 300;
   color: var(--text);
@@ -309,7 +309,7 @@ section {
   font-weight: 500;
 }
 .section-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 2.4rem;
   font-weight: 400;
   color: var(--text);
@@ -358,7 +358,7 @@ section {
   transform: scale(1.05);
 }
 .portfolio-block .bg span {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 3rem;
   color: rgba(255, 255, 255, 0.25);
 }
@@ -373,7 +373,7 @@ section {
 }
 .portfolio-block .label {
   color: var(--white);
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.5rem;
 }
 .portfolio-block .count {
@@ -408,12 +408,12 @@ section {
   align-items: center;
 }
 .photo-placeholder span {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 3rem;
   color: rgba(255, 255, 255, 0.5);
 }
 .about-home h3 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 2rem;
   font-weight: 400;
   color: var(--text);
@@ -457,7 +457,7 @@ section {
   justify-content: center;
 }
 .service-card-img span {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 2.5rem;
   color: rgba(255, 255, 255, 0.4);
 }
@@ -465,7 +465,7 @@ section {
   padding: 2rem;
 }
 .service-card-content h4 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.4rem;
   color: var(--text);
   margin-bottom: 0.5rem;
@@ -498,7 +498,7 @@ section {
   align-items: center;
 }
 .team-photo span {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.2rem;
   color: rgba(255, 255, 255, 0.5);
   font-style: italic;
@@ -564,7 +564,7 @@ section {
 }
 .testimonial-card::before {
   content: '"';
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 4rem;
   color: var(--rose-light);
   position: absolute;
@@ -599,7 +599,7 @@ section {
   margin-bottom: 4rem;
 }
 .sobre-head h1 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: clamp(3rem, 5vw, 4.5rem);
   font-weight: 300;
   color: var(--text);
@@ -615,7 +615,7 @@ section {
   align-items: stretch;
 }
 .sobre-text h3 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.8rem;
   font-weight: 400;
   color: var(--text);
@@ -644,12 +644,12 @@ section {
   align-items: center;
 }
 .sobre-photo span {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.2rem;
   color: rgba(255, 255, 255, 0.4);
 }
 .sobre-curriculo h3 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.8rem;
   font-weight: 400;
   color: var(--text);
@@ -688,7 +688,7 @@ section {
   background: linear-gradient(180deg, var(--cream) 0%, var(--surface) 100%);
 }
 .noivas-hero h1 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: clamp(2.2rem, 4vw, 3.2rem);
   font-weight: 300;
   line-height: 1.25;
@@ -712,13 +712,13 @@ section {
   border-radius: 12px;
 }
 .step-num {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 2.5rem;
   color: var(--rose-light);
   margin-bottom: 0.5rem;
 }
 .step-card h4 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.2rem;
   color: var(--text);
   margin-bottom: 0.5rem;
@@ -752,7 +752,7 @@ section {
   align-items: center;
 }
 .noiva-photo span {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 2rem;
   color: rgba(255, 255, 255, 0.4);
 }
@@ -775,7 +775,7 @@ section {
   border-color: var(--rose);
 }
 .pacote-card h4 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.5rem;
   color: var(--text);
   margin-bottom: 0.5rem;
@@ -898,12 +898,12 @@ section {
   align-items: center;
 }
 .occasion-photo span {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.5rem;
   color: rgba(255, 255, 255, 0.5);
 }
 .occasion-info h3 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.8rem;
   color: var(--text);
   margin-bottom: 1rem;
@@ -958,7 +958,7 @@ section {
   align-items: center;
 }
 .curso-img span {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 2rem;
   color: rgba(255, 255, 255, 0.5);
 }
@@ -973,7 +973,7 @@ section {
   margin-bottom: 0.5rem;
 }
 .curso-content h4 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.3rem;
   color: var(--text);
   margin-bottom: 0.5rem;
@@ -1071,7 +1071,7 @@ section {
   padding: 1.5rem;
 }
 .equipe-member h5 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.2rem;
   color: var(--text);
   margin-bottom: 0.2rem;
@@ -1144,7 +1144,7 @@ section {
   transform: translateY(-4px);
 }
 .rede-card h4 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.3rem;
   color: var(--text);
   margin-bottom: 0.5rem;
@@ -1176,7 +1176,7 @@ section {
   text-align: center;
 }
 .blog-note h4 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.3rem;
   color: var(--text);
   margin-bottom: 0.5rem;
@@ -1240,7 +1240,7 @@ section {
   align-items: center;
 }
 .video-placeholder span {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.6);
 }
@@ -1390,7 +1390,7 @@ section {
   margin: 0 auto;
 }
 .pacote-single .from {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 2rem;
   color: var(--rose-dark);
   margin-bottom: 1.5rem;
@@ -1462,7 +1462,7 @@ section {
   margin-bottom: 2rem;
 }
 .ag-step h4 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.3rem;
   font-weight: 400;
   margin-bottom: 1rem;
@@ -1492,7 +1492,7 @@ section {
   border: 1px solid var(--rose);
   background: var(--surface);
   color: var(--rose);
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 0.9rem;
   font-style: italic;
   font-weight: 600;
@@ -1845,7 +1845,7 @@ section {
   text-align: center;
 }
 .ag-done h3 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.8rem;
   font-weight: 400;
   margin: 0.5rem 0;
@@ -1954,7 +1954,7 @@ footer {
   background: var(--surface);
 }
 footer .logo {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.1rem;
   letter-spacing: 2px;
   color: var(--text);
@@ -2550,7 +2550,7 @@ footer p {
   margin-top: 0.3rem;
 }
 .cst-name {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1rem;
   font-style: italic;
   color: var(--text);
@@ -2670,7 +2670,7 @@ footer p {
   margin-bottom: 0.8rem;
 }
 .ag-cal-head strong {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.35rem;
   font-weight: 400;
   color: var(--text);
@@ -2896,4 +2896,168 @@ footer p {
   body {
     transition: none;
   }
+}
+
+/* ===================== PRÉVIA VISUAL (out/2026) ===================== */
+
+/* Item 2: hero lado a lado no desktop (texto à esquerda, foto à direita), botões visíveis sem rolar */
+@media (min-width: 969px) {
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    grid-template-areas:
+      'text img'
+      'moon moon';
+    align-items: center;
+    column-gap: 4rem;
+    text-align: left;
+    padding: 7rem max(4rem, calc((100vw - 1140px) / 2)) 3rem;
+  }
+  .hero-text {
+    grid-area: text;
+  }
+  .hero-img {
+    grid-area: img;
+    justify-self: center;
+    width: min(340px, 28vw);
+    margin-bottom: 0;
+  }
+  .hero h1 {
+    font-size: clamp(2.8rem, 4.4vw, 4.2rem);
+  }
+  .hero-sub {
+    margin-bottom: 2.5rem;
+  }
+  .hero-btns {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 0.8rem;
+  }
+  .hero-btns .btn {
+    padding: 0.85rem 1.6rem;
+    white-space: nowrap;
+  }
+  .hero .moon-today {
+    grid-area: moon;
+  }
+}
+
+/* Item 6: contraste dos números do "Como funciona" e das legendas das constelações */
+.step-num {
+  color: var(--rose);
+  opacity: 0.55;
+}
+.cst-nick {
+  font-size: 0.66rem;
+  color: var(--text-light);
+}
+
+/* Item 8: três depoimentos inteiros no desktop (antes o terceiro aparecia cortado) */
+@media (min-width: 969px) {
+  .review-card {
+    flex-basis: calc((100% - 3rem) / 3);
+  }
+}
+
+/* Item 9: as faixas de cor entram e saem em degradê, sem linha reta entre as seções.
+   Modo diurno: branco -> rosa chá -> branco. Modo noturno: céu -> azul mais claro -> céu (as estrelas continuam nas bordas). */
+.section-rose {
+  background: linear-gradient(
+    180deg,
+    var(--surface) 0,
+    var(--cream) 7rem,
+    var(--cream) calc(100% - 7rem),
+    var(--surface) 100%
+  );
+}
+:root[data-theme='dark'] .section-rose {
+  background: linear-gradient(
+    180deg,
+    transparent 0,
+    rgba(22, 29, 69, 0.9) 7rem,
+    rgba(22, 29, 69, 0.9) calc(100% - 7rem),
+    transparent 100%
+  );
+}
+#social,
+#cursos {
+  background: linear-gradient(180deg, var(--surface) 0, var(--cream) 8rem, var(--surface) 32rem);
+}
+:root[data-theme='dark'] #social,
+:root[data-theme='dark'] #cursos {
+  background: linear-gradient(180deg, transparent 0, rgba(22, 29, 69, 0.85) 8rem, transparent 32rem);
+}
+
+/* Item 11: cartão de valores do Social com selo no pacote */
+.price-item .service {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.6rem;
+}
+.price-badge {
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--rose);
+  color: var(--on-rose);
+}
+.price-item--featured .value {
+  font-size: 1rem;
+}
+
+/* Item 12: ícones de linha nos cursos, sem quebrar "4 horas" no meio */
+.curso-meta {
+  flex-wrap: wrap;
+  gap: 0.5rem 1.1rem;
+}
+.curso-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+.curso-meta svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  color: var(--rose);
+}
+
+/* Item 13: logos reais das redes, na cor do site (segue o modo diurno e o noturno) */
+.rede-card .social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(194, 83, 122, 0.3);
+  background: var(--cream);
+}
+.rede-card .social-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Item 11: o valor nunca quebra em duas linhas */
+.price-item .value {
+  white-space: nowrap;
+}
+
+/* Item 12: os botões "Quero me inscrever" ficam alinhados no pé dos três cursos */
+.curso-card {
+  display: flex;
+  flex-direction: column;
+}
+.curso-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.curso-content .btn-inscrever {
+  margin-top: auto;
+  align-self: flex-start;
 }
