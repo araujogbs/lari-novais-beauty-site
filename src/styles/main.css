@@ -3435,16 +3435,16 @@ footer p {
 }
 
 /* Duas faixas rosa seguidas viram uma só: sem desbotar para branco no meio */
-.section-rose:has(+ .section-rose) {
+.section-rose:not([hidden]):has(+ .section-rose:not([hidden])) {
   background: linear-gradient(180deg, var(--surface) 0, var(--cream) 7rem, var(--cream) 100%);
 }
-.section-rose + .section-rose {
+.section-rose:not([hidden]) + .section-rose {
   background: linear-gradient(180deg, var(--cream) 0, var(--cream) calc(100% - 7rem), var(--surface) 100%);
 }
-:root[data-theme='dark'] .section-rose:has(+ .section-rose) {
+:root[data-theme='dark'] .section-rose:not([hidden]):has(+ .section-rose:not([hidden])) {
   background: linear-gradient(180deg, transparent 0, rgba(22, 29, 69, 0.9) 7rem, rgba(22, 29, 69, 0.9) 100%);
 }
-:root[data-theme='dark'] .section-rose + .section-rose {
+:root[data-theme='dark'] .section-rose:not([hidden]) + .section-rose {
   background: linear-gradient(
     180deg,
     rgba(22, 29, 69, 0.9) 0,
@@ -3778,5 +3778,15 @@ footer .star-divider {
     min-height: 0;
     padding-top: 7.5rem;
     padding-bottom: 1.5rem;
+  }
+}
+
+/* Sem a seção "Serviços", os depoimentos vêm depois dos cartões (fundo branco): voltam ao respiro normal */
+#depoimentos {
+  padding-top: 5rem;
+}
+@media (max-width: 968px) {
+  #depoimentos {
+    padding-top: 3.5rem;
   }
 }

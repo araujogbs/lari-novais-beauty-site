@@ -9,7 +9,6 @@ import { Hero } from './components/Hero';
 import { Nav } from './components/Nav';
 import { Networks } from './components/Networks';
 import { Portfolio } from './components/Portfolio';
-import { ServicesHome } from './components/ServicesHome';
 import { SocialNetworksHome } from './components/SocialNetworksHome';
 import { SocialService } from './components/SocialService';
 import { Team } from './components/Team';
@@ -46,9 +45,8 @@ export function App() {
       <CelestialSprites />
       <Nav theme={theme} onToggleTheme={toggleTheme} />
       <Hero />
-      <Portfolio />
       <AboutHome />
-      <ServicesHome />
+      <Portfolio />
       <SocialNetworksHome />
       <Testimonials />
       <AboutMe />
