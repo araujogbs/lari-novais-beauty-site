@@ -3433,3 +3433,22 @@ footer p {
     padding: 2.4rem 1.25rem 2rem;
   }
 }
+
+/* Duas faixas rosa seguidas viram uma só: sem desbotar para branco no meio */
+.section-rose:has(+ .section-rose) {
+  background: linear-gradient(180deg, var(--surface) 0, var(--cream) 7rem, var(--cream) 100%);
+}
+.section-rose + .section-rose {
+  background: linear-gradient(180deg, var(--cream) 0, var(--cream) calc(100% - 7rem), var(--surface) 100%);
+}
+:root[data-theme='dark'] .section-rose:has(+ .section-rose) {
+  background: linear-gradient(180deg, transparent 0, rgba(22, 29, 69, 0.9) 7rem, rgba(22, 29, 69, 0.9) 100%);
+}
+:root[data-theme='dark'] .section-rose + .section-rose {
+  background: linear-gradient(
+    180deg,
+    rgba(22, 29, 69, 0.9) 0,
+    rgba(22, 29, 69, 0.9) calc(100% - 7rem),
+    transparent 100%
+  );
+}
