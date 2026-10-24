@@ -3716,3 +3716,67 @@ footer p {
 footer .star-divider {
   margin-bottom: 1.2rem;
 }
+
+/* ===== Espaçamento: escala única e mais enxuta entre as seções =====
+   Antes: 112px em cima e embaixo de cada seção (224px de vazio entre duas), com exceções soltas.
+   Agora: 80px no desktop (160px entre seções) e 56px no celular; seções que continuam a anterior ficam com 32px. */
+section {
+  padding: 5rem 2rem;
+}
+#depoimentos,
+#redes,
+#contato {
+  padding-top: 2rem;
+}
+.noivas-hero {
+  padding-top: 5rem;
+}
+/* Topo da página: não ocupa mais a tela inteira à toa; a fase da lua fica perto do conteúdo */
+.hero {
+  min-height: min(100vh, 820px);
+  padding-bottom: 2.5rem;
+}
+.moon-today {
+  margin-top: 2rem;
+}
+footer {
+  padding: 2.5rem 2rem;
+}
+@media (max-width: 968px) {
+  section {
+    padding: 3.5rem 1.25rem;
+  }
+  #depoimentos,
+  #redes,
+  #contato {
+    padding-top: 1.25rem;
+  }
+  .noivas-hero {
+    padding-top: 3.5rem;
+  }
+  .hero {
+    min-height: 0;
+    padding-top: 6.5rem;
+  }
+}
+@media (max-width: 968px) {
+  /* no celular o desenho da constelação fica acima do título: menos respiro em cima para compensar */
+  .has-constellation {
+    padding-top: 1.75rem;
+  }
+}
+footer .star-divider {
+  margin-bottom: 0.8rem;
+}
+/* Os cartões logo abaixo do topo continuam a apresentação: ficam mais perto da fase da lua */
+.hero + section {
+  padding-top: 2.5rem;
+}
+@media (min-width: 969px) {
+  /* o topo tem a altura do próprio conteúdo (foto + texto + lua), sem sobra embaixo */
+  .hero {
+    min-height: 0;
+    padding-top: 7.5rem;
+    padding-bottom: 1.5rem;
+  }
+}
