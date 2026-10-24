@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { buildBrideMessage, openWhatsapp } from '../whatsapp';
+import { StarCorners } from './StarCorners';
 
 export function BrideForm() {
   const [nome, setNome] = useState('');
@@ -9,12 +10,13 @@ export function BrideForm() {
 
   return (
     <form
-      className="noivas-form"
+      className="noivas-form frame"
       onSubmit={(e) => {
         e.preventDefault();
         openWhatsapp(buildBrideMessage({ nome, data, local, mensagem }));
       }}
     >
+      <StarCorners />
       <div className="form-group form-full">
         <label htmlFor="noivaNome">Nome da noiva</label>
         <input
