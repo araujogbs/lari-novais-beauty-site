@@ -3790,3 +3790,24 @@ footer .star-divider {
     padding-top: 3.5rem;
   }
 }
+
+/* A home ocupa a tela inteira: texto e foto centralizados, fase da lua no pé; o "Sobre" só aparece ao rolar */
+@media (min-width: 969px) {
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    grid-template-rows: 1fr auto;
+    padding-top: 6.5rem;
+    padding-bottom: 2rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.8rem, 4.2vw, 3.9rem);
+  }
+  .hero-img {
+    width: min(400px, 28vw, 50vh);
+  }
+  .hero + section {
+    padding-top: 5rem;
+  }
+}
