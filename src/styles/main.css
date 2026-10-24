@@ -3452,3 +3452,267 @@ footer p {
     transparent 100%
   );
 }
+
+/* ===================== TEMA CELESTE NO SITE TODO ===================== */
+
+/* Tons da moldura disponíveis em qualquer lugar (seguem o modo diurno e o noturno pelo --celestial) */
+:root {
+  --frame-line: color-mix(in srgb, var(--celestial) 45%, transparent);
+  --frame-line-soft: color-mix(in srgb, var(--celestial) 22%, transparent);
+  --star-shape: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+}
+
+/* 1. Divisor dos títulos: — ✦ — no lugar do tracinho, e estrelinhas no rótulo da seção */
+.section-divider {
+  position: relative;
+  width: 120px;
+  height: 10px;
+  background: linear-gradient(
+      90deg,
+      transparent,
+      var(--frame-line) 25%,
+      var(--frame-line) 42%,
+      transparent 42%,
+      transparent 58%,
+      var(--frame-line) 58%,
+      var(--frame-line) 75%,
+      transparent
+    )
+    center / 100% 1px no-repeat;
+}
+.section-divider::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  transform: translate(-50%, -50%);
+  background: var(--celestial);
+  clip-path: var(--star-shape);
+}
+.section-label::before,
+.section-label::after {
+  content: '✦';
+  font-size: 0.55rem;
+  margin: 0 0.7rem;
+  vertical-align: 0.1em;
+  color: var(--celestial);
+}
+
+/* 2. "Como funciona" das noivas: números viram estrelas ligadas por uma linha pontilhada */
+.step-card {
+  position: relative;
+  border-color: var(--frame-line-soft);
+  border-radius: 6px;
+}
+.step-num {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--celestial);
+  opacity: 1;
+  background: var(--surface);
+  border: 1px solid var(--celestial);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--celestial) 10%, transparent);
+  position: relative;
+  z-index: 1;
+}
+:root[data-theme='dark'] .step-num {
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--celestial) 10%, transparent),
+    0 0 16px color-mix(in srgb, var(--celestial) 45%, transparent);
+}
+/* linha da estrela de um passo até a do próximo (na mesma fileira) */
+@media (min-width: 601px) {
+  .step-card:not(:nth-child(3n))::after {
+    content: '';
+    position: absolute;
+    top: calc(2rem + 19px);
+    left: calc(2rem + 38px);
+    right: calc(-4rem);
+    border-top: 1px dashed var(--frame-line);
+  }
+}
+@media (max-width: 600px) {
+  /* no celular a linha só aparece no espaço entre um cartão e o próximo, sem cruzar o texto */
+  .step-card:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: calc(1.5rem + 19px);
+    top: 100%;
+    height: calc(2rem + 1.5rem);
+    border-left: 1px dashed var(--frame-line);
+  }
+}
+
+/* 3. Depoimentos: borda fina do tema e aspas grandes e suaves */
+.review-card {
+  position: relative;
+  border-color: var(--frame-line-soft);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.review-card::after {
+  content: '\201D';
+  position: absolute;
+  top: -0.6rem;
+  right: 1.1rem;
+  font-family: 'EB Garamond', serif;
+  font-size: 6rem;
+  line-height: 1;
+  color: var(--celestial);
+  opacity: 0.22;
+  pointer-events: none;
+}
+.review-text {
+  position: relative;
+}
+:root[data-theme='dark'] .review-card {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--celestial) 6%, transparent);
+}
+
+/* 4. Fotos em arco (ecoam a foto oval do topo) com brilho ao passar o mouse */
+.noiva-photo,
+.noiva-photo img,
+.social-gallery img {
+  border-radius: 50% 50% 10px 10px / 37.5% 37.5% 10px 10px !important;
+}
+.noiva-photo {
+  position: relative;
+  transition:
+    transform 0.4s,
+    box-shadow 0.4s;
+}
+.social-gallery img {
+  transition:
+    transform 0.4s,
+    box-shadow 0.4s;
+}
+.noiva-photo:hover,
+.social-gallery img:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--celestial) 28%, transparent);
+}
+/* estrelinha que pisca no topo do arco */
+.noiva-photo::after {
+  content: '';
+  position: absolute;
+  top: 8%;
+  right: 22%;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  clip-path: var(--star-shape);
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 0.3s,
+    transform 0.5s;
+  pointer-events: none;
+}
+.noiva-photo:hover::after {
+  opacity: 0.9;
+  transform: scale(1) rotate(45deg);
+  animation: twinkle 1.6s ease-in-out infinite;
+}
+@keyframes twinkle {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* 5. Botões: o rosa já tem o brilho dourado que atravessa (mais acima); o "Quero me inscrever" ganha o mesmo,
+   e os botões de contorno ficam com a borda fina do tema */
+.btn-inscrever {
+  position: relative;
+  overflow: hidden;
+}
+.btn-inscrever::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 236, 190, 0.7) 47%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 236, 190, 0.7) 53%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: ln-shimmer 5s ease-in-out infinite 1.5s;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-inscrever::after {
+    display: none;
+  }
+}
+.btn-outline {
+  border-color: var(--frame-line);
+}
+.btn-outline:hover {
+  border-color: var(--celestial);
+  background: color-mix(in srgb, var(--celestial) 10%, transparent);
+}
+
+/* 6. Fale comigo: formulário na moldura celeste e canais com borda fina */
+.contact-form.frame {
+  padding: 2.6rem 2.4rem 2.2rem;
+}
+.contact-channel.frame {
+  padding: 2rem;
+}
+.contact-channel h5 {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0.3px;
+}
+.contact-channel a {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.2rem;
+}
+.contact-form.frame input,
+.contact-form.frame textarea,
+.contact-form.frame select {
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border: 1px solid var(--frame-line-soft);
+  border-radius: 6px;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
+}
+.contact-form.frame input:focus,
+.contact-form.frame textarea:focus,
+.contact-form.frame select:focus {
+  outline: none;
+  border-color: var(--celestial);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--celestial) 18%, transparent);
+}
+.contact-form.frame label {
+  color: var(--celestial);
+}
+@media (max-width: 600px) {
+  .contact-form.frame {
+    padding: 2.2rem 1.25rem 1.8rem;
+  }
+}
+
+/* 7. Detalhes finos: seleção de texto na cor do tema e ornamento no rodapé */
+::selection {
+  background: color-mix(in srgb, var(--celestial) 35%, transparent);
+  color: var(--text);
+}
+footer .star-divider {
+  margin-bottom: 1.2rem;
+}

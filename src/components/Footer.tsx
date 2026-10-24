@@ -1,7 +1,10 @@
+import { StarDivider } from './StarCorners';
+
 export function Footer() {
   return (
     <>
       <footer>
+        <StarDivider />
         <div className="logo">
           Lari Novais <span>Beauty</span>
         </div>

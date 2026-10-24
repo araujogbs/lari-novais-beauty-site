@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { buildContactMessage, openWhatsapp } from '../whatsapp';
+import { StarCorners } from './StarCorners';
 
 const SUBJECTS = ['Sugestão', 'Elogio', 'Parceria', 'Outro'] as const;
 
@@ -11,12 +12,13 @@ export function ContactForm() {
 
   return (
     <form
-      className="contact-form"
+      className="contact-form frame"
       onSubmit={(e) => {
         e.preventDefault();
         openWhatsapp(buildContactMessage({ nome, email, assunto, mensagem }));
       }}
     >
+      <StarCorners />
       <div className="form-group">
         <label htmlFor="contatoNome">Seu Nome</label>
         <input

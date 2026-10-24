@@ -15,19 +15,19 @@ export function Contact() {
           <div className="contact-grid reveal">
             <ContactForm />
             <div className="contact-channels">
-              <div className="contact-channel">
+              <div className="contact-channel frame">
                 <h5>WhatsApp</h5>
                 <p>Para respostas rápidas</p>
                 <a href="https://wa.me/5511914834786" target="_blank" rel="noopener">
                   (11) 91483-4786
                 </a>
               </div>
-              <div className="contact-channel">
+              <div className="contact-channel frame">
                 <h5>E-mail</h5>
                 <p>Para parcerias, propostas e contratos formais</p>
                 <a href="mailto:larinovaisbeauty@gmail.com">larinovaisbeauty@gmail.com</a>
               </div>
-              <div className="contact-channel">
+              <div className="contact-channel frame">
                 <h5>Redes</h5>
                 <p>Nas demais redes (Instagram, TikTok e YouTube)</p>
                 <a href="https://www.instagram.com/larinovaisbeauty/" target="_blank">
