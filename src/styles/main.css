@@ -1588,6 +1588,45 @@ section {
   color: var(--rose-dark);
   font-weight: 500;
 }
+.ag-person + .ag-person {
+  margin-top: 1.4rem;
+}
+.ag-person-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.8rem;
+  margin-bottom: 0.6rem;
+}
+.ag-person-sum {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+.ag-person-remove {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--rose-dark);
+  font: inherit;
+  font-size: 0.82rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.ag-add-person {
+  margin-top: 1rem;
+  padding: 0.7rem 1.1rem;
+  background: transparent;
+  border: 1px dashed var(--rose);
+  border-radius: 8px;
+  color: var(--rose-dark);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.ag-add-person:hover,
+.ag-add-person:focus-visible {
+  background: var(--rose-light);
+}
 .ag-slots {
   display: flex;
   flex-wrap: wrap;
@@ -1837,11 +1876,21 @@ section {
   .ag-grid {
     grid-template-columns: 1fr;
   }
+  /* No celular o tempo do procedimento fica embaixo do nome, em vez de sumir */
   .ag-service {
     grid-template-columns: auto 1fr auto;
+    row-gap: 0.1rem;
+  }
+  .ag-service input {
+    grid-row: 1 / span 2;
+  }
+  .ag-service-price {
+    grid-row: 1 / span 2;
+    grid-column: 3;
   }
   .ag-service-meta {
-    display: none;
+    grid-column: 2;
+    grid-row: 2;
   }
   .ag-lookup {
     flex-direction: column;

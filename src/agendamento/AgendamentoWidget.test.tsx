@@ -130,12 +130,30 @@ describe('AgendamentoWidget', () => {
     expect(screen.getByText('Maquiagem + Penteado')).toBeInTheDocument();
     expect(screen.getByText('R$ 590,00')).toBeInTheDocument();
     // os horários e a agenda são pedidos para a soma dos serviços
-    expect(fetchMock.mock.calls.some(([u]) => urlOf(u).includes('serviceIds=1,2'))).toBe(true);
+    expect(fetchMock.mock.calls.some(([u]) => urlOf(u).includes('groups=1%2C2'))).toBe(true);
 
     await user.click(screen.getByRole('button', { name: 'Confirmar agendamento' }));
     expect(await screen.findByText('Agendamento em análise')).toBeInTheDocument();
     const body = fetchMock.mock.calls.find(isPost)?.[1]?.body as FormData;
     expect(body.getAll('serviceItemIds')).toEqual(['1', '2']);
+    expect(body.getAll('personServices')).toEqual(['1,2']);
+  });
+
+  it('permite outra pessoa com serviços diferentes e soma tudo', async () => {
+    const fetchMock = mockApi();
+    const user = userEvent.setup();
+    render(<AgendamentoWidget />);
+    await user.click(await screen.findByLabelText(/Maquiagem/));
+    await user.click(screen.getByLabelText(/Penteado/));
+    await user.click(screen.getByRole('button', { name: '+ Adicionar outro cliente' }));
+    expect(screen.getByText('Cliente 2')).toBeInTheDocument();
+    // a segunda pessoa só quer o penteado
+    const [, segunda] = screen.getAllByLabelText(/Penteado/);
+    if (!segunda) throw new Error('checkbox da pessoa 2 não encontrado');
+    await user.click(segunda);
+    expect(fetchMock.mock.calls.some(([u]) => urlOf(u).includes('groups=1%2C2%3B2'))).toBe(true);
+    // (290 + 300) + 300
+    expect(screen.getAllByText('R$ 890,00').length).toBeGreaterThan(0);
   });
 
   it('abre a agenda só até 3 meses à frente e avisa isso', async () => {

@@ -6,7 +6,10 @@ import {
   EMPTY_VALUES,
   firstError,
   endTimeFor,
-  parsePeople,
+  fmtMinutes,
+  groupsLabel,
+  groupsParam,
+  conflictsWith,
   plusMinutes,
   total,
 } from './booking';
@@ -15,14 +18,14 @@ import type { BookingValues, Service } from './types';
 const makeup: Service = { id: 1, name: 'Maquiagem', durationMinutes: 60, price: 380 };
 const hair: Service = { id: 2, name: 'Penteado', durationMinutes: 90, price: 380 };
 const service: Service = { id: 3, name: 'Escova e Babyliss', durationMinutes: 60, price: 300 };
-const services = [service];
+const services = [[service]];
+const pack: Service = { id: 4, name: 'Maquiagem + Penteado', durationMinutes: 150, price: 700 };
 const valid: BookingValues = {
   nome: ' Maria Souza ',
   fone: '(11) 91234-5678',
   cep: '01310-100',
   num: '120, apto 32',
   end: 'Av. Paulista',
-  qtd: '2',
   msg: 'Casamento',
 };
 const file = (type: string, size = 10): File => new File([new Uint8Array(size)], 'x', { type });
@@ -30,6 +33,7 @@ const file = (type: string, size = 10): File => new File([new Uint8Array(size)],
 describe('firstError', () => {
   it('valida na ordem dos passos', () => {
     expect(firstError(valid, [], '2030-01-10', '09:00')).toBe('Escolha o serviço.');
+    expect(firstError(valid, [[service], []], '2030-01-10', '09:00')).toBe('Escolha o serviço de cada cliente.');
     expect(firstError(valid, services, '', '09:00')).toBe('Escolha a data e o horário.');
     expect(firstError(valid, services, '2030-01-10', '')).toBe('Escolha a data e o horário.');
     expect(firstError(EMPTY_VALUES, services, '2030-01-10', '09:00')).toBe('Informe o seu nome completo.');
@@ -72,15 +76,15 @@ describe('buildAppointmentForm', () => {
     expect(fd.get('cep')).toBe('01310100');
     expect(fd.getAll('serviceItemIds')).toEqual(['3']);
     expect(fd.get('startTime')).toBe('2030-01-10T09:00:00-03:00');
-    expect(fd.get('people')).toBe('2');
+    expect(fd.getAll('personServices')).toEqual(['3']);
+    expect(fd.get('people')).toBe('1');
     expect(fd.get('description')).toBe('Atendimento Social.\nCasamento');
     expect(fd.getAll('images')).toHaveLength(1);
   });
 
-  it('omite o CEP quando incompleto e assume 1 pessoa se a quantidade for inválida', () => {
-    const fd = buildAppointmentForm({ ...valid, cep: '0131', qtd: '' }, services, '2030-01-10', '09:00', []);
+  it('omite o CEP quando incompleto', () => {
+    const fd = buildAppointmentForm({ ...valid, cep: '0131' }, services, '2030-01-10', '09:00', []);
     expect(fd.has('cep')).toBe(false);
-    expect(fd.get('people')).toBe('1');
   });
 });
 
@@ -91,26 +95,33 @@ describe('total', () => {
     expect(total([], undefined)).toBe(0);
   });
 
-  it('multiplica o serviço pelo número de pessoas, sem multiplicar o deslocamento', () => {
-    expect(total(services, { distanceKm: 10, travelFee: 40 }, 2)).toBe(640);
+  it('soma os serviços de cada pessoa, sem multiplicar o deslocamento', () => {
+    // pessoa 1: maquiagem + penteado; pessoa 2: só penteado
+    expect(total([[makeup, hair], [hair]], { distanceKm: 10, travelFee: 40 })).toBe(1180);
   });
 });
 
-describe('vários serviços', () => {
-  it('soma o valor e envia todos os serviços', () => {
-    expect(total([makeup, hair], undefined)).toBe(760);
-    expect(total([makeup, hair], { distanceKm: 10, travelFee: 40 }, 2)).toBe(1560);
-    const fd = buildAppointmentForm(valid, [makeup, hair], '2030-01-10', '09:00', []);
+describe('várias pessoas', () => {
+  const groups = [[makeup, hair], [hair]];
+
+  it('envia os serviços de cada pessoa', () => {
+    const fd = buildAppointmentForm(valid, groups, '2030-01-10', '09:00', []);
+    expect(fd.getAll('personServices')).toEqual(['1,2', '2']);
     expect(fd.getAll('serviceItemIds')).toEqual(['1', '2']);
+    expect(fd.get('people')).toBe('2');
   });
-});
 
-describe('parsePeople', () => {
-  it('limita entre 1 e 20 e assume 1 se inválido', () => {
-    expect(parsePeople('3')).toBe(3);
-    expect(parsePeople('')).toBe(1);
-    expect(parsePeople('0')).toBe(1);
-    expect(parsePeople('99')).toBe(20);
+  it('monta o parâmetro da API e o nome do pedido', () => {
+    expect(groupsParam([[1, 2], [2]])).toBe('1,2;2');
+    expect(groupsLabel(groups)).toBe('Cliente 1: Maquiagem + Penteado; Cliente 2: Penteado');
+    expect(groupsLabel([[makeup], [makeup]])).toBe('Maquiagem');
+  });
+
+  it('o pacote não vale junto com maquiagem ou penteado avulsos', () => {
+    expect(conflictsWith(pack, makeup)).toBe(true);
+    expect(conflictsWith(hair, pack)).toBe(true);
+    expect(conflictsWith(pack, service)).toBe(false);
+    expect(conflictsWith(makeup, hair)).toBe(false);
   });
 });
 
@@ -121,15 +132,19 @@ describe('durationLabel', () => {
 
   it('mantém a duração cadastrada nos demais serviços', () => {
     expect(durationLabel({ id: 2, name: 'Maquiagem', durationMinutes: 75, price: 350 })).toBe('75 min');
-    expect(durationLabel({ id: 3, name: 'Maquiagem + Penteado', durationMinutes: 150, price: 700 })).toBe('150 min');
+    expect(fmtMinutes(150)).toBe('2h30');
+    expect(fmtMinutes(60)).toBe('1h');
+    expect(fmtMinutes(45)).toBe('45 min');
+    expect(durationLabel(pack)).toBe('120 a 150 min');
   });
 });
 
 describe('término previsto', () => {
-  it('soma a duração total (serviço x pessoas) ao horário de início', () => {
+  it('soma a duração de todas as pessoas ao horário de início', () => {
     expect(plusMinutes('09:00', 90)).toBe('10:30');
-    expect(endTimeFor([makeup], 2, '15:00')).toBe('17:00');
-    // vários serviços somam a duração: maquiagem (60) + penteado (90) = 150 min
-    expect(endTimeFor([makeup, hair], 1, '15:00')).toBe('17:30');
+    expect(endTimeFor([[makeup], [makeup]], '15:00')).toBe('17:00');
+    // maquiagem (60) + penteado (90) = 150 min; a segunda pessoa só penteado (90)
+    expect(endTimeFor([[makeup, hair]], '15:00')).toBe('17:30');
+    expect(endTimeFor([[makeup, hair], [hair]], '15:00')).toBe('19:00');
   });
 });

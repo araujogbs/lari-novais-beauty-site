@@ -39,7 +39,6 @@ export interface BookingValues {
   cep: string;
   num: string;
   end: string;
-  qtd: string;
   msg: string;
 }
 

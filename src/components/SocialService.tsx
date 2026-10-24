@@ -4,12 +4,12 @@ import { Constellation } from './Constellation';
 const SOCIAL_GALLERY: readonly { src: string; alt: string }[] = [
   { src: '/img/social-1.jpg', alt: 'Formanda com penteado baixo e maquiagem luminosa' },
   { src: '/img/social-2.jpg', alt: 'Madrinha com rabo de cavalo sofisticado' },
-  { src: '/img/social-3.jpg', alt: 'Convidada com coque alto e maquiagem elegante' },
   { src: '/img/social-4.jpg', alt: 'Penteado preso com detalhes florais em cabelo cacheado' },
   { src: '/img/social-5.jpg', alt: 'Maquiagem natural para evento' },
-  { src: '/img/social-6.jpg', alt: 'Cabelo cacheado semipreso' },
   { src: '/img/social-7.jpg', alt: 'Formanda com cachos definidos' },
   { src: '/img/social-8.jpg', alt: 'Debutante com vestido azul e cabelo ondulado' },
+  { src: '/img/social-9.jpg', alt: 'Maquiagem e penteado ondulado para convidada' },
+  { src: '/img/social-10.jpg', alt: 'Maquiagem com olhos esfumados e cabelo liso longo' },
 ];
 
 export function SocialService() {
@@ -35,18 +35,22 @@ export function SocialService() {
           <div className="pacote-single reveal" style={{ textAlign: 'center' }}>
             <div className="pacote-card featured">
               <h4>Maquiagem + Penteado</h4>
-              <p className="from">R$ 760,00</p>
+              <p className="from">R$ 700,00</p>
               <div className="price-list" style={{ textAlign: 'left' }}>
                 <div className="price-item">
-                  <span className="service">Maquiagem</span>
+                  <span className="service">Maquiagem · 60 min</span>
                   <span className="value">R$ 380,00</span>
                 </div>
                 <div className="price-item">
-                  <span className="service">Penteado</span>
+                  <span className="service">Penteado · 60 a 90 min</span>
                   <span className="value">R$ 380,00</span>
                 </div>
                 <div className="price-item">
-                  <span className="service">Escova e Babyliss</span>
+                  <span className="service">Maquiagem + Penteado · 120 a 150 min</span>
+                  <span className="value">R$ 700,00</span>
+                </div>
+                <div className="price-item">
+                  <span className="service">Escova e Babyliss · 60 min</span>
                   <span className="value">R$ 300,00</span>
                 </div>
               </div>

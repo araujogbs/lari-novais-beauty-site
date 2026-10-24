@@ -7,13 +7,20 @@ import { addToken } from './myBookings';
 import {
   acceptFiles,
   buildAppointmentForm,
+  conflictsWith,
   CURLY_HAIR_NOTICE,
   durationLabel,
   EMPTY_VALUES,
   endTimeFor,
   firstError,
+  fmtMinutes,
+  groupsLabel,
+  groupsMinutes,
+  groupsParam,
+  groupsPrice,
   MAX_FILES,
-  parsePeople,
+  MAX_PEOPLE,
+  servicesMinutes,
   servicesPrice,
   START_TIME_INFO,
   total,
@@ -36,7 +43,8 @@ interface PickedFile {
 const errMsg = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 export function NewBooking({ services, onBooked }: Props) {
-  const [serviceIds, setServiceIds] = useState<number[]>([]);
+  // Serviços de cada pessoa: persons[0] é a primeira pessoa, e assim por diante.
+  const [persons, setPersons] = useState<number[][]>([[]]);
   const [date, setDate] = useState('');
   const [slot, setSlot] = useState('');
   const [slotsNonce, setSlotsNonce] = useState(0);
@@ -47,13 +55,36 @@ export function NewBooking({ services, onBooked }: Props) {
   const errorRef = useRef<HTMLParagraphElement>(null);
 
   const serviceList = services.status === 'ready' ? services.services : [];
-  // Mais de um serviço pode ser marcado; o valor e a duração somam (na ordem da lista).
-  const chosen: Service[] = serviceList.filter((s) => serviceIds.includes(s.id));
-  const chosenIds = chosen.map((s) => s.id);
-  const chosenKey = chosenIds.join(',');
+  // Cada pessoa marca os próprios serviços (na ordem da lista); o valor e a duração somam entre todas.
+  const groups: Service[][] = persons.map((ids) => serviceList.filter((s) => ids.includes(s.id)));
+  const groupsKey = groupsParam(groups.map((g) => g.map((s) => s.id)));
+  const allChosen = groups.every((g) => g.length > 0);
+  const people = groups.length;
 
-  const toggleService = (id: number): void => {
-    setServiceIds((ids) => (ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]));
+  const toggleService = (person: number, id: number): void => {
+    const picked = serviceList.find((s) => s.id === id);
+    setPersons((all) =>
+      all.map((ids, i) => {
+        if (i !== person) return ids;
+        if (ids.includes(id)) return ids.filter((x) => x !== id);
+        // O pacote Maquiagem + Penteado não vale junto com maquiagem ou penteado avulsos.
+        const kept = ids.filter((x) => {
+          const other = serviceList.find((s) => s.id === x);
+          return !(picked && other && conflictsWith(picked, other));
+        });
+        return [...kept, id];
+      }),
+    );
+    setSlot('');
+  };
+
+  const addPerson = (): void => {
+    setPersons((all) => (all.length < MAX_PEOPLE ? [...all, []] : all));
+    setSlot('');
+  };
+
+  const removePerson = (person: number): void => {
+    setPersons((all) => (all.length > 1 ? all.filter((_, i) => i !== person) : all));
     setSlot('');
   };
 
@@ -62,9 +93,8 @@ export function NewBooking({ services, onBooked }: Props) {
   };
 
   /* ---------- horários livres ---------- */
-  const people = parsePeople(values.qtd);
-  const slots = useAsync(chosen.length && date ? `${chosenKey}|${date}|${people}|${slotsNonce}` : null, () =>
-    api.getSlots(date, chosenIds, people),
+  const slots = useAsync(allChosen && date ? `${groupsKey}|${date}|${slotsNonce}` : null, () =>
+    api.getSlots(date, groupsKey),
   );
 
   /* ---------- CEP / deslocamento ---------- */
@@ -121,9 +151,9 @@ export function NewBooking({ services, onBooked }: Props) {
   /* ---------- envio ---------- */
   const submit = async (): Promise<void> => {
     if (busy) return;
-    const invalid = firstError(values, chosen, date, slot);
-    if (invalid || !chosen.length) {
-      setError(invalid ?? 'Escolha o serviço.');
+    const invalid = firstError(values, groups, date, slot);
+    if (invalid) {
+      setError(invalid);
       return;
     }
     setBusy(true);
@@ -132,7 +162,7 @@ export function NewBooking({ services, onBooked }: Props) {
       const created = await api.createAppointment(
         buildAppointmentForm(
           values,
-          chosen,
+          groups,
           date,
           slot,
           picked.map((p) => p.file),
@@ -142,12 +172,12 @@ export function NewBooking({ services, onBooked }: Props) {
       onBooked({
         nome: values.nome.trim(),
         fone: values.fone,
-        serviceName: chosen.map((s) => s.name).join(' + '),
+        serviceName: groupsLabel(groups),
         when: `${fmtDateBR(date)} às ${slot}`,
-        total: total(chosen, feeData, people),
+        total: total(groups, feeData),
         date,
         start: slot,
-        end: endTimeFor(chosen, people, slot),
+        end: endTimeFor(groups, slot),
       });
     } catch (e) {
       const status = e instanceof ApiError ? e.status : 0;
@@ -170,38 +200,69 @@ export function NewBooking({ services, onBooked }: Props) {
         <h4>
           <span>1</span> Escolha o serviço
         </h4>
-        <p className="ag-hint">Você pode marcar mais de um (por exemplo, maquiagem e penteado).</p>
-        <div className="ag-services">
-          {services.status === 'loading' && <p className="ag-hint">Carregando serviços…</p>}
-          {services.status === 'error' && (
-            <p className="ag-msg">
-              Não foi possível carregar os serviços agora.{' '}
-              <a href={waLink()} target="_blank" rel="noopener">
-                Agende pelo WhatsApp
-              </a>
-              .
-            </p>
-          )}
-          {services.status === 'ready' && !serviceList.length && (
-            <p className="ag-hint">Nenhum serviço disponível no momento.</p>
-          )}
-          {serviceList.map((s) => (
-            <label className="ag-service" key={s.id}>
-              <input
-                type="checkbox"
-                name="agServico"
-                value={s.id}
-                checked={serviceIds.includes(s.id)}
-                onChange={() => {
-                  toggleService(s.id);
-                }}
-              />
-              <span className="ag-service-name">{s.name}</span>
-              <span className="ag-service-meta">{durationLabel(s)}</span>
-              <span className="ag-service-price">{brl(s.price)}</span>
-            </label>
-          ))}
-        </div>
+        <p className="ag-hint">
+          Marque os serviços de cada cliente (por exemplo, maquiagem e penteado). Se forem mais clientes, cada um
+          escolhe os seus.
+        </p>
+        {services.status === 'loading' && <p className="ag-hint">Carregando serviços…</p>}
+        {services.status === 'error' && (
+          <p className="ag-msg">
+            Não foi possível carregar os serviços agora.{' '}
+            <a href={waLink()} target="_blank" rel="noopener">
+              Agende pelo WhatsApp
+            </a>
+            .
+          </p>
+        )}
+        {services.status === 'ready' && !serviceList.length && (
+          <p className="ag-hint">Nenhum serviço disponível no momento.</p>
+        )}
+        {persons.map((ids, p) => (
+          <div className="ag-person" key={p}>
+            {people > 1 && (
+              <div className="ag-person-head">
+                <strong>Cliente {p + 1}</strong>
+                {groups[p] && groups[p].length > 0 && (
+                  <span className="ag-person-sum">
+                    {fmtMinutes(servicesMinutes(groups[p]))} · {brl(servicesPrice(groups[p]))}
+                  </span>
+                )}
+                <button
+                  type="button"
+                  className="ag-person-remove"
+                  onClick={() => {
+                    removePerson(p);
+                  }}
+                >
+                  Remover
+                </button>
+              </div>
+            )}
+            <div className="ag-services">
+              {serviceList.map((s) => (
+                <label className="ag-service" key={s.id}>
+                  <input
+                    type="checkbox"
+                    name={`agServico${p}`}
+                    value={s.id}
+                    checked={ids.includes(s.id)}
+                    onChange={() => {
+                      toggleService(p, s.id);
+                    }}
+                  />
+                  <span className="ag-service-name">{s.name}</span>
+                  <span className="ag-service-meta">{durationLabel(s)}</span>
+                  <span className="ag-service-price">{brl(s.price)}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        ))}
+        {services.status === 'ready' && people < MAX_PEOPLE && (
+          <button type="button" className="ag-add-person" onClick={addPerson}>
+            + Adicionar outro cliente
+          </button>
+        )}
         <p className="ag-notice ag-notice--hair" role="note">
           {CURLY_HAIR_NOTICE}
         </p>
@@ -217,10 +278,9 @@ export function NewBooking({ services, onBooked }: Props) {
             </span>
           </button>
         </h4>
-        {chosen.length ? (
+        {allChosen ? (
           <AvailabilityCalendar
-            serviceIds={chosenIds}
-            people={people}
+            groups={groupsKey}
             value={date}
             refreshKey={slotsNonce}
             onChange={(d) => {
@@ -229,7 +289,9 @@ export function NewBooking({ services, onBooked }: Props) {
             }}
           />
         ) : (
-          <p className="ag-hint">Escolha o serviço para ver os dias livres.</p>
+          <p className="ag-hint">
+            {people > 1 ? 'Escolha o serviço de cada cliente' : 'Escolha o serviço'} para ver os dias livres.
+          </p>
         )}
         {date && (
           <p className="ag-cal-picked">
@@ -336,20 +398,6 @@ export function NewBooking({ services, onBooked }: Props) {
                   : 'Deslocamento gratuito para o seu endereço.')}
             </div>
           )}
-          <div className="form-group">
-            <label htmlFor="agQtd">O serviço será para quantas pessoas?</label>
-            <input
-              type="number"
-              id="agQtd"
-              min={1}
-              max={20}
-              value={values.qtd}
-              onChange={(e) => {
-                set('qtd', e.target.value);
-                setSlot(''); // a duração muda com o número de pessoas
-              }}
-            />
-          </div>
           <div className="form-group ag-full">
             <span className="ag-label">Fotos de referência (até {MAX_FILES}, opcional)</span>
             <input
@@ -413,11 +461,24 @@ export function NewBooking({ services, onBooked }: Props) {
           <span>4</span> Confirmação
         </h4>
         <div className="ag-summary">
-          {chosen.length ? (
+          {allChosen ? (
             <>
+              {people > 1 ? (
+                groups.map((g, i) => (
+                  <div key={i}>
+                    <span>Cliente {i + 1}</span>
+                    <strong>{g.map((s) => s.name).join(' + ')}</strong>
+                  </div>
+                ))
+              ) : (
+                <div>
+                  <span>{groups[0] && groups[0].length > 1 ? 'Serviços' : 'Serviço'}</span>
+                  <strong>{groupsLabel(groups)}</strong>
+                </div>
+              )}
               <div>
-                <span>{chosen.length > 1 ? 'Serviços' : 'Serviço'}</span>
-                <strong>{chosen.map((s) => s.name).join(' + ')}</strong>
+                <span>Tempo de atendimento</span>
+                <strong>{fmtMinutes(groupsMinutes(groups))}</strong>
               </div>
               <div>
                 <span>Data</span>
@@ -430,14 +491,12 @@ export function NewBooking({ services, onBooked }: Props) {
               {slot && (
                 <div>
                   <span>Término previsto</span>
-                  <strong>{endTimeFor(chosen, people, slot)}</strong>
+                  <strong>{endTimeFor(groups, slot)}</strong>
                 </div>
               )}
               <div>
-                <span>
-                  {people > 1 ? `Serviços (${people} pessoas × ${brl(servicesPrice(chosen))})` : 'Valor dos serviços'}
-                </span>
-                <strong>{brl(servicesPrice(chosen) * people)}</strong>
+                <span>{people > 1 ? `Valor dos serviços (${people} clientes)` : 'Valor dos serviços'}</span>
+                <strong>{brl(groupsPrice(groups))}</strong>
               </div>
               {feeData && (
                 <div>
@@ -447,7 +506,7 @@ export function NewBooking({ services, onBooked }: Props) {
               )}
               <div className="ag-total">
                 <span>Total</span>
-                <strong>{brl(total(chosen, feeData, people))}</strong>
+                <strong>{brl(total(groups, feeData))}</strong>
               </div>
               <p className="ag-hint ag-deposit-note">
                 Para garantir o horário, depois que a Lari confirmar o seu pedido você recebe o PIX do sinal.

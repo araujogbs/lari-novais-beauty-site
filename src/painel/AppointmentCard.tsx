@@ -69,7 +69,7 @@ export function AppointmentCard({
           <p className="pn-when">
             {showDate && `${fmtDay(item.startTime)} · `}
             {fmtTime(item.startTime)} às {fmtTime(item.endTime)}
-            {!isBlocked && ` · ${serviceLabel}${people > 1 ? ` (${people} pessoas)` : ''}`}
+            {!isBlocked && ` · ${serviceLabel}${people > 1 ? ` (${people} clientes)` : ''}`}
           </p>
           {isPending && item.expiresAt && (
             <p className="pn-deadline">
