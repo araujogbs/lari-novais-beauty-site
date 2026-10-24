@@ -1,5 +1,6 @@
 import { BrideForm } from './BrideForm';
 import { Constellation } from './Constellation';
+import { StarCorners, StarDivider } from './StarCorners';
 
 export function Brides() {
   return (
@@ -131,9 +132,13 @@ export function Brides() {
             tranquilidade.
           </p>
           <div className="pacote-single reveal">
-            <div className="pacote-card featured">
-              <h4>O que está incluso</h4>
-              <ul>
+            <div className="pacote-card frame">
+              <StarCorners />
+              <h4 className="carta-title">
+                <StarDivider />O que está incluso
+                <StarDivider />
+              </h4>
+              <ul className="carta-checklist">
                 <li>Análise de perfil &amp; análise visagista</li>
                 <li>Dossiê de beleza</li>
                 <li>Teste de maquiagem e penteado</li>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { API_URL } from '../config';
 import { waLink } from '../utils';
+import { StarCorners } from '../components/StarCorners';
 import { BookingDone } from './BookingDone';
 import { MyAppointments } from './MyAppointments';
 import { addToken, tokenFromHash } from './myBookings';
@@ -38,7 +39,7 @@ export function AgendamentoWidget() {
 
   if (!API_URL) {
     return (
-      <div className="ag">
+      <div className="ag frame">
         <p className="ag-msg">
           Agendamento online indisponível.{' '}
           <a href={waLink()} target="_blank" rel="noopener">
@@ -52,7 +53,8 @@ export function AgendamentoWidget() {
 
   if (done) {
     return (
-      <div className="ag" id="agendaApp" ref={root}>
+      <div className="ag frame" id="agendaApp" ref={root}>
+        <StarCorners />
         <BookingDone
           info={done}
           onViewAppointments={() => {
@@ -66,7 +68,8 @@ export function AgendamentoWidget() {
   }
 
   return (
-    <div className="ag" id="agendaApp" ref={root}>
+    <div className="ag frame" id="agendaApp" ref={root}>
+      <StarCorners />
       <div className="ag-tabs">
         <button
           type="button"

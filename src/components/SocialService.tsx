@@ -1,5 +1,6 @@
 import { AgendamentoWidget } from '../agendamento/AgendamentoWidget';
 import { Constellation } from './Constellation';
+import { StarCorners, StarDivider } from './StarCorners';
 
 const SOCIAL_GALLERY: readonly { src: string; alt: string }[] = [
   { src: '/img/social-1.jpg', alt: 'Formanda com penteado baixo e maquiagem luminosa' },
@@ -10,6 +11,14 @@ const SOCIAL_GALLERY: readonly { src: string; alt: string }[] = [
   { src: '/img/social-8.jpg', alt: 'Debutante com vestido azul e cabelo ondulado' },
   { src: '/img/social-9.jpg', alt: 'Maquiagem e penteado ondulado para convidada' },
   { src: '/img/social-10.jpg', alt: 'Maquiagem com olhos esfumados e cabelo liso longo' },
+];
+
+/** Tabela de valores do Atendimento Social (a duração é a mesma usada no agendamento). */
+const PRICES: readonly { name: string; time: string; price: string; saving?: string }[] = [
+  { name: 'Maquiagem', time: '60 min', price: 'R$ 380' },
+  { name: 'Penteado', time: '60 a 90 min', price: 'R$ 380' },
+  { name: 'Maquiagem + Penteado', time: '120 a 150 min', price: 'R$ 700', saving: 'R$ 60' },
+  { name: 'Escova e Babyliss', time: '60 min', price: 'R$ 300' },
 ];
 
 export function SocialService() {
@@ -33,29 +42,26 @@ export function SocialService() {
             ))}
           </div>
           <div className="pacote-single reveal" style={{ textAlign: 'center' }}>
-            <div className="pacote-card featured">
-              <h4>Valores</h4>
-              <div className="price-list" style={{ textAlign: 'left' }}>
-                <div className="price-item">
-                  <span className="service">Maquiagem · 60 min</span>
-                  <span className="value">R$ 380,00</span>
-                </div>
-                <div className="price-item">
-                  <span className="service">Penteado · 60 a 90 min</span>
-                  <span className="value">R$ 380,00</span>
-                </div>
-                <div className="price-item price-item--featured">
-                  <span className="service">
-                    Maquiagem + Penteado · 120 a 150 min
-                    <span className="price-badge">Economize R$ 60</span>
-                  </span>
-                  <span className="value">R$ 700,00</span>
-                </div>
-                <div className="price-item">
-                  <span className="service">Escova e Babyliss · 60 min</span>
-                  <span className="value">R$ 300,00</span>
-                </div>
-              </div>
+            <div className="pacote-card frame">
+              <StarCorners />
+              <h4 className="carta-title">
+                <StarDivider />
+                Valores
+                <StarDivider />
+              </h4>
+              <ul className="carta-list">
+                {PRICES.map((p) => (
+                  <li key={p.name} className={p.saving ? 'carta-item carta-item--featured' : 'carta-item'}>
+                    {p.saving && <span className="carta-badge">Pacote · economize {p.saving}</span>}
+                    <span className="carta-name">
+                      {p.name}
+                      <small>{p.time}</small>
+                    </span>
+                    <span className="carta-dots" aria-hidden="true" />
+                    <span className="carta-price">{p.price}</span>
+                  </li>
+                ))}
+              </ul>
               <p className="price-note">
                 A taxa de deslocamento é cobrada à parte de acordo com o endereço de atendimento. Para garantir o
                 horário, é cobrado um sinal depois da confirmação do pedido.

@@ -3061,3 +3061,334 @@ footer p {
   margin-top: auto;
   align-self: flex-start;
 }
+
+/* ===== Moldura celeste: borda fina dupla com estrelinhas nos cantos (valores, pacote de noivas e agendamento) ===== */
+.frame {
+  --frame-line: color-mix(in srgb, var(--celestial) 45%, transparent);
+  --frame-line-soft: color-mix(in srgb, var(--celestial) 22%, transparent);
+  position: relative;
+  border: 1px solid var(--frame-line);
+  border-radius: 6px;
+  background:
+    radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--celestial) 9%, transparent), transparent 70%),
+    var(--cream);
+}
+.frame::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px solid var(--frame-line-soft);
+  border-radius: 3px;
+  pointer-events: none;
+}
+.frame-star {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  fill: var(--celestial);
+  pointer-events: none;
+}
+.frame-star--tl {
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+}
+.frame-star--tr {
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+}
+.frame-star--bl {
+  bottom: 0;
+  left: 0;
+  transform: translate(-50%, 50%);
+}
+.frame-star--br {
+  bottom: 0;
+  right: 0;
+  transform: translate(50%, 50%);
+}
+:root[data-theme='dark'] .frame-star {
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--celestial) 70%, transparent));
+}
+
+/* Título com ornamento: — ✦ Valores ✦ — */
+.carta-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  margin-bottom: 2rem !important;
+}
+.star-divider {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.star-divider::before,
+.star-divider::after {
+  content: '';
+  width: 1.6rem;
+  height: 1px;
+  background: var(--frame-line, var(--celestial));
+}
+.star-divider svg {
+  width: 8px;
+  height: 8px;
+  fill: var(--celestial);
+}
+
+/* ===== Carta de valores do Social: nome ... pontilhado ... preço, como um menu fino ===== */
+.pacote-card.frame {
+  padding: 3.2rem 2.6rem 2.6rem;
+  border-width: 1px;
+}
+.carta-list {
+  list-style: none;
+  text-align: left;
+  margin: 0 0 2rem !important;
+}
+.pacote-card .carta-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: end;
+  column-gap: 0.7rem;
+  padding: 0.85rem 0 !important;
+  border: 0 !important;
+  font-weight: 400 !important;
+}
+.pacote-card .carta-item::before {
+  content: none !important;
+}
+.carta-name {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.2rem;
+  color: var(--text);
+  line-height: 1.2;
+}
+.carta-name small {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.carta-dots {
+  align-self: end;
+  margin-bottom: 0.45rem;
+  border-bottom: 1px dotted var(--frame-line);
+}
+.carta-price {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.25rem;
+  color: var(--rose-dark);
+  white-space: nowrap;
+}
+/* Pacote: faixa com brilho suave, selo e preço maior */
+.pacote-card .carta-item--featured {
+  margin: 0.4rem -1.1rem;
+  padding: 1.1rem 1.1rem !important;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--celestial) 4%, transparent),
+    color-mix(in srgb, var(--celestial) 14%, transparent) 50%,
+    color-mix(in srgb, var(--celestial) 4%, transparent)
+  );
+  box-shadow: inset 0 0 0 1px var(--frame-line-soft);
+}
+.carta-badge {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-bottom: 0.45rem;
+  font-size: 0.6rem;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--celestial);
+}
+.carta-badge::before {
+  content: '✦ ';
+}
+.carta-item--featured .carta-price {
+  font-size: 1.45rem;
+}
+.pacote-card.frame .price-note {
+  max-width: 34ch;
+  margin: 0 auto;
+  font-size: 0.78rem;
+  line-height: 1.7;
+}
+
+/* Lista do pacote de noivas: estrelinhas no lugar do ✓ */
+.carta-checklist li {
+  border-bottom-color: var(--frame-line-soft) !important;
+}
+.carta-checklist li::before {
+  content: '✦  ' !important;
+  color: var(--celestial) !important;
+  font-size: 0.7rem;
+}
+.pacote-card.frame .from {
+  font-size: 2.4rem;
+}
+
+@media (max-width: 600px) {
+  .pacote-card.frame {
+    padding: 2.6rem 1.4rem 2rem;
+  }
+  .pacote-card .carta-item--featured {
+    margin: 0.4rem -0.6rem;
+    padding: 1rem 0.6rem !important;
+  }
+  .carta-name {
+    font-size: 1.08rem;
+  }
+}
+
+/* ===== Agendamento: moldura celeste e etapas ligadas como uma constelação ===== */
+.ag.frame {
+  border-radius: 6px;
+  padding: 2.8rem 2.6rem;
+}
+.ag-step {
+  position: relative;
+  padding-left: 2.8rem;
+}
+/* a linha da constelação liga a estrela de uma etapa à da próxima */
+.ag-step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 34px;
+  bottom: -1.6rem;
+  border-left: 1px dashed var(--frame-line);
+}
+.ag-step h4 > span {
+  position: absolute;
+  left: 0;
+  width: 27px;
+  height: 27px;
+  background: var(--surface);
+  color: var(--celestial);
+  border: 1px solid var(--celestial);
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--celestial) 10%, transparent);
+}
+:root[data-theme='dark'] .ag-step h4 > span {
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--celestial) 10%, transparent),
+    0 0 14px color-mix(in srgb, var(--celestial) 45%, transparent);
+}
+
+/* Serviços: cartão leve; a caixinha vira uma estrela que acende quando marcada */
+.ag-service {
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border-color: var(--frame-line-soft);
+  border-radius: 6px;
+  transition:
+    border-color 0.25s,
+    background-color 0.25s,
+    box-shadow 0.25s;
+}
+.ag-service:hover {
+  border-color: var(--frame-line);
+}
+.ag-service:has(input:checked) {
+  border-color: var(--celestial);
+  box-shadow: 0 0 0 1px var(--celestial);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--celestial) 12%, transparent), transparent 70%);
+}
+.ag-service:has(input:focus-visible) {
+  outline: 2px solid var(--rose);
+  outline-offset: 2px;
+}
+.ag-service input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  background: var(--frame-line);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  transition:
+    background-color 0.25s,
+    transform 0.3s;
+}
+.ag-service input[type='checkbox']:checked {
+  background: var(--celestial);
+  transform: scale(1.3);
+}
+:root[data-theme='dark'] .ag-service:has(input:checked) input {
+  filter: drop-shadow(0 0 3px var(--celestial));
+}
+.ag-service-name {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.1rem;
+}
+.ag-service-price {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+/* Resumo: mesmo pontilhado da carta de valores, total em destaque */
+.ag-summary {
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border: 1px solid var(--frame-line-soft);
+  border-radius: 6px;
+}
+.ag-summary .ag-total {
+  border-top-color: var(--frame-line);
+}
+.ag-summary .ag-total strong {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+@media (max-width: 600px) {
+  .ag.frame {
+    padding: 2rem 1.1rem;
+  }
+  .ag-step {
+    padding-left: 2.3rem;
+  }
+  .ag-step h4 > span {
+    width: 24px;
+    height: 24px;
+  }
+  .ag-step:not(:last-child)::before {
+    left: 11.5px;
+    top: 30px;
+  }
+}
+
+/* "Adicionar outro cliente" no mesmo tom da moldura */
+.ag-add-person {
+  border-color: var(--frame-line);
+  border-radius: 6px;
+  color: var(--celestial);
+  font-family: 'EB Garamond', serif;
+  font-size: 1.05rem;
+}
+.ag-add-person:hover,
+.ag-add-person:focus-visible {
+  background: color-mix(in srgb, var(--celestial) 10%, transparent);
+}
+
+/* No celular as abas do agendamento cabem numa linha */
+@media (max-width: 600px) {
+  .ag-tab {
+    padding: 0.7rem 0.5rem;
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+}
