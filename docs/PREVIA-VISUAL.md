@@ -112,6 +112,13 @@ Quase todo o CSS novo está no fim de `src/styles/main.css`, em blocos comentado
 - **O quê:** no desktop a home ocupa a altura da tela, com texto e foto centralizados e a fase da lua no pé; o "Sobre" só aparece ao rolar. Título sempre em duas linhas (antes quebrava em três em telas largas) e foto um pouco maior. No celular segue igual.
 - **Onde:** bloco "A home ocupa a tela inteira" no fim do CSS (este bloco substitui o ajuste do item 16 que encolhia o topo).
 
+## 19. Aviso de horários especiais
+
+- **O quê:** embaixo dos horários do agendamento, um aviso pequeno: "Para horários especiais, das 22h às 5h, consulte pelo WhatsApp", com link que abre o WhatsApp com a mensagem pronta.
+- **Onde:** `src/agendamento/NewBooking.tsx` (classe `ag-special-hours`).
+
+---
+
 ## Como a home ficou (ordem final)
 
 1. Topo em tela cheia: título, botões, foto oval e fase da lua
