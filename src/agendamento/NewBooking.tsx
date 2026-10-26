@@ -319,6 +319,17 @@ export function NewBooking({ services, onBooked }: Props) {
               </button>
             ))}
         </div>
+        <p className="ag-hint ag-special-hours">
+          Para horários especiais, das 22h às 5h, consulte pelo{' '}
+          <a
+            href={waLink('Olá, vim pelo site e gostaria de consultar um horário especial (entre 22h e 5h).')}
+            target="_blank"
+            rel="noopener"
+          >
+            WhatsApp
+          </a>
+          .
+        </p>
       </div>
 
       <div className="ag-step">
