@@ -2,7 +2,7 @@
 
 Teste de visual feito na branch **`previa-visual`** do repositório do site. **Nada disso está publicado**: a branch `master` (que publica na Cloudflare) continua igual. Para ver a prévia, rode o site local (`npm run dev`) com a branch `previa-visual` e abra http://localhost:5173. Use o botão de sol/lua do menu para comparar o modo diurno e o noturno.
 
-**Status (24/10/2026):** visual aprovado ("agora tá perfeito"), aguardando o momento de publicar. Cada item abaixo diz onde mexer para voltar só ele, caso mude de ideia.
+**Status (26/10/2026):** visual aprovado pela Lari ("agora tá perfeito"), aguardando o momento de publicar. Cada item abaixo diz onde mexer para voltar só ele, caso mude de ideia.
 
 Quase todo o CSS novo está no fim de `src/styles/main.css`, em blocos comentados ("PRÉVIA VISUAL", "Moldura celeste", "TEMA CELESTE NO SITE TODO").
 
@@ -10,8 +10,9 @@ Quase todo o CSS novo está no fim de `src/styles/main.css`, em blocos comentado
 
 ## 1. Fonte dos títulos
 
-- **O quê:** Cormorant Garamond → **EB Garamond** (mesmo estilo). A Cormorant do Google Fonts desenha "ê" e "ô" com o acento solto, bem acima da letra ("você", "Referências").
-- **Onde:** link da fonte em `index.html`; nome da fonte em `src/styles/main.css` e `src/painel/painel.css` (o painel da Lari também mudou).
+- **Decisão final (26/10):** a Lari preferiu o traço fino, então ficou a **Cormorant Garamond** de antes, em todo o site e no painel. A troca para EB Garamond foi desfeita.
+- **Ponto conhecido:** a Cormorant desenha o "ê" e o "ô" com o acento um pouco acima da letra ("você", "Referências"). Isso é do desenho da fonte (testado no Google Fonts e no fontsource) e foi aceito.
+- **Onde:** link da fonte em `index.html`; nome da fonte em `src/styles/main.css` e `src/painel/painel.css`.
 
 ## 2. Topo da página (hero)
 
@@ -148,3 +149,4 @@ Para voltar tudo depois de publicado: `git revert` dos commits abaixo (ou do mer
 6. `50354ec` — espaçamento revisado
 7. `9f59807` — seção Serviços removida, Sobre a Lari sobe
 8. `db6ba13` — home em tela cheia
+9. `aa90979` — volta a fonte fina e aviso de horários especiais
