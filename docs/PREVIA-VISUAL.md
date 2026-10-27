@@ -2,7 +2,7 @@
 
 Teste de visual feito na branch **`previa-visual`** do repositório do site. **Nada disso está publicado**: a branch `master` (que publica na Cloudflare) continua igual. Para ver a prévia, rode o site local (`npm run dev`) com a branch `previa-visual` e abra http://localhost:5173. Use o botão de sol/lua do menu para comparar o modo diurno e o noturno.
 
-**Status (26/10/2026):** visual aprovado pela Lari ("agora tá perfeito"), aguardando o momento de publicar. Cada item abaixo diz onde mexer para voltar só ele, caso mude de ideia.
+**Status (26/10/2026):** visual aprovado pela Lari e **publicado** (branch `previa-visual` juntada na `master`). Cada item abaixo diz onde mexer para voltar só ele, caso mude de ideia.
 
 Quase todo o CSS novo está no fim de `src/styles/main.css`, em blocos comentados ("PRÉVIA VISUAL", "Moldura celeste", "TEMA CELESTE NO SITE TODO").
 
