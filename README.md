@@ -9,7 +9,7 @@ Site institucional da maquiadora e penteadista Lari Novais, de São Paulo, com *
 <table>
   <tr>
     <td align="center" valign="top" width="25%"><img src="docs/site-celular.jpg" alt="Site no celular" /><br /><sub>No celular</sub></td>
-    <td align="center" valign="top" width="37%"><img src="docs/site-agendamento.png" alt="Agendamento online com horários livres e taxa de deslocamento" /><br /><sub>Agendamento online: horários livres, taxa por CEP e resumo</sub></td>
+    <td align="center" valign="top" width="37%"><img src="docs/site-agendamento.png" alt="Agendamento online com horários livres e taxa de deslocamento" /><br /><sub>Agendamento online: serviços por cliente, dias livres, horários e resumo</sub></td>
     <td align="center" valign="top" width="38%"><img src="docs/painel.png" alt="Painel Ateliê com pedidos em análise e agenda do dia" /><br /><sub>Painel da Lari: aprovar, recusar e agenda do dia (dados fictícios)</sub></td>
   </tr>
 </table>
@@ -32,7 +32,8 @@ Site institucional da maquiadora e penteadista Lari Novais, de São Paulo, com *
 Site institucional de uma maquiadora e penteadista profissional que atende a domicílio (São Paulo). Apresenta a profissional, os serviços de **noivas**, **atendimento social** e **cursos**, reúne depoimentos de clientes e converte visitas em contato por **WhatsApp**. O Atendimento Social tem **agendamento online** integrado à AgendamentoApi, do repositório [lari-novais-beauty-agendamento](https://github.com/araujogbs/lari-novais-beauty-agendamento) (localmente, na pasta `../API e App`).
 
 - **Tipo:** site de uma página (one-page) em **React + TypeScript**, com build e servidor de desenvolvimento do **Vite**.
-- **Fontes:** Cormorant Garamond e Inter (Google Fonts).
+- **Fontes:** Cormorant Garamond (títulos, traço fino) e Inter (Google Fonts).
+- **Visual:** tema celeste (moldura fina com estrelinhas nos cantos, agendamento em constelação, fotos em arco, divisores "— ✦ —"). A lista de cada detalhe e onde mexer está em [`docs/PREVIA-VISUAL.md`](docs/PREVIA-VISUAL.md).
 - **Conteúdo:** segue o documento `INFORMAÇÕES SITE.docx`, que é a referência de textos, preços e estrutura.
 
 ---
@@ -105,11 +106,11 @@ A navegação fixa no topo tem: **Home · Sobre Mim · Noivas · Social · Curso
 
 | Seção | Âncora | O que tem |
 |---|---|---|
-| **Home** | `#home` | Hero com carrossel automático de fotos (troca a cada 4 s), título que aparece palavra por palavra, botões e **a lua de hoje**. Em seguida: portfólio em 3 blocos (Noivas, Eventos Sociais, Cursos), apresentação "Olá, eu sou a Lari" (sem o título "Quem sou eu"), cartões de serviços |
+| **Home** | `#home` | Em tela cheia no desktop: título que aparece palavra por palavra e botões à esquerda, carrossel de fotos em moldura oval à direita e **a lua de hoje** no pé. Em seguida: "Olá, eu sou a Lari" e os cartões Noivas / Eventos Sociais / Cursos, que levam a cada seção |
 | **Depoimentos** | `#depoimentos` | Carrossel com as 7 avaliações reais do documento. **Só existe na Home** |
 | **Sobre Mim** | `#sobre` | Constelação **Lyra**. "A artista por trás dos pincéis": trajetória em texto e currículo (Senac, Anhembi Morumbi, Style Academy, Visagismo, O Poder da Juba e especializações) |
 | **Noivas** | `#noivas` | Constelação **Corona Borealis**. Frase de posicionamento, "Do primeiro contato ao altar" em 6 passos, galeria de inspirações, pacote único ("a partir de R$ 3.000,00") e formulário da noiva |
-| **Atendimento Social** | `#social` | Constelação **Plêiades**. Texto de posicionamento, galeria, tabela de preços, **agendamento online** e carrossel "Avaliações no Google" |
+| **Atendimento Social** | `#social` | Constelação **Plêiades**. Texto de posicionamento, galeria com fotos em arco, cartão de valores ("carta celeste", com a duração de cada serviço), **agendamento online** e carrossel "Avaliações no Google" |
 | **Cursos** | `#cursos` | Constelação **Cruzeiro do Sul**. Três cursos Beauty Class (Automaquiagem, Penteado Profissional, Maquiagem Profissional), cada um com botão "Quero me Inscrever" que abre o WhatsApp |
 | **Redes** | `#redes` | Instagram, TikTok e YouTube, com os links reais |
 | **Fale Comigo** | `#contato` | Formulário de sugestões, elogios e parcerias, mais WhatsApp, e-mail e redes |
@@ -119,12 +120,12 @@ A navegação fixa no topo tem: **Home · Sobre Mim · Noivas · Social · Curso
 - **Depoimentos de noivas e de clientes sociais:** removidos de propósito. Está previsto gravar vídeos curtos de depoimento no futuro.
 
 ### Preços (Atendimento Social)
-| Item | Valor |
-|---|---|
-| Pacote Maquiagem + Penteado | R$ 700,00 |
-| Maquiagem (unitário) | R$ 350,00 |
-| Penteado (unitário) | R$ 350,00 |
-| Escova e Babyliss | R$ 300,00 |
+| Item | Duração | Valor |
+|---|---|---|
+| Maquiagem | 60 min | R$ 380,00 |
+| Penteado | 60 a 90 min | R$ 380,00 |
+| Pacote Maquiagem + Penteado | 120 a 150 min | R$ 700,00 (economia de R$ 60) |
+| Escova e Babyliss | 60 min | R$ 300,00 |
 
 A taxa de deslocamento é cobrada à parte, conforme o endereço. Cursos: Automaquiagem R$ 500,00 (4 h); Penteado Profissional (20 h) e Maquiagem Profissional (6 h) com valores sob consulta.
 
@@ -167,24 +168,24 @@ O tema celeste do site (sóis e luas de tarô) ganhou movimento:
 O widget (`src/agendamento/`) conversa com a **AgendamentoApi** (.NET). Noivas **não** usa agendamento online, apenas o formulário de WhatsApp.
 
 **Fluxo da cliente**
-1. Escolhe o **serviço** (lista, duração e preço vêm de `GET /api/services`).
-2. Escolhe o **dia num calendário do mês** que marca cada dia como **livre**, **últimos horários** (até 3 horários de início) ou **lotado** (não dá para escolher), com uma única chamada a `GET /api/appointments/availability`. No celular pequeno, o rótulo vira um ponto colorido. Os **horários livres** do dia vêm de `GET /api/appointments/available-slots`. Se a disponibilidade não carregar, o calendário avisa e continua deixando escolher o dia.
-3. Preenche nome, WhatsApp (com máscara), horário de início (o símbolo "i" ao lado do título explica como escolher), CEP, número, quantidade de pessoas, descrição e **fotos de referência** (até 5, JPG/PNG/WebP, 5 MB cada, com miniaturas e botão para remover).
+1. Escolhe os **serviços de cada cliente** (lista, duração e preço vêm de `GET /api/services`). "Adicionar outro cliente" abre a Cliente 2, 3… (até 20), cada uma com os próprios serviços; o pacote Maquiagem + Penteado não combina com maquiagem ou penteado avulsos na mesma cliente. A escolha vai para a API no formato `groups=1,2;2` (uma cliente por `;`).
+2. Escolhe o **dia num calendário do mês** que marca cada dia como **livre**, **últimos horários** (até 3 horários de início) ou **lotado** (não dá para escolher), com uma única chamada a `GET /api/appointments/availability`. No celular pequeno, o rótulo vira um ponto colorido. Os **horários livres** do dia vêm de `GET /api/appointments/available-slots`. Se a disponibilidade não carregar, o calendário avisa e continua deixando escolher o dia. Embaixo dos horários, um aviso pequeno indica que horários especiais (das 22h às 5h) são combinados pelo WhatsApp.
+3. Preenche nome, WhatsApp (com máscara), horário de início (o símbolo "i" ao lado do título explica como escolher), CEP, número, descrição e **fotos de referência** (até 5, JPG/PNG/WebP, 5 MB cada, com miniaturas e botão para remover).
 4. Ao completar o **CEP**, o endereço é preenchido e a **taxa de deslocamento** é calculada (`GET /api/appointments/estimate-fee`). O resumo mostra serviço, deslocamento e total.
 5. Confirma (`POST /api/appointments`, formulário multipart). O horário é enviado em fuso de Brasília (`-03:00`). Na tela de confirmação há os botões **Google Agenda** (link de evento pronto) e **Apple / Outlook** (baixa um `.ics`, com o horário em UTC para abrir certo em qualquer agenda).
 6. Em **Meus agendamentos**, busca pelo WhatsApp, vê o status ("Em análise" ou "Confirmado") e cancela: pedido em análise a qualquer momento, confirmado com mais de 24 h de antecedência (`my-appointments` e `client-cancel`).
 
-O horário escolhido é o de **início** (`startTime`); a API calcula o término somando a duração total (serviço × pessoas), e o resumo mostra o término previsto. Ao enviar, a cliente vê "Agendamento em análise": o pedido segura o horário até a Lari aprovar ou recusar no painel (prazo de 3 dias, depois expira), e a resposta chega pelo WhatsApp. A quantidade de pessoas (`people`) multiplica o valor do serviço e a duração, mas não o deslocamento.
+O horário escolhido é o de **início** (`startTime`); a API calcula o término somando a duração total (serviço × pessoas), e o resumo mostra o término previsto. Ao enviar, a cliente vê "Agendamento em análise": o pedido segura o horário até a Lari aprovar ou recusar no painel (prazo de 3 dias, depois expira), e a resposta chega pelo WhatsApp. O valor e a duração somam os serviços de todas as clientes; o deslocamento é cobrado uma vez só.
 
 **Se a API estiver indisponível:** o widget mostra um aviso e um link "Agendar pelo WhatsApp"; o resto do site não é afetado.
 
-**Regras que vêm do backend** (não do site): expediente das 6h às 22h, sem sobreposição de horários, aprovação dos pedidos e prazo de 3 dias, cancelamento de confirmados só com mais de 24 h, limites de requisições por IP (resposta 429) e cálculo de deslocamento a partir do CEP. Detalhes no README da AgendamentoApi.
+**Regras que vêm do backend** (não do site): expediente das 6h às 22h, **bloqueio fixo "Docente Senac" de segunda a sábado, das 6h às 14h** (a Lari libera uma manhã pelo botão "Desbloquear" daquele dia no painel), sem sobreposição de horários, aprovação dos pedidos e prazo de 3 dias, cancelamento de confirmados só com mais de 24 h, limites de requisições por IP (resposta 429) e cálculo de deslocamento a partir do CEP. Detalhes no README da AgendamentoApi.
 
 ### Serviços cadastrados na API
 | Serviço | Duração | Preço |
 |---|---|---|
-| Maquiagem | 60 min | R$ 350 |
-| Penteado | 90 min | R$ 350 |
+| Maquiagem | 60 min | R$ 380 |
+| Penteado | 90 min | R$ 380 |
 | Escova e Babyliss | 60 min | R$ 300 |
 | Maquiagem + Penteado | 150 min | R$ 700 |
 
@@ -305,7 +306,7 @@ Para publicar em outra hospedagem, basta servir a pasta `dist/` (Netlify, Vercel
 - **Seção Equipe e bloco de redes da Home estão ocultos**; os nomes e descrições da Equipe são de exemplo.
 - **Cartões de Instagram e TikTok** na seção Redes trazem listas de exemplo ("Antes e depois de noivas", "Penteado em 60 segundos") que não vêm do documento.
 - **Conteúdo do portfólio** da Home e rótulos das fotos são genéricos; vale revisar com a cliente.
-- **Horário de atendimento da API é fixo** (6h às 22h, constantes `WorkStart`/`WorkEnd` no `AppointmentsController`).
+- **Horário de atendimento da API é fixo** (6h às 22h, constantes `WorkStart`/`WorkEnd` no `AppointmentsController`), com as manhãs de segunda a sábado bloqueadas pelo `RecurringBlockService` (Docente Senac). Horários das 22h às 5h só pelo WhatsApp.
 - **Fuso:** o widget envia o horário com `-03:00` fixo, o que está correto enquanto o Brasil não adotar horário de verão.
 - **"Meus agendamentos" funciona por código secreto, não por telefone.** Cada pedido gera um código (`id.assinatura`) que o navegador guarda e que também vai num link de WhatsApp (`/#ag=código`). Quem só sabe o telefone de alguém não vê nada. Limitação: em outro aparelho, só pelo link do WhatsApp (depende da integração oficial) ou falando com a Lari.
 - **Analytics:** Cloudflare Web Analytics em configuração automática (sem cookies). `sitemap.xml` e `robots.txt` já estão no ar.
