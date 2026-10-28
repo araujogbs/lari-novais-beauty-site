@@ -5,7 +5,7 @@ import { StarCorners, StarDivider } from './StarCorners';
 const SOCIAL_GALLERY: readonly { src: string; alt: string }[] = [
   { src: '/img/social-1.jpg', alt: 'Formanda com penteado baixo e maquiagem luminosa' },
   { src: '/img/social-2.jpg', alt: 'Madrinha com rabo de cavalo sofisticado' },
-  { src: '/img/social-4.jpg', alt: 'Penteado preso com mecha ondulada e maquiagem em tons de vinho' },
+  { src: '/img/social-11.jpg', alt: 'Penteado preso com mecha ondulada e maquiagem em tons de vinho' },
   { src: '/img/social-5.jpg', alt: 'Maquiagem natural para evento' },
   { src: '/img/social-7.jpg', alt: 'Formanda com cachos definidos' },
   { src: '/img/social-8.jpg', alt: 'Debutante com vestido azul e cabelo ondulado' },
