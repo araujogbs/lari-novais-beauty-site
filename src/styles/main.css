@@ -1970,6 +1970,20 @@ footer p {
   color: var(--text-muted);
   letter-spacing: 1px;
 }
+footer .footer-credit {
+  margin-top: 0.4rem;
+  font-size: 0.68rem;
+  opacity: 0.8;
+}
+footer .footer-credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--rose-light);
+  text-underline-offset: 3px;
+}
+footer .footer-credit a:hover {
+  color: var(--rose-dark);
+}
 
 /* REVEAL */
 .reveal {
