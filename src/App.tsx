@@ -9,9 +9,7 @@ import { Hero } from './components/Hero';
 import { Nav } from './components/Nav';
 import { Networks } from './components/Networks';
 import { Portfolio } from './components/Portfolio';
-import { SocialNetworksHome } from './components/SocialNetworksHome';
 import { SocialService } from './components/SocialService';
-import { Team } from './components/Team';
 import { Testimonials } from './components/Testimonials';
 import { SparkleTrail, StarrySky } from './components/SkyEffects';
 import { lazy, Suspense } from 'react';
@@ -47,13 +45,11 @@ export function App() {
       <Hero />
       <AboutHome />
       <Portfolio />
-      <SocialNetworksHome />
       <Testimonials />
       <AboutMe />
       <Brides />
       <SocialService />
       <Courses />
-      <Team />
       <Networks />
       <Contact />
       <Footer />

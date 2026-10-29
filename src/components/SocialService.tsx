@@ -1,6 +1,7 @@
 import { AgendamentoWidget } from '../agendamento/AgendamentoWidget';
 import { Constellation } from './Constellation';
 import { StarCorners, StarDivider } from './StarCorners';
+import { responsive } from '../lib/img';
 
 const SOCIAL_GALLERY: readonly { src: string; alt: string }[] = [
   { src: '/img/social-1.jpg', alt: 'Formanda com penteado baixo e maquiagem luminosa' },
@@ -38,7 +39,7 @@ export function SocialService() {
           </div>
           <div className="social-gallery reveal">
             {SOCIAL_GALLERY.map(({ src, alt }) => (
-              <img key={src} src={src} alt={alt} loading="lazy" />
+              <img key={src} {...responsive(src, '(max-width: 600px) 45vw, 240px')} alt={alt} loading="lazy" />
             ))}
           </div>
           <div className="pacote-single reveal" style={{ textAlign: 'center' }}>

@@ -1,4 +1,5 @@
 import { Constellation } from './Constellation';
+import { responsive } from '../lib/img';
 
 export function AboutMe() {
   return (
@@ -8,11 +9,11 @@ export function AboutMe() {
         <div className="container">
           <div className="sobre-head">
             <div className="section-label">Sobre Mim</div>
-            <h1>
+            <h2>
               A <em>artista</em> por trás
               <br />
               dos pincéis
-            </h1>
+            </h2>
           </div>
           <div className="sobre-grid reveal">
             <div className="sobre-text">
@@ -51,28 +52,32 @@ export function AboutMe() {
             <div className="sobre-photos">
               <div className="sobre-photo">
                 <img
-                  src="/img/lari-pb-1.jpg"
+                  {...responsive('/img/lari-pb-1.jpg', '(max-width: 968px) 45vw, 240px')}
+                  loading="lazy"
                   alt="Lari"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
                 />
               </div>
               <div className="sobre-photo">
                 <img
-                  src="/img/lari-pb-2.jpg"
+                  {...responsive('/img/lari-pb-2.jpg', '(max-width: 968px) 45vw, 240px')}
+                  loading="lazy"
                   alt="Lari"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
                 />
               </div>
               <div className="sobre-photo">
                 <img
-                  src="/img/lari-pb-3.jpg"
+                  {...responsive('/img/lari-pb-3.jpg', '(max-width: 968px) 45vw, 240px')}
+                  loading="lazy"
                   alt="Lari"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
                 />
               </div>
               <div className="sobre-photo">
                 <img
-                  src="/img/lari-pb-4.jpg"
+                  {...responsive('/img/lari-pb-4.jpg', '(max-width: 968px) 45vw, 240px')}
+                  loading="lazy"
                   alt="Lari"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
                 />

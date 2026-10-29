@@ -1,4 +1,5 @@
 import { Constellation } from './Constellation';
+import { responsive } from '../lib/img';
 
 /* Ícones de linha da ficha de cada curso (duração, turma e valor), na cor do site */
 const iconProps = {
@@ -48,7 +49,8 @@ export function Courses() {
             <div className="curso-card">
               <div className="curso-img">
                 <img
-                  src="/img/curso-automaquiagem.jpg"
+                  {...responsive('/img/curso-automaquiagem.jpg', '(max-width: 968px) 90vw, 380px')}
+                  loading="lazy"
                   alt="Automaquiagem"
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
@@ -89,7 +91,8 @@ export function Courses() {
             <div className="curso-card">
               <div className="curso-img">
                 <img
-                  src="/img/curso-penteado.jpg"
+                  {...responsive('/img/curso-penteado.jpg', '(max-width: 968px) 90vw, 380px')}
+                  loading="lazy"
                   alt="Penteado Profissional"
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
@@ -133,7 +136,8 @@ export function Courses() {
             <div className="curso-card">
               <div className="curso-img">
                 <img
-                  src="/img/curso-maquiagem-pro.jpg"
+                  {...responsive('/img/curso-maquiagem-pro.jpg', '(max-width: 968px) 90vw, 380px')}
+                  loading="lazy"
                   alt="Maquiagem Profissional"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%' }}
                 />

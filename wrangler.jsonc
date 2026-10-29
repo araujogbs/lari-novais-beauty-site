@@ -1,0 +1,10 @@
+// Worker da Cloudflare que publica o site (build: npm run build; cada push na master publica)
+{
+  "name": "larinovaisbeauty",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    // Endereço inexistente responde 404 com a página public/404.html (a navegação do site é por #)
+    "not_found_handling": "404-page",
+  },
+}

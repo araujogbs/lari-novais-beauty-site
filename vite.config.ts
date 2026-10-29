@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   // Caminhos relativos: o build funciona em qualquer hospedagem ou subpasta.
   base: './',
-  build: { target: 'es2020', sourcemap: true },
+  build: { target: 'es2020', sourcemap: false },
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],

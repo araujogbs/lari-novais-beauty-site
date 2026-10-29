@@ -513,39 +513,11 @@ section {
   color: var(--text-muted);
 }
 
-/* SOCIAL CARDS */
-.social-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-}
-.social-card {
-  text-align: center;
-  padding: 2.5rem 1.5rem;
-  border: 1px solid rgba(194, 83, 122, 0.15);
-  border-radius: 12px;
-  transition: border-color 0.3s;
-}
-.social-card:hover {
-  border-color: var(--rose);
-}
+/* ÍCONE DAS REDES */
 .social-icon {
   font-size: 1.8rem;
   margin-bottom: 1rem;
   color: var(--rose);
-}
-.social-card h5 {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text);
-  margin-bottom: 0.5rem;
-}
-.social-card p {
-  font-size: 0.8rem;
-  color: var(--text-light);
-  margin-bottom: 1.5rem;
-  font-weight: 300;
-  line-height: 1.6;
 }
 
 /* TESTIMONIALS */
@@ -598,13 +570,13 @@ section {
   text-align: center;
   margin-bottom: 4rem;
 }
-.sobre-head h1 {
+.sobre-head h2 {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(3rem, 5vw, 4.5rem);
   font-weight: 300;
   color: var(--text);
 }
-.sobre-head h1 em {
+.sobre-head h2 em {
   color: var(--rose-dark);
   font-style: italic;
 }
@@ -687,7 +659,7 @@ section {
   padding: 8rem 2rem 2rem;
   background: linear-gradient(180deg, var(--cream) 0%, var(--surface) 100%);
 }
-.noivas-hero h1 {
+.noivas-hero h2 {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(2.2rem, 4vw, 3.2rem);
   font-weight: 300;
@@ -696,7 +668,7 @@ section {
   max-width: 900px;
   margin: 0 auto 1rem;
 }
-.noivas-hero h1 em {
+.noivas-hero h2 em {
   color: var(--rose-dark);
   font-style: italic;
 }
@@ -1045,50 +1017,6 @@ section {
   background: var(--rose-dark);
 }
 
-/* EQUIPE */
-.equipe-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-}
-.equipe-member {
-  background: var(--surface);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(194, 83, 122, 0.1);
-  transition: transform 0.3s;
-  text-align: center;
-}
-.equipe-member:hover {
-  transform: translateY(-4px);
-}
-.equipe-member .photo-placeholder {
-  width: 100%;
-  aspect-ratio: 4/3;
-  border-radius: 12px 12px 0 0;
-}
-.equipe-member .member-info {
-  padding: 1.5rem;
-}
-.equipe-member h5 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.2rem;
-  color: var(--text);
-  margin-bottom: 0.2rem;
-}
-.equipe-member .role {
-  font-size: 0.8rem;
-  color: var(--rose);
-  margin-bottom: 0.8rem;
-  display: block;
-}
-.equipe-member p {
-  font-size: 0.85rem;
-  color: var(--text-light);
-  line-height: 1.7;
-  font-weight: 300;
-}
-
 /* PILARES GRID */
 .pilares-grid {
   display: grid;
@@ -1104,26 +1032,6 @@ section {
 .pilar-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-}
-
-/* EQUIPE PHOTOS */
-.equipe-gallery {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-  margin-top: 3rem;
-}
-.equipe-gallery .gallery-placeholder {
-  aspect-ratio: 1/1;
-  background: linear-gradient(135deg, var(--ph-a), var(--ph-b));
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.equipe-gallery .gallery-placeholder span {
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.9rem;
 }
 
 /* REDES FULL */
@@ -2035,14 +1943,12 @@ footer .footer-credit a:hover {
   }
   .portfolio-grid,
   .services-grid,
-  .social-grid,
   .cursos-grid,
   .rede-grid {
     grid-template-columns: 1fr;
   }
   .team-grid,
   .pacotes-grid,
-  .equipe-grid,
   .steps-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -2071,7 +1977,6 @@ footer .footer-credit a:hover {
 @media (max-width: 600px) {
   .team-grid,
   .pacotes-grid,
-  .equipe-grid,
   .pillars-grid,
   .steps-grid {
     grid-template-columns: 1fr;
@@ -2080,8 +1985,7 @@ footer .footer-credit a:hover {
     padding: 1.5rem;
   }
   .noivas-grid,
-  .social-gallery,
-  .equipe-gallery {
+  .social-gallery {
     grid-template-columns: repeat(2, 1fr);
   }
   .hero h1 {
@@ -2105,7 +2009,7 @@ footer .footer-credit a:hover {
   .sobre-head {
     margin-bottom: 2.5rem;
   }
-  .sobre-head h1 {
+  .sobre-head h2 {
     font-size: 2.4rem;
   }
   .certificates {

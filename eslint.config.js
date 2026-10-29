@@ -6,7 +6,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   // public/ tem só arquivos estáticos servidos como estão (inclui o service worker, que não passa pelo build)
-  { ignores: ['dist', 'node_modules', 'public'] },
+  { ignores: ['dist', 'dist-ssr', 'node_modules', 'public'] },
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
@@ -29,7 +29,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['*.ts', '*.js'],
+    files: ['*.ts', '*.js', 'scripts/*.mjs'],
     extends: [tseslint.configs.disableTypeChecked],
     languageOptions: { globals: globals.node },
   },

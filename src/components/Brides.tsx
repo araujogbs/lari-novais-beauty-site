@@ -1,6 +1,7 @@
 import { BrideForm } from './BrideForm';
 import { Constellation } from './Constellation';
 import { StarCorners, StarDivider } from './StarCorners';
+import { responsive } from '../lib/img';
 
 export function Brides() {
   return (
@@ -9,11 +10,11 @@ export function Brides() {
         <Constellation id="noivas" side="right" />
         <div>
           <div className="section-label">Noivas</div>
-          <h1>
+          <h2>
             A <em>sofisticação</em> que o seu momento pede,
             <br />
             com a <em>naturalidade</em> que você deseja.
-          </h1>
+          </h2>
         </div>
       </section>
       <section style={{ paddingTop: '1rem', paddingBottom: '2rem' }}>
@@ -94,28 +95,32 @@ export function Brides() {
           <div className="noivas-grid reveal">
             <div className="noiva-photo">
               <img
-                src="/img/insp-1.jpg"
+                {...responsive('/img/insp-1.jpg', '(max-width: 600px) 45vw, 300px')}
+                loading="lazy"
                 alt="Noiva"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
               />
             </div>
             <div className="noiva-photo">
               <img
-                src="/img/insp-2.jpg"
+                {...responsive('/img/insp-2.jpg', '(max-width: 600px) 45vw, 300px')}
+                loading="lazy"
                 alt="Noiva"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
               />
             </div>
             <div className="noiva-photo">
               <img
-                src="/img/insp-3.jpg?v=3"
+                {...responsive('/img/insp-3.jpg', '(max-width: 600px) 45vw, 300px')}
+                loading="lazy"
                 alt="Noiva"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
               />
             </div>
             <div className="noiva-photo">
               <img
-                src="/img/insp-4.jpg"
+                {...responsive('/img/insp-4.jpg', '(max-width: 600px) 45vw, 300px')}
+                loading="lazy"
                 alt="Noiva"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
               />

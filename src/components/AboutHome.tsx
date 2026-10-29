@@ -1,3 +1,4 @@
+import { responsive } from '../lib/img';
 export function AboutHome() {
   return (
     <>
@@ -6,7 +7,8 @@ export function AboutHome() {
           <div className="about-home reveal">
             <div className="photo-placeholder">
               <img
-                src="/img/lari-perfil.jpg"
+                {...responsive('/img/lari-perfil.jpg', '(max-width: 968px) 90vw, 400px')}
+                loading="lazy"
                 alt="Lari"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
               />

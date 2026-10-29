@@ -86,8 +86,11 @@ Site/
 │   ├── config.ts · utils.ts   # Variáveis VITE_* e utilitários (máscaras, datas, valores)
 │   ├── styles/main.css        # Todos os estilos
 │   └── **/*.test.ts(x)        # Testes (Vitest + Testing Library)
-├── public/img/                # Imagens otimizadas usadas pelo site (hero, home, cursos, Lari)
-├── public/og-image.jpg · favicon.svg · robots.txt   # prévia de link (1200 x 630), ícone e robôs de busca
+├── public/img/                # Fotos originais do site (JPG); public/img/w/ tem as versões WebP de 480 e 960 px
+├── public/og-image.jpg · favicon.svg · apple-touch-icon.png · robots.txt · 404.html   # prévia de link, ícones, robôs de busca e página de erro
+├── scripts/optimize-images.mjs   # gera as versões WebP das fotos (npm run images)
+├── scripts/prerender.mjs      # coloca o HTML da página pronto no dist/index.html (fim do npm run build)
+├── wrangler.jsonc             # Worker da Cloudflare: pasta dist e página 404
 ├── .env.example               # Modelo das variáveis de ambiente
 ├── .env.development · .env.production   # usados por `npm run dev` e `npm run build`
 ├── package.json · tsconfig.json · vite.config.ts
@@ -96,7 +99,7 @@ Site/
 └── README.md
 ```
 
-Os arquivos de `public/` são copiados como estão para o `dist/` e referenciados por `/img/...` no HTML. As fotos originais ficam fora do site, na pasta `Fotos do site/` do projeto: otimize a imagem (até 1200 px, JPG) antes de colocar em `public/img/`.
+Os arquivos de `public/` são copiados como estão para o `dist/` e referenciados por `/img/...` no HTML. As fotos originais ficam fora do site, na pasta `Fotos do site/` do projeto. Para colocar ou trocar uma foto: copie o JPG (até 1200 px) para `public/img/` **com um nome novo** (o navegador guarda as fotos por 7 dias, então reaproveitar o nome mostra a antiga) e rode `npm run images`, que gera as versões WebP em `public/img/w/`. Nos componentes, use `responsive('/img/nome.jpg', sizes)` (`src/lib/img.ts`): o navegador baixa a versão de 480 ou 960 px conforme a tela.
 
 ---
 
@@ -116,7 +119,7 @@ A navegação fixa no topo tem: **Home · Sobre Mim · Noivas · Social · Curso
 | **Fale Comigo** | `#contato` | Formulário de sugestões, elogios e parcerias, mais WhatsApp, e-mail e redes |
 
 ### Conteúdo oculto
-- **Equipe:** a seção completa (`#equipe`) e o bloco "Redes" da Home estão com o atributo `hidden`, e o link "Equipe" saiu do menu. Para exibir de novo, remova `hidden` da `<section>` correspondente.
+- **Equipe:** a seção e o bloco "Redes" da Home (que estavam ocultos com textos de exemplo) foram removidos do código; dá para recuperar pelo git (`Team.tsx` e `SocialNetworksHome.tsx`).
 - **Depoimentos de noivas e de clientes sociais:** removidos de propósito. Está previsto gravar vídeos curtos de depoimento no futuro.
 
 ### Preços (Atendimento Social)
@@ -272,7 +275,7 @@ As variáveis são embutidas no build: ao mudá-las, rode `npm run build` de nov
 - **Textos:** edite o componente da seção em `src/components/` (por exemplo, a Trajetória está em `AboutMe.tsx`). Ele é JSX: `class` vira `className` e `style` é um objeto.
 - **Depoimentos e avaliações:** ficam em `src/data/reviews.ts`. O mesmo conteúdo alimenta o carrossel da Home e o do Google. Para as avaliações do Google serem reais, será preciso integrar com a API do Google Places ou copiar os textos manualmente.
 - **Cursos:** cada curso é um bloco `.curso-card` em `src/components/Courses.tsx`; o link do botão é um `wa.me` com o nome do curso já codificado.
-- **Fotos:** coloque as imagens já otimizadas em `public/img/` e referencie por `/img/...`. Atenção ao peso (veja abaixo).
+- **Fotos:** veja o passo a passo em [Estrutura do projeto](#estrutura-do-projeto) (nome novo, `npm run images` e `responsive()`).
 - **Cores e tipografia:** variáveis CSS em `:root` no topo de `src/styles/main.css` (`--rose`, `--rose-dark`, `--cream`…). O modo noturno redefine as mesmas variáveis em `:root[data-theme='dark']`. Use `--surface` para fundos e `--on-rose` para texto sobre rosa (não `--white`, que é branco fixo para texto sobre fotos).
 - **Constelações:** nome, apelido, texto do botão de estrela e posição das estrelas ficam em `src/data/constellations.ts`. O lado (esquerda ou direita) é a prop `side` em cada seção.
 - **Prévia de link e Google:** título, descrição e dados do negócio ficam no `index.html`; a imagem é `public/og-image.jpg` (1200 x 630).
@@ -289,10 +292,13 @@ O site está no ar em **[larinovaisbeauty.com.br](https://larinovaisbeauty.com.b
 | Build | `npm run build`, saída `dist`, Node 22 (`.node-version`) |
 | Domínio | `larinovaisbeauty.com.br` ligado ao Worker; `www` redireciona (301) para o domínio principal por uma Redirect Rule da Cloudflare |
 | DNS | Cloudflare, com DNSSEC; o domínio é registrado no registro.br |
-| Cabeçalhos | `public/_headers`: segurança (HSTS, `X-Frame-Options`, `nosniff`, Referrer e Permissions Policy) e cache longo de `/assets/*` (arquivos com hash no nome) |
+| Cabeçalhos | `public/_headers`: segurança (HSTS, `X-Frame-Options`, `nosniff`, Referrer e Permissions Policy, **Content-Security-Policy**) e cache longo de `/assets/*` (arquivos com hash no nome). A CSP só libera o próprio site, as fontes do Google, a API e o Cloudflare Web Analytics: ao usar um serviço externo novo, inclua o domínio nela |
+| Página 404 | `wrangler.jsonc` com `not_found_handling: "404-page"`: endereço inexistente responde **404** com `public/404.html` |
+| Pré-renderização | O `npm run build` também gera o HTML da página (`src/entry-server.tsx` + `scripts/prerender.mjs`, com jsdom simulando o navegador). Buscadores e quem está sem JavaScript veem o conteúdo; no navegador o React assume a página |
+| Source maps | Desligados no build (`vite.config.ts`): o código-fonte não fica exposto no navegador |
 | API | `https://api.larinovaisbeauty.com.br`, com CORS liberado só para o domínio do site (veja o README da API) |
 
-A navegação é por hash (`#painel`), então não precisa configurar rewrite. Ao mudar o domínio ou o WhatsApp, ajuste o `.env.production`: as variáveis são embutidas no build.
+A navegação é por hash (`#painel`), então não precisa de rewrite para o app. Ao mudar o domínio ou o WhatsApp, ajuste o `.env.production`: as variáveis são embutidas no build.
 
 Para publicar em outra hospedagem, basta servir a pasta `dist/` (Netlify, Vercel, Cloudflare Pages, hospedagem comum); o `_headers` só vale na Cloudflare e na Netlify.
 
@@ -301,9 +307,8 @@ Para publicar em outra hospedagem, basta servir a pasta `dist/` (Netlify, Vercel
 ## Limitações conhecidas e próximos passos
 
 - **Mensagens de WhatsApp e eventos do Google Agenda ainda em simulação na API** (a cliente vê a confirmação na tela, mas não recebe mensagem automática). O WhatsApp automático foi adiado (a Meta só libera coexistência para parceiros): a Lari envia a confirmação e o PIX pelo botão "Enviar pelo WhatsApp" do painel.
-- **Imagens sem versões responsivas (`srcset`).** Todas ficam em `public/img/` (cerca de 3 MB no total), mas o celular baixa o mesmo arquivo que o computador.
+- **Fotos responsivas:** WebP de 480 e 960 px com `srcset`, carregamento sob demanda fora da tela e o carrossel do topo baixando só a foto atual e a próxima. A primeira tela no celular caiu de cerca de 2,5 MB para menos de 1 MB.
 - **Avaliações do Google copiadas à mão:** os 7 textos vêm do perfil real (todas 5 estrelas) e o selo "5,0" é fixo; não há integração automática com o Google (a Places API traz só 5 avaliações e exige chave e endpoint no servidor).
-- **Seção Equipe e bloco de redes da Home estão ocultos**; os nomes e descrições da Equipe são de exemplo.
 - **Cartões de Instagram e TikTok** na seção Redes trazem listas de exemplo ("Antes e depois de noivas", "Penteado em 60 segundos") que não vêm do documento.
 - **Conteúdo do portfólio** da Home e rótulos das fotos são genéricos; vale revisar com a cliente.
 - **Horário de atendimento da API é fixo** (6h às 22h, constantes `WorkStart`/`WorkEnd` no `AppointmentsController`), com as manhãs de segunda a sábado bloqueadas pelo `RecurringBlockService` (Docente Senac). Horários das 22h às 5h só pelo WhatsApp.
