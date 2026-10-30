@@ -1,8 +1,10 @@
 # Lari Novais Beauty — Site
 
-Site institucional da maquiadora e penteadista Lari Novais, de São Paulo, com **agendamento online** e o **painel da profissional** integrados à API de agendamento ([lari-novais-beauty-agendamento](https://github.com/araujogbs/lari-novais-beauty-agendamento), que também tem o app).
+Site institucional da maquiadora e penteadista Lari Novais, de São Paulo, com **agendamento online** e o **painel da profissional** integrados à API de agendamento em .NET ([lari-novais-beauty-agendamento](https://github.com/araujogbs/lari-novais-beauty-agendamento)).
 
 **No ar em [larinovaisbeauty.com.br](https://larinovaisbeauty.com.br)** (Cloudflare), com a API em `https://api.larinovaisbeauty.com.br`.
+
+![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white) ![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white) ![Vitest](https://img.shields.io/badge/testes-Vitest-6E9F18?logo=vitest&logoColor=white) ![Cloudflare Workers](https://img.shields.io/badge/deploy-Cloudflare%20Workers-F38020?logo=cloudflare&logoColor=white)
 
 <p align="center"><img src="docs/site-home.jpg" width="820" alt="Página inicial do site" /></p>
 
@@ -24,6 +26,9 @@ Site institucional da maquiadora e penteadista Lari Novais, de São Paulo, com *
 - **Céu interativo:** constelações que se desenham com a rolagem, sóis e luas que giram conforme a página desce, a fase real da lua no dia e um **modo noturno** com céu estrelado (canvas). Tudo respeita o "menos movimento" do aparelho.
 - **Calendário de disponibilidade:** o agendamento mostra quais dias estão livres, com últimos horários ou lotados, numa única chamada à API, e oferece salvar o pedido no Google Agenda ou num arquivo `.ics`.
 - **Pronto para compartilhar:** Open Graph com imagem própria (prévia no WhatsApp e no Instagram), dados estruturados `BeautySalon` para o Google, favicon e `robots.txt`.
+- **Desempenho:** HTML pré-renderizado no build (buscadores e quem está sem JavaScript veem a página pronta) e fotos WebP responsivas (`srcset` de 480 e 960 px). A primeira tela no celular caiu de cerca de 2,5 MB para 438 KB.
+- **Painel instalável no iPhone com push:** PWA com service worker e Web Push. A Lari recebe o aviso de pedido novo sem app de loja.
+- **Segurança no front:** Content-Security-Policy, HSTS e demais cabeçalhos em `public/_headers`, sem source maps em produção e página 404 de verdade.
 
 ---
 
@@ -200,7 +205,7 @@ As durações são estimativas e devem ser ajustadas ao tempo real de atendiment
 
 ## Painel Ateliê (área da Lari)
 
-A mesma gestão do app, no navegador. Abre pelo endereço **`/#painel`** (não há link no site). O login é o mesmo do app (`Admin:Username` / senha da API).
+A gestão dos pedidos, no navegador (substitui o antigo app React Native). Abre pelo endereço **`/#painel`** (não há link no site). O login é o mesmo do app (`Admin:Username` / senha da API).
 
 - **Pedidos em análise** (de qualquer data) com **Aprovar** e **Recusar** (motivo opcional, enviado à cliente) e o prazo para responder: sem resposta em 3 dias, a API expira o pedido e libera o horário.
 - **Agenda do dia** com navegação entre dias: serviço, horário, WhatsApp, endereço, valores, descrição e **fotos de referência** (baixadas com o token e ampliáveis).
@@ -235,7 +240,8 @@ npm run lint       # ESLint (typescript-eslint strict)
 npm run format     # Prettier
 npm test           # testes (Vitest)
 npm run check      # typecheck + lint + format + testes
-npm run build      # gera dist/ (tsc + vite build)
+npm run build      # gera dist/ (tsc + vite build + pré-renderização)
+npm run images     # gera as versões WebP das fotos de public/img
 npm run preview    # serve o dist/ localmente
 ```
 
@@ -306,8 +312,8 @@ Para publicar em outra hospedagem, basta servir a pasta `dist/` (Netlify, Vercel
 
 ## Limitações conhecidas e próximos passos
 
-- **Mensagens de WhatsApp e eventos do Google Agenda ainda em simulação na API** (a cliente vê a confirmação na tela, mas não recebe mensagem automática). O WhatsApp automático foi adiado (a Meta só libera coexistência para parceiros): a Lari envia a confirmação e o PIX pelo botão "Enviar pelo WhatsApp" do painel.
-- **Fotos responsivas:** WebP de 480 e 960 px com `srcset`, carregamento sob demanda fora da tela e o carrossel do topo baixando só a foto atual e a próxima. A primeira tela no celular caiu de cerca de 2,5 MB para menos de 1 MB.
+- **WhatsApp automático ainda em simulação na API** (a cliente vê a confirmação na tela, mas não recebe mensagem automática). Foi adiado (a Meta só libera coexistência para parceiros): a Lari envia a confirmação e o PIX pelo botão "Enviar pelo WhatsApp" do painel. O Google Agenda já está ligado: o atendimento aprovado vira evento na agenda dela.
+- **Fotos responsivas:** WebP de 480 e 960 px com `srcset`, carregamento sob demanda fora da tela e o carrossel do topo baixando só a foto atual e a próxima. A primeira tela no celular caiu de cerca de 2,5 MB para 438 KB.
 - **Avaliações do Google copiadas à mão:** os 7 textos vêm do perfil real (todas 5 estrelas) e o selo "5,0" é fixo; não há integração automática com o Google (a Places API traz só 5 avaliações e exige chave e endpoint no servidor).
 - **Cartões de Instagram e TikTok** na seção Redes trazem listas de exemplo ("Antes e depois de noivas", "Penteado em 60 segundos") que não vêm do documento.
 - **Conteúdo do portfólio** da Home e rótulos das fotos são genéricos; vale revisar com a cliente.
