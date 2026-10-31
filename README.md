@@ -37,7 +37,7 @@ Site institucional da maquiadora e penteadista Lari Novais, de São Paulo, com *
 Site institucional de uma maquiadora e penteadista profissional que atende a domicílio (São Paulo). Apresenta a profissional, os serviços de **noivas**, **atendimento social** e **cursos**, reúne depoimentos de clientes e converte visitas em contato por **WhatsApp**. O Atendimento Social tem **agendamento online** integrado à AgendamentoApi, do repositório [lari-novais-beauty-agendamento](https://github.com/araujogbs/lari-novais-beauty-agendamento) (localmente, na pasta `../API e App`).
 
 - **Tipo:** site de uma página (one-page) em **React + TypeScript**, com build e servidor de desenvolvimento do **Vite**.
-- **Fontes:** Cormorant Garamond (títulos, traço fino) e Inter (Google Fonts).
+- **Fontes:** Cormorant Garamond (títulos, traço fino) e Inter, servidas pelo próprio site (`public/fonts/`, declaradas em `src/styles/fonts.css`), sem depender do Google Fonts.
 - **Visual:** tema celeste (moldura fina com estrelinhas nos cantos, agendamento em constelação, fotos em arco, divisores "— ✦ —"). A lista de cada detalhe e onde mexer está em [`docs/PREVIA-VISUAL.md`](docs/PREVIA-VISUAL.md).
 - **Conteúdo:** segue o documento `INFORMAÇÕES SITE.docx`, que é a referência de textos, preços e estrutura.
 
