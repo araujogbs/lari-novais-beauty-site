@@ -14,9 +14,11 @@ const app = (
 );
 
 // Com o HTML pré-renderizado (build), o React assume a página sem recriá-la: a foto do topo,
-// que é o LCP, aparece antes do JavaScript. No `npm run dev` o #root vem vazio, e o painel
-// (/#painel) é outra tela, então nesses casos o React monta do zero.
-if (container.hasChildNodes() && window.location.hash !== '#painel') {
+// que é o LCP, aparece antes do JavaScript. No `npm run dev` o #root vem vazio; o painel
+// (/#painel) é outra tela e o link do WhatsApp (/#ag=código) abre "Meus agendamentos",
+// que não estão no HTML do build: nesses casos o React monta do zero.
+const hash = window.location.hash;
+if (container.hasChildNodes() && hash !== '#painel' && !hash.startsWith('#ag=')) {
   hydrateRoot(container, app);
 } else {
   container.replaceChildren();

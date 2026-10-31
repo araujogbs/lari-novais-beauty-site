@@ -1,4 +1,3 @@
-import QRCode from 'qrcode';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -12,7 +11,9 @@ export function PixQr({ code }: Props) {
 
   useEffect(() => {
     let active = true;
-    QRCode.toString(code, { type: 'svg', margin: 1, errorCorrectionLevel: 'M' })
+    // A biblioteca (~75 KB) só é baixada quando há um PIX para mostrar, fora do carregamento da página
+    import('qrcode')
+      .then(({ default: QRCode }) => QRCode.toString(code, { type: 'svg', margin: 1, errorCorrectionLevel: 'M' }))
       .then((svg) => {
         if (active) setSrc(`data:image/svg+xml;utf8,${encodeURIComponent(svg)}`);
       })
