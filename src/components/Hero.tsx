@@ -17,7 +17,8 @@ function Words({ text, from = 0 }: { text: string; from?: number }) {
 export function Hero() {
   return (
     <section id="home" className="hero">
-      <div className="hero-img reveal">
+      {/* Sem .reveal: a foto é o LCP e precisa aparecer já no HTML pré-renderizado, sem esperar o JS */}
+      <div className="hero-img">
         <HeroCarousel />
       </div>
       {/* No desktop o texto fica à esquerda e a foto à direita, para os botões aparecerem sem rolar */}

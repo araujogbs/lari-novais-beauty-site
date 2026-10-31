@@ -14,11 +14,21 @@ for (const key of ['window', 'document', 'localStorage', 'sessionStorage', 'loca
 Object.defineProperty(globalThis, 'navigator', { value: window.navigator, configurable: true });
 
 const { render } = await import(pathToFileURL('dist-ssr/entry-server.js').href);
-const html = render();
+// O React 19 abre o HTML com <link rel="preload"> das imagens; dentro do #root eles quebram a hidratação.
+// Vão para o <head>, só o da foto principal (fetchPriority="high"), que é o LCP.
+const rendered = render();
+const preloads = rendered.match(/^(<link [^>]*\/>)*/)[0];
+const html = rendered.slice(preloads.length);
+const headLinks = (preloads.match(/<link [^>]*\/>/g) ?? []).filter((l) => l.includes('fetchPriority="high"'));
 const file = 'dist/index.html';
 const page = readFileSync(file, 'utf8');
 if (!page.includes('<div id="root"></div>')) throw new Error('<div id="root"></div> não encontrado em dist/index.html');
-writeFileSync(file, page.replace('<div id="root"></div>', `<div id="root">${html}</div>`));
+writeFileSync(
+  file,
+  page
+    .replace('</head>', `${headLinks.join('')}</head>`)
+    .replace('<div id="root"></div>', `<div id="root">${html}</div>`),
+);
 rmSync('dist-ssr', { recursive: true, force: true });
 console.log(`Pré-renderizado: ${Math.round(html.length / 1024)} KB de HTML em ${file}`);
 process.exit(0);

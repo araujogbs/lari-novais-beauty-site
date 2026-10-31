@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { prefersDark } from '../lib/motion';
+import { useMounted } from './useMounted';
 
 export type Theme = 'light' | 'dark';
 
@@ -21,7 +22,8 @@ function storedTheme(): Theme | null {
 export function useTheme(active: boolean): [Theme, () => void] {
   const [chosen, setChosen] = useState<Theme | null>(storedTheme);
   const [system, setSystem] = useState<Theme>(() => (prefersDark() ? 'dark' : 'light'));
-  const theme = chosen ?? system;
+  // Claro até hidratar, como no HTML pré-renderizado; o tema do aparelho entra em seguida
+  const theme = useMounted() ? (chosen ?? system) : 'light';
 
   useEffect(() => {
     if (typeof window.matchMedia !== 'function') return;

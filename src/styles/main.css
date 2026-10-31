@@ -1208,6 +1208,8 @@ section {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   padding: 0.5rem 0.25rem 1rem;
+  /* Igual ao padding: sem isso o snap rola 4px ao carregar e o Chrome para de medir o LCP (NO_LCP no PageSpeed) */
+  scroll-padding-inline: 0.25rem;
   scrollbar-width: none;
 }
 .reviews-track::-webkit-scrollbar {
