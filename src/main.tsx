@@ -19,7 +19,12 @@ const app = (
 // que não estão no HTML do build: nesses casos o React monta do zero.
 const hash = window.location.hash;
 if (container.hasChildNodes() && hash !== '#painel' && !hash.startsWith('#ag=')) {
-  hydrateRoot(container, app);
+  // O HTML já está completo: deixa o navegador pintá-lo primeiro e hidrata no quadro seguinte
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      hydrateRoot(container, app);
+    }, 0);
+  });
 } else {
   container.replaceChildren();
   createRoot(container).render(app);
