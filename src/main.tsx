@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { App } from './App';
+import './styles/fonts.css';
 import './styles/main.css';
 
 const container = document.getElementById('root');
