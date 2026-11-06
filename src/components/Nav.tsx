@@ -16,7 +16,7 @@ export function Nav({ theme, onToggleTheme }: Props) {
   return (
     <nav className={scrolled ? 'nav-scrolled' : undefined}>
       <div className="logo">
-        Lari Novais <span>Beauty</span>
+        Lari&nbsp;Novais <span>Beauty</span>
       </div>
       <ul id="navMenu" className={open ? 'active' : undefined}>
         {NAV_LINKS.map((link) => (
@@ -26,6 +26,9 @@ export function Nav({ theme, onToggleTheme }: Props) {
         ))}
       </ul>
       <div className="nav-actions">
+        <a href="#agendar" className="nav-cta">
+          Agendar
+        </a>
         <button
           type="button"
           className="theme-toggle"

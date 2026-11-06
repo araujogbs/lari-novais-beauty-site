@@ -32,16 +32,17 @@ export function Hero() {
         </h1>
         <p className="hero-sub">Maquiagem &amp; Penteados — São&nbsp;Paulo</p>
         <div className="hero-btns">
-          <a href="#noivas" className="btn btn-primary">
-            Agendar Noiva
+          <a href="#agendar" className="btn btn-primary">
+            Agendar Horário
           </a>
-          <a href="#social" className="btn btn-outline">
-            Ver Serviços
+          <a href="#noivas" className="btn btn-outline">
+            Agendar Noiva
           </a>
           <a href="#cursos" className="btn btn-outline">
             Conhecer Cursos
           </a>
         </div>
+        <p className="hero-hint">Maquiagem e penteado a domicílio: veja os horários livres e agende online.</p>
       </div>
       <MoonToday />
     </section>

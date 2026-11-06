@@ -3740,3 +3740,58 @@ footer .star-divider {
 .ag-special-hours a {
   color: var(--rose-dark);
 }
+
+/* Agendamento em destaque: dica sob os botões do topo e botão "Agendar" fixo no menu */
+.hero-hint {
+  margin-top: 1rem;
+  font-size: 0.72rem;
+  color: var(--text-light);
+  font-weight: 300;
+  opacity: 0.55;
+}
+.nav-cta {
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  background: var(--rose);
+  border: 1px solid var(--rose);
+  color: var(--on-rose);
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
+}
+nav a.nav-cta {
+  color: var(--on-rose);
+}
+nav a.nav-cta:hover {
+  background: var(--rose-dark);
+  border-color: var(--rose-dark);
+  color: var(--on-rose);
+}
+/* Os botões "Agendar" levam ao título do agendamento, sem o menu fixo cobri-lo */
+#agendar {
+  scroll-margin-top: 90px;
+}
+@media (max-width: 420px) {
+  nav .logo {
+    font-size: 1.15rem;
+    letter-spacing: 1.5px;
+  }
+  .nav-actions {
+    gap: 0.35rem;
+  }
+  .nav-cta {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.62rem;
+    letter-spacing: 1px;
+  }
+}
+@media (max-width: 350px) {
+  .nav-cta {
+    display: none;
+  }
+}
